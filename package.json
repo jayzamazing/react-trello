@@ -1,0 +1,23 @@
+{
+  "name": "react-trello",
+  "version": "1.0.0",
+  "description": "Trello app. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayzamazing/react-trello.git"
+  },
+  "keywords": [
+    "React",
+    "Trello"
+  ],
+  "author": "Adrian J Lopez <adrianjaylopez@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jayzamazing/react-trello/issues"
+  },
+  "homepage": "https://github.com/jayzamazing/react-trello#readme"
+}
