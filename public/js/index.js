@@ -1,37 +1,44 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 //function to render text
-var Card = function() {
-  var text = "This is a card";
+var Card = function(props) {
   return (
       <div className="card">
         <div className="card-text">
-          {text}
+          {props.text}
         </div>
       </div>
   );
 };
 //function to render multiple cards
-var List = function() {
-  var cards = [];
+var List = function(props) {
   for (var i = 0; i < 3; i++) {
-    cards.push(<Card />);
+    props.cards.push(<Card />);
   }
   return (
     <div className="list">
-      {cards}
+      <div className="list-name">
+        {props.title}
+      </div>
+      <div className="list-cards">
+        {props.cards}
+      </div>
     </div>
   );
 };
 //function to render multiple lists of cards
-var Board = function() {
-  var cardsList = [];
+var Board = function(props) {
   for (var i = 0; i < 3; i++) {
-    cardsList.push(<List />);
+    props.cardsList.push(<List />);
   }
   return (
       <div className="board">
-        {cardsList}
+        <div className="board-name">
+          {{props.title}}
+        </div>
+        <div className="board-list">
+          {props.cardsList}
+        </div>
       </div>
   );
 };
