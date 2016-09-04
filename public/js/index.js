@@ -10,22 +10,47 @@ var Card = function(props) {
         </div>
     );
 };
+//function to create an input component
+var Input = function(props) {
+  return <input type="text" onChange={props.onChange} placeholder={props.placeholder} name={props.name}></input>;
+};
+//function to create submit input component
+var Submit = function(props) {
+  return <input type="submit" onClick={props.onClick}></input>;
+};
 //function to render multiple cards
-var List = function(props) {
-    var cards = props.card.map((elem, index) => {
+var List = React.createClass({
+  onAddInputChanged: function() {
+    console.log('inside onaddinputchanged');
+  },
+  onAddSubmit: function() {
+    console.log('inside onaddsubmit');
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+  },
+  render: function() {
+    var cards = this.props.card.map((elem, index) => {
         return (<Card key={elem.key} text={elem.text}/>)
     });
     return (
-        <div className="list">
-            <div className="list-name">
-                <h3>{props.title}</h3>
-            </div>
-            <div className="list-cards">
-                {cards}
-            </div>
-        </div>
+      <div className="list">
+          <div className="list-name">
+              <h3>{this.props.title}</h3>
+          </div>
+          <div className="list-cards">
+              {cards}
+          </div>
+          <div className="list-form-section" onSubmit={this.handleSubmit}>
+            <form className="list-form">
+              <Input onChange={this.onAddInputChanged} />
+              <Submit onClick={this.onAddSubmit} />
+            </form>
+          </div>
+      </div>
     );
-};
+  }
+})
 //function to render multiple lists of cards
 var Board = function(props) {
     var list = props.cardsList.map((elem) => {
@@ -42,7 +67,7 @@ var Board = function(props) {
         </div>
     );
 };
-var data = {
+Board.defaultProps = {
     title: 'blah',
     cardsList: [
         {
@@ -76,5 +101,5 @@ var data = {
 //render the data onto div with id app
 document.addEventListener('DOMContentLoaded', function() {
     ReactDOM.render(
-        <Board title={data.title} cardsList={data.cardsList}/>, document.getElementById('app'));
+        <Board />, document.getElementById('app'));
 });
