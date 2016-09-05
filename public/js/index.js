@@ -19,18 +19,11 @@ var Submit = function(props) {
   return <input type="submit" onClick={props.onClick}></input>;
 };
 //function to render multiple cards
-var List = React.createClass({
-  onAddInputChanged: function() {
-    console.log('inside onaddinputchanged');
-  },
-  onAddSubmit: function() {
-    console.log('inside onaddsubmit');
-  },
-  handleSubmit: function(e) {
-    e.preventDefault();
-  },
-  render: function() {
-    var cards = this.props.card.map((elem, index) => {
+var List = function(props) {
+    var handleSubmit = function(e) {
+      e.preventDefault();
+    };
+    var cards = props.card.map((elem, index) => {
         return (<Card key={elem.key} text={elem.text}/>)
     });
     return (
@@ -41,20 +34,39 @@ var List = React.createClass({
           <div className="list-cards">
               {cards}
           </div>
-          <div className="list-form-section" onSubmit={this.handleSubmit}>
-            <form className="list-form">
-              <Input onChange={this.onAddInputChanged} />
-              <Submit onClick={this.onAddSubmit} />
+          <div className="list-form-section">
+            <form className="list-form" onSubmit={handleSubmit}>
+              <Input onChange={props.onChange} />
+              <Submit onClick={props.onClick} />
             </form>
           </div>
       </div>
     );
+  };
+//component to store list of cards and text
+var ListContainer = React.createClass({
+  getInitialState: function() {
+    return {
+      text: '',
+      cards: []
+    }
+  },
+  onAddInputChanged: function(event) {
+    this.setState({text: event.target.value});
+  },
+  onAddSubmit: function(event) {
+    this.setState(cards.push(event.target.value))
+  },
+  render: function() {
+    return (
+      <List cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
+    );
   }
-})
+});
 //function to render multiple lists of cards
 var Board = function(props) {
     var list = props.cardsList.map((elem) => {
-        return (<List title={elem.title} card={elem.cards} key={elem.key}/>)
+        return (<ListContainer title={elem.title} card={elem.cards} key={elem.key}/>)
     });
     return (
         <div className="board">
