@@ -3,11 +3,11 @@ var ReactDOM = require('react-dom');
 //function to render text
 var Card = function(props) {
     return (
-        <div className="card">
-            <div className="card-text">
+        <List>
+            <ListItem>
                 {props.text}
-            </div>
-        </div>
+            </ListItem>
+        </List>
     );
 };
 //function to create an input component
@@ -20,9 +20,15 @@ var Submit = function(props) {
 };
 var Form = function(props) {
   return <form className={props.className} onSubmit={props.onSubmit}>{props.children}</form>
-}
-//function to render multiple cards
+};
 var List = function(props) {
+  return <ul>{props.children}</ul>
+};
+var ListItem = function(props) {
+  return <li>{props.children}</li>
+};
+//function to render multiple cards
+var Lists = function(props) {
     var handleSubmit = function(e) {
       e.preventDefault();
     };
@@ -30,20 +36,16 @@ var List = function(props) {
         return (<Card key={index} text={elem.text}/>)
     });
     return (
-      <div className="list">
-          <div className="list-name">
-              <h3>{props.title}</h3>
-          </div>
-          <div className="list-cards">
+      <List>
+          <ListItem>
+            <h3>{props.title}</h3>
               {cards}
-          </div>
-          <div className="list-form-section">
             <Form className="list-form" onSubmit={handleSubmit}>
               <Input onChange={props.onChange} />
               <Submit onClick={props.onClick} />
             </Form>
-          </div>
-      </div>
+          </ListItem>
+      </List>
     );
   };
 //component to store list of cards and text
@@ -64,7 +66,7 @@ var ListContainer = React.createClass({
   },
   render: function() {
     return (
-      <List title={this.props.title} cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
+      <Lists title={this.props.title} cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
     );
   }
 });
