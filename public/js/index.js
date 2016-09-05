@@ -23,13 +23,13 @@ var List = function(props) {
     var handleSubmit = function(e) {
       e.preventDefault();
     };
-    var cards = props.card.map((elem, index) => {
-        return (<Card key={elem.key} text={elem.text}/>)
+    var cards = props.cards.map((elem, index) => {
+        return (<Card key={index} text={elem.text}/>)
     });
     return (
       <div className="list">
           <div className="list-name">
-              <h3>{this.props.title}</h3>
+              <h3>{props.title}</h3>
           </div>
           <div className="list-cards">
               {cards}
@@ -48,25 +48,27 @@ var ListContainer = React.createClass({
   getInitialState: function() {
     return {
       text: '',
-      cards: []
+      cards: this.props.cards//anti-pattern, remove later
     }
   },
   onAddInputChanged: function(event) {
     this.setState({text: event.target.value});
   },
-  onAddSubmit: function(event) {
-    this.setState(cards.push(event.target.value))
+  onAddSubmit: function() {
+    var temp = this.state.cards;
+    temp.push({text: this.state.text});
+    this.setState({cards: temp});
   },
   render: function() {
     return (
-      <List cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
+      <List title={this.props.title} cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
     );
   }
 });
 //function to render multiple lists of cards
 var Board = function(props) {
-    var list = props.cardsList.map((elem) => {
-        return (<ListContainer title={elem.title} card={elem.cards} key={elem.key}/>)
+    var list = props.cardsList.map((elem, index) => {
+        return (<ListContainer title={elem.title} cards={elem.cards} key={index}/>)
     });
     return (
         <div className="board">
@@ -79,31 +81,26 @@ var Board = function(props) {
         </div>
     );
 };
+//drop some default data into board
 Board.defaultProps = {
     title: 'blah',
     cardsList: [
         {
-            key: 1,
             title: 'something',
             cards: [
                 {
-                    key: 1,
                     text: 'ummmm'
                 }, {
-                    key: 2,
                     text: 'food'
                 }
             ]
         },
         {
-            key: 2,
             title: 'hungry',
             cards: [
                 {
-                    key: 1,
                     text: 'special'
                 }, {
-                    key: 2,
                     text: 'taco'
                 }
             ]
