@@ -1,6 +1,6 @@
 {
   "name": "react-trello",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "Trello app. ",
   "main": "public/js/index.js",
   "scripts": {

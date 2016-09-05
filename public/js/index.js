@@ -18,6 +18,9 @@ var Input = function(props) {
 var Submit = function(props) {
   return <input type="submit" onClick={props.onClick}></input>;
 };
+var Form = function(props) {
+  return <form className={props.className} onSubmit={props.onSubmit}>{props.children}</form>
+}
 //function to render multiple cards
 var List = function(props) {
     var handleSubmit = function(e) {
@@ -35,10 +38,10 @@ var List = function(props) {
               {cards}
           </div>
           <div className="list-form-section">
-            <form className="list-form" onSubmit={handleSubmit}>
+            <Form className="list-form" onSubmit={handleSubmit}>
               <Input onChange={props.onChange} />
               <Submit onClick={props.onClick} />
-            </form>
+            </Form>
           </div>
       </div>
     );
