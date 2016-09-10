@@ -1,9 +1,9 @@
 var React = require('react');
-var ListContainer = require('./list.js')
+var List = require('./list.js')
 //function to render multiple lists of cards
 var Board = function(props) {
     var list = props.cardsList.map((elem, index) => {
-        return (<ListContainer title={elem.title} cards={elem.cards} key={index}/>)
+        return (<List.ListContainer title={elem.title} cards={elem.cards} key={index}/>)
     });
     return (
         <div className="board">

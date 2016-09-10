@@ -65,8 +65,12 @@ var ListContainer = React.createClass({
   },
   render: function() {
     return (
-      <Lists title={this.props.title} cards={this.state.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
+      <Lists title={this.props.title} cards={this.state.cards}
+        onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
     );
   }
 });
-module.exports = ListContainer;
+module.exports = {
+  ListContainer,
+  Lists
+};
