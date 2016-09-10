@@ -4,6 +4,7 @@
   "description": "Trello app. ",
   "main": "public/js/index.js",
   "scripts": {
+    "test": "mocha --compilers js:babel-register test/**/*.js*",
     "mkdir": "mkdir -p build",
     "build": "npm run clean && npm run mkdir && npm run build:html && npm run build:css && npm run build:js",
     "watch": "npm run watch:html & npm run watch:css & npm run watch:js",
