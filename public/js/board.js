@@ -2,13 +2,13 @@ var React = require('react');
 var List = require('./list.js')
 //function to render multiple lists of cards
 var Board = function(props) {
-    var list = props.cardsList.map((elem, index) => {
+    var list = props[props.board].cardsList.map((elem, index) => {
         return (<List.ListContainer title={elem.title} cards={elem.cards} key={index}/>)
     });
     return (
         <div className="board">
             <div className="board-name">
-                <h1>{props.title}</h1>
+                <h1>{props.board}</h1>
             </div>
             <div className="board-list">
                 {list}
@@ -16,30 +16,35 @@ var Board = function(props) {
         </div>
     );
 };
+var Boards = function() {
+
+}
 //drop some default data into board
 Board.defaultProps = {
-    title: 'blah',
-    cardsList: [
-        {
-            title: 'something',
-            cards: [
-                {
-                    text: 'ummmm'
-                }, {
-                    text: 'food'
-                }
-            ]
-        },
-        {
-            title: 'hungry',
-            cards: [
-                {
-                    text: 'special'
-                }, {
-                    text: 'taco'
-                }
-            ]
-        }
-    ]
+    board: 'blah',
+    blah: {
+      cardsList: [
+          {
+              title: 'something',
+              cards: [
+                  {
+                      text: 'ummmm'
+                  }, {
+                      text: 'food'
+                  }
+              ]
+          },
+          {
+              title: 'hungry',
+              cards: [
+                  {
+                      text: 'special'
+                  }, {
+                      text: 'taco'
+                  }
+              ]
+          }
+      ]
+    }
 };
 module.exports = Board;
