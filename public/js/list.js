@@ -49,12 +49,6 @@ var Lists = function(props) {
   };
 //component to store list of cards and text
 var ListContainer = React.createClass({
-  getInitialState: function() {
-    return {
-      text: '',
-      cards: this.props.cards//anti-pattern, remove later
-    }
-  },
   onAddInputChanged: function(event) {
     this.setState({text: event.target.value});
   },
@@ -65,7 +59,7 @@ var ListContainer = React.createClass({
   },
   render: function() {
     return (
-      <Lists title={this.props.title} cards={this.state.cards}
+      <Lists title={this.props.title} cards={this.props.cards}
         onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
     );
   }
