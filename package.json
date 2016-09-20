@@ -46,6 +46,7 @@
   },
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "dependencies": {
+    "normalize.css": "^4.2.0",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
   },
