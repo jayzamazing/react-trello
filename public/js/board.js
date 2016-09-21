@@ -23,7 +23,7 @@ var Board = function(props) {
         </div>
     );
 };
-var BoardsList = React.createClass({
+var BoardsListName = React.createClass({
   showBoard: function(board) {
     hashHistory.push('/:' + board);
   },
@@ -93,7 +93,7 @@ var App = React.createClass({
 var routes = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
-      <IndexRoute component={BoardsList} />
+      <IndexRoute component={BoardsListName} />
     </Route>
   </Router>
 );
