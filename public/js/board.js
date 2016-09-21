@@ -1,8 +1,15 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
+var router = require('react-router');
+var Router = router.Router;
+var Route = router.Route;
+var hashHistory = router.hashHistory;
+var IndexRoute = router.IndexRoute;
+var Link = router.Link;
 var List = require('./list.js')
 //function to render multiple lists of cards
 var Board = function(props) {
-    var list = props[props.board].cardsList.map((elem, index) => {
+    var list = props[props.boardName].cardsList.map((elem, index) => {
         return (<List.ListContainer title={elem.title} cards={elem.cards} key={index}/>)
     });
     return (
@@ -16,13 +23,26 @@ var Board = function(props) {
         </div>
     );
 };
-var Boards = function() {
-
-}
-//drop some default data into board
-Board.defaultProps = {
-    board: 'blah',
-    blah: {
+// var Boards = function() {
+//
+// }
+var NavBarContainer = React.createClass({
+  showBoards: function() {
+    hashHistory.push('/');
+  },
+  render: function() {
+    return (
+      <nav className="navBar">
+        <input type="button" onClick={this.showBoards()} value="Boards"/>
+      </nav>
+    );
+  }
+});
+var App = React.createClass({
+  defaultProps: {
+    boardName: 'blah',
+    boards: {
+      blah: {
       cardsList: [
           {
               title: 'something',
@@ -46,5 +66,21 @@ Board.defaultProps = {
           }
       ]
     }
-};
-module.exports = Board;
+    }
+  },
+  render: function() {
+    return (
+      <section>
+        <NavBarContainer boards={this.defaultProps.boards}/>
+        {this.props.children}
+      </section>
+    );
+  }
+});
+var routes = (
+  <Router history={hashHistory}>
+    <Route path='/' component={App}>
+    </Route>
+  </Router>
+);
+module.exports = App;
