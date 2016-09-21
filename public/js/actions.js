@@ -1,13 +1,14 @@
 require('isomorphic-fetch');
 /*
-* Should return list of boards
+* Should be able to add a board to list of boards
 */
-var BOARDSLIST = 'BOARDSLIST';
-var boardsList = function() {
+var ADD_BOARD = 'ADD_BOARD';
+var addBoard= function(name) {
   return {
-    type: BOARDSLIST
+    type: ADD_BOARD,
+    board: name
   };
 };
 
-exports.BOARDSLIST = BOARDSLIST;
-exports.boardsList = boardsList;
+exports.ADD_BOARD = ADD_BOARD;
+exports.addBoard = addBoard;
