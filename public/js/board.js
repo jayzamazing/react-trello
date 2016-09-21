@@ -23,9 +23,22 @@ var Board = function(props) {
         </div>
     );
 };
-// var Boards = function() {
-//
-// }
+var BoardsList = React.createClass({
+  showBoard: function(board) {
+    hashHistory.push('/:' + board);
+  },
+  render: function() {
+    var list = Object.keys(this.props.boards).map(function(item) {
+      return (<Button onClick={showBoard({item})} value={item}/>);
+    });
+    return (
+      {list}
+    );
+  }
+});
+var Button = function(props) {
+  return <input type="button" onClick={props.buttonHandler} value={props.value}/>
+}
 var NavBarContainer = React.createClass({
   showBoards: function() {
     hashHistory.push('/');
@@ -33,7 +46,7 @@ var NavBarContainer = React.createClass({
   render: function() {
     return (
       <nav className="navBar">
-        <input type="button" onClick={this.showBoards()} value="Boards"/>
+        <Button onClick={this.showBoards()} value="Boards"/>
       </nav>
     );
   }
@@ -80,6 +93,7 @@ var App = React.createClass({
 var routes = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
+      <IndexRoute component={BoardsList} />
     </Route>
   </Router>
 );
