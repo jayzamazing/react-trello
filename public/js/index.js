@@ -8,6 +8,7 @@ var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
 var NavBar = require('./navbar');
 var Board_List = require('./board-list');
+var Board = require('./board');
 var store = require('./store');
 //render the data onto div with id app
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <Router history={hashHistory}>
             <Route path='/' component={NavBar}>
               <IndexRoute component={Board_List} />
+              <Route path='/:board_name' component={Board} />
             </Route>
           </Router>
       </Provider>,

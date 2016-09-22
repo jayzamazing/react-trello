@@ -2,7 +2,7 @@ var actions = require('./actions');
 var initialRepositoryState = {
   boards: {
     blah: {
-    cardsList: [
+      cardsList: [
         {
             title: 'something',
             cards: [
@@ -24,8 +24,32 @@ var initialRepositoryState = {
             ]
         }
     ]
+    },
+  'shopping list': {
+    cardsList: [
+      {
+          title: 'groceries',
+          cards: [
+              {
+                  text: 'apple'
+              }, {
+                  text: 'pie'
+              }
+          ]
+      },
+      {
+          title: 'clothes',
+          cards: [
+              {
+                  text: 'pants'
+              }, {
+                  text: 'shirt'
+              }
+          ]
+      }
+  ]
   }
-  }
+}
 };
 function trelloReducer(state, action) {
   state = state || initialRepositoryState;

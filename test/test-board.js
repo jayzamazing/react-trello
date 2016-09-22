@@ -6,7 +6,7 @@ chai.use(require('chai-shallow-deep-equal'));
 var should = chai.should();
 var boardItem = {};
 
-var Boards = require('../public/js/board');
+var Board = require('../public/js/board');
 var List = require('../public/js/list');
 describe('Board component', function() {
     beforeEach((done) => {
@@ -38,7 +38,7 @@ describe('Board component', function() {
         //create instance of render
         var renderer = TestUtils.createRenderer();
         //render an image component
-        renderer.render(<Boards.Board title={boardItem.title} cardsList={boardItem.cardsList} />);
+        renderer.render(<Board title={boardItem.title} cardsList={boardItem.cardsList} />);
         //get the rendered react component to test against
         var board = renderer.getRenderOutput();
         // console.log(result);

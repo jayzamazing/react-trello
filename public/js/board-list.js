@@ -15,7 +15,7 @@ var BoardsListName = React.createClass({
   render: function() {
     var context = this;
     var list = Object.keys(this.props.boards).map(function(item, index) {
-      return (<input key={index} type="button" onClick={context.showBoard.bind(null, {item})} value={item}/>);
+      return (<input key={index} type="button" onClick={context.showBoard.bind(null, item)} value={item}/>);
     });
     return (
       <div>
