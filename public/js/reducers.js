@@ -28,7 +28,8 @@ var initialRepositoryState = {
   }
 };
 function trelloReducer(state, action) {
-  if(action.type === ADD_BOARD) {
+  state = state || initialRepositoryState;
+  if(action.type === actions.ADD_BOARD) {
     return Object.assign(
       {}, state, state.boards.concat(action.board));
   }
