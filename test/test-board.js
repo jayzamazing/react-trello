@@ -1,35 +1,44 @@
+'use strict';
 var React = require('react');
 var TestUtils = require('react-addons-test-utils');
 var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 var should = chai.should();
+var boardItem = {};
 
-var Board = require('../public/js/board');
+var Boards = require('../public/js/board');
 var List = require('../public/js/list');
 describe('Board component', function() {
+    beforeEach((done) => {
+      boardItem = {
+          title: 'blah',
+          cardsList: [{
+              title: 'everything',
+              cards: [{
+                  text: 'is'
+              }, {
+                  text: 'code'
+              }]
+          }, {
+              title: 'starving',
+              cards: [{
+                  text: 'hamburger'
+              }, {
+                  text: 'sauce'
+              }]
+          }]
+      };
+      done();
+    });
+    afterEach((done) => {
+      boardItem = {};
+      done();
+    });
     it('Renders the board item', function() {
-        var boardItem = {
-            title: 'blah',
-            cardsList: [{
-                title: 'everything',
-                cards: [{
-                    text: 'is'
-                }, {
-                    text: 'code'
-                }]
-            }, {
-                title: 'starving',
-                cards: [{
-                    text: 'hamburger'
-                }, {
-                    text: 'sauce'
-                }]
-            }]
-        };
         //create instance of render
         var renderer = TestUtils.createRenderer();
         //render an image component
-        renderer.render(<Board title={boardItem.title} cardsList={boardItem.cards} />);
+        renderer.render(<Boards.Board title={boardItem.title} cardsList={boardItem.cardsList} />);
         //get the rendered react component to test against
         var board = renderer.getRenderOutput();
         // console.log(result);
@@ -46,8 +55,8 @@ describe('Board component', function() {
         board_list.props.className.should.equal('board-list')
         var listContainer = board_list.props.children[0];
         listContainer.type.should.shallowDeepEqual(List.ListContainer);
-        listContainer.props.title.should.equal('something');
-        listContainer.props.cards[0].text.should.equal('ummmm');
+        listContainer.props.title.should.equal('everything');
+        listContainer.props.cards[0].text.should.equal('is');
 
     });
 });

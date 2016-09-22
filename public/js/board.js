@@ -9,13 +9,13 @@ var Link = router.Link;
 var List = require('./list.js')
 //function to render multiple lists of cards
 var Board = function(props) {
-    var list = props[props.boardName].cardsList.map((elem, index) => {
+    var list = props.cardsList.map((elem, index) => {
         return (<List.ListContainer title={elem.title} cards={elem.cards} key={index}/>)
     });
     return (
         <div className="board">
             <div className="board-name">
-                <h1>{props.board}</h1>
+                <h1>{props.title}</h1>
             </div>
             <div className="board-list">
                 {list}
@@ -97,4 +97,6 @@ var routes = (
     </Route>
   </Router>
 );
-module.exports = App;
+module.exports = {
+  App, Board
+};
