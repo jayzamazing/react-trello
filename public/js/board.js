@@ -8,13 +8,14 @@ var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
 //function to render multiple lists of cards
 var Board = function(props) {
-    var list = props.boards[props.params.board_name.replace(':', '')].cardsList.map((elem, index) => {
-        return (<List.ListContainer title={elem.title} cards={elem.cards} key={index}/>)
+    var board_name = props.params.board_name.replace(':', '');
+    var list = props.boards[board_name].cardsList.map((elem, index) => {
+        return (<List.Container title={elem.title} cards={elem.cards} key={index} id={index} board={board_name}/>)
     });
     return (
         <div className="board">
             <div className="board-name">
-                <h1>{props.title}</h1>
+                <h1>{board_name}</h1>
             </div>
             <div className="board-list">
                 {list}
