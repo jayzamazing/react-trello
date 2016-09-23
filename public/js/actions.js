@@ -19,12 +19,12 @@ var addBoardCardListItem = function(boardName, id, itemName) {
   };
 };
 var BOARD_DESERIALIZATION = 'BOARD_DESERIALIZATION';
-var boardDeserialization = function(board) {
+var boardDeserialization = function(boards) {
   return {
     type: 'BOARD_DESERIALIZATION',
-    board:
-  }
-}
+    boards: boards
+  };
+};
 
 exports.ADD_BOARD = ADD_BOARD;
 exports.addBoard = addBoard;
