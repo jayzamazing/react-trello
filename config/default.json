@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "mongodb": "mongodb://localhost:27017/reactTrello",
+  "public": "../public/",
+  "auth": {
+    "token": {
+      "secret": "575Y07fvC+lZUAndUaQCyqoV3iaZrU55kq+hTFtPwoa8S9Zy54W2nfvW2/5eSQ6+DCswfClF3r8X0qbH4yOQUQ=="
+    },
+    "local": {}
+  }
+}

@@ -6,8 +6,8 @@ chai.use(require('chai-shallow-deep-equal'));
 var should = chai.should();
 var boardItem = {};
 
-var Board = require('../public/js/board');
-var List = require('../public/js/list');
+var Board = require('../../../public/js/board');
+var List = require('../../../public/js/list');
 describe('Board component', function() {
     beforeEach((done) => {
       boardItem = {

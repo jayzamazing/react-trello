@@ -4,7 +4,7 @@ var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 var should = chai.should();
 
-var List = require('../public/js/list');
+var List = require('../../../public/js/list');
 
 describe('List component', function() {
     it('Renders the list item', function() {

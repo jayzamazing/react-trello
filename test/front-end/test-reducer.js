@@ -1,5 +1,5 @@
-import reducer from '../public/js/reducers.js';
-import actions from '../public/js/actions.js';
+import reducer from '../../../public/js/reducers.js';
+import actions from '../../../public/js/actions.js';
 const boards =
     [{
         "id": 1,
