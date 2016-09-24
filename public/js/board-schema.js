@@ -52,9 +52,9 @@ import { Schema, arrayOf } from 'normalizr';
 //     }]
 // }]
 //define schema items
-const boardsSchema = new Schema('boards');
-const cardsListSchema = new Schema('cardsList');
-const cardsSchema = new Schema('cards');
+const boardsSchema = new Schema('boards', { idAttribute: '_id' });
+const cardsListSchema = new Schema('cardsList', { idAttribute: '_id' });
+const cardsSchema = new Schema('cards', { idAttribute: '_id' });
 
 //A board has an array of card list
 boardsSchema.define({

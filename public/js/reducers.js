@@ -1,5 +1,5 @@
 var actions = require('./actions');
-import { normalize } from 'normalizr';
+import { normalize, arrayOf } from 'normalizr';
 import { boardsSchema } from './board-schema';
 import Immutable from 'seamless-immutable';
 
@@ -37,13 +37,15 @@ function trelloReducer(state, action) {
     }
   //reducer for flattening nested board based on schema
   } else if (action.type === actions.BOARD_DESERIALIZATION) {
-    //console.log(action);
-    //flatten nested board
-    var normalizedBoard = normalize(action, {
-      boards: boardsSchema
-    });
     //merge new entities into state
+    var normalizedBoard = normalize(action, {
+      boards: arrayOf(boardsSchema)
+    });
     return state.merge(normalizedBoard.entities);
+    //merge new entities into state
+    // return state = Immutable(normalizedBoard);
+  } else if (action.type === actions.BOARD_SERIALIZATION) {
+    //TODO
   }
   return state;
 }

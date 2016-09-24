@@ -25,6 +25,10 @@ var boardDeserialization = function(boards) {
     boards: boards
   };
 };
+var BOARD_SERIALIZATION = 'BOARD_SERIALIZATION';
+var boardSerialization = function(boards) {
+  //TODO
+};
 
 exports.ADD_BOARD = ADD_BOARD;
 exports.addBoard = addBoard;
