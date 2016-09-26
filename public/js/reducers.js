@@ -38,14 +38,11 @@ function trelloReducer(state, action) {
   //reducer for flattening nested board based on schema
   } else if (action.type === actions.BOARD_DESERIALIZATION) {
     //merge new entities into state
-    var normalizedBoard = normalize(action, {
+    const normalizedBoard = normalize(action, {
       boards: arrayOf(boardsSchema)
     });
-    return state.merge(normalizedBoard.entities);
     //merge new entities into state
-    // return state = Immutable(normalizedBoard);
-  } else if (action.type === actions.BOARD_SERIALIZATION) {
-    //TODO
+    return state.merge(normalizedBoard.entities);
   }
   return state;
 }

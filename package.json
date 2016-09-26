@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "public/js/index.js",
   "keywords": [
@@ -56,7 +56,6 @@
     "body-parser": "^1.15.2",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
-    "denormalizr": "^0.3.2",
     "feathers": "^2.0.2",
     "feathers-authentication": "^0.7.10",
     "feathers-configuration": "^0.2.3",
@@ -74,14 +73,12 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "redux": "^3.6.0",
+    "redux-thunk": "^2.1.0",
     "seamless-immutable": "^6.1.1",
     "serve-favicon": "^2.3.0",
     "winston": "^2.2.0"
   },
   "devDependencies": {
-    "jshint": "^2.9.3",
-    "mocha": "^3.0.2",
-    "request": "^2.75.0",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
@@ -91,9 +88,14 @@
     "chai": "^3.5.0",
     "chai-shallow-deep-equal": "^1.4.0",
     "chokidar": "^1.6.0",
+    "jshint": "^2.9.3",
     "less": "^2.7.1",
     "less-plugin-clean-css": "^1.5.1",
+    "mocha": "^3.0.2",
+    "nock": "^8.0.0",
     "react-addons-test-utils": "^15.3.1",
+    "redux-mock-store": "^1.2.1",
+    "request": "^2.75.0",
     "uglify-js": "^2.7.3",
     "webpack": "^1.13.2"
   }
