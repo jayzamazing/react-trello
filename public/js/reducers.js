@@ -8,42 +8,24 @@ const initialRepositoryState = Immutable({
   cardsList: [],
   cards: []
 });
+function deserialize(state, action) {
+  //merge new entities into state
+  const normalizedBoard = normalize(action, {
+    boards: arrayOf(boardsSchema)
+  });
+  //merge new entities into state
+  return state.merge(normalizedBoard.entities);
+}
+
 function trelloReducer(state, action) {
   //TODO remove in the future
   state = state || initialRepositoryState;
   //reducer for adding a board
-  if(action.type === actions.CREATE_BOARD_SUCCESS) {//TODO concat to state
-    //return the previous state with the new board added to it
-    //merge new entities into state
-    const normalizedBoard = normalize(action, {
-      boards: boardsSchema
-    });
+  if (action.type === actions.CREATE_BOARD_SUCCESS) {//TODO concat to state
+    return deserialize(state, action);
   //reducer for adding a b
-  } else if(action.type === actions.ADD_BOARD_CARDLIST_ITEM) {
-    console.log(state.boards[action.board]);
-    console.log(state.boards[action.board].cardsList[action.id]);
-    console.log(state.boards[action.board].cardsList[action.id].cards);
-    return {
-      ...state,
-      [state.boards[action.board]]: {
-        ...state.boards[action.board],
-        cardsList: {
-          ...state.boards[action.board].cardsList[action.id],
-          cards: {
-            ...state.boards[action.board].cardsList[action.id].cards,
-            text: action.item
-          }
-        }
-      }
-    }
-  //reducer for flattening nested board based on schema
   } else if (action.type === actions.BOARD_DESERIALIZATION) {
-    //merge new entities into state
-    const normalizedBoard = normalize(action, {
-      boards: arrayOf(boardsSchema)
-    });
-    //merge new entities into state
-    return state.merge(normalizedBoard.entities);
+    return deserialize(state, action);
   }
   return state;
 }

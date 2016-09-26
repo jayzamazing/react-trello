@@ -22,10 +22,11 @@ var boardDeserialization = function(boards) {
 };
 var CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
 var createBoardSuccess = function(data) {
+  var boards = {};
+  boards[boards] = data;
   return {
     type: 'CREATE_BOARD_SUCCESS',
-    title: data.title,
-    _id: data._id
+    boards: data
   }
 }
 /*
