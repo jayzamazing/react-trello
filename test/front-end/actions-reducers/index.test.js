@@ -100,7 +100,7 @@ describe('trelloReducer', () => {
         //create a mock server response
         nock('http://localhost:3030/')
         //request to create a board
-        .put('/boards')
+        .put('/boards/1')
         //send back reply to request
         .reply((uri, requestBody) => {
           //create json obj out of the request
@@ -120,7 +120,7 @@ describe('trelloReducer', () => {
         //set up a mockstore
         const store = mockStore({boards: {}});
         //call createboard passing a title of the new board
-        return store.dispatch(actions.createBoard('blah'))
+        return store.dispatch(actions.queryBoards('PUT', {title: 'blah'}, 'create board'))
         .then(() => {
           //check response against expected values
           var response = store.getActions()[0];

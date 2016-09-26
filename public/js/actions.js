@@ -31,16 +31,29 @@ var createBoardSuccess = function(data) {
 }
 /*
 * Function to create a single board
-* @return dispatch function
+* @params method - either PUT, GET, DELETE, or FIND
+* @return dispatch function based on type of query
 */
-var createBoard = function(name) {
+var queryBoards = function(method, params, type) {
       return function(dispatch) {
-        return fetch('http://localhost:3030/boards',
+        var url, baseUrl = 'http://localhost:3030/boards/';
+        //switch to deal with method mappings in feathersjs
+        switch(method) {
+          case 'PUT':
+          case 'GET':
+          case 'DELETE':
+            url = baseUrl + '1';
+            break;
+          case 'FIND':
+            method = 'GET';
+          default:
+            url = baseUrl;
+            break;
+        }
+        return fetch(url,
         {
-          method: 'PUT',
-          body: JSON.stringify({
-            title: name
-          })
+          method: method,
+          body: JSON.stringify(params)
         }).then((res) => {
           if (res.status < 200 || res.status >= 300) {
             var error = new Error(response.statusText);
@@ -49,13 +62,19 @@ var createBoard = function(name) {
           }
           return res.json();
         })
-          .then(json => dispatch(createBoardSuccess(json.body)))
+          .then(json => {
+            switch(type) {
+              case 'create board':
+                dispatch(createBoardSuccess(json.body));
+                break;
+            }
+          })
       };
 };
 exports.ADD_BOARD_CARDLIST_ITEM = ADD_BOARD_CARDLIST_ITEM;
 exports.addBoardCardListItem = addBoardCardListItem;
 exports.BOARD_DESERIALIZATION = BOARD_DESERIALIZATION;
 exports.boardDeserialization = boardDeserialization;
-exports.createBoard = createBoard;
+exports.queryBoards = queryBoards;
 exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
