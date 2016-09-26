@@ -1,7 +1,6 @@
 'use strict';
+const cardslist = require('./cardslist');
 const card = require('./card');
-const card = require('./card');
-const cardsList = require('./cards-list');
 const board = require('./board');
 const authentication = require('./authentication');
 const user = require('./user');
@@ -15,7 +14,6 @@ module.exports = function() {
   app.configure(authentication);
   app.configure(user);
   app.configure(board);
-  app.configure(cardsList);
   app.configure(card);
-  app.configure(card);
+  app.configure(cardslist);
 };

@@ -2,6 +2,10 @@
 
 const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
+const populateCards = hooks.populate('cards', {
+  service: 'cards',
+  field: '_id'
+});
 
 
 exports.before = {
@@ -15,7 +19,7 @@ exports.before = {
 };
 
 exports.after = {
-  all: [],
+  all: [populateCards],
   find: [],
   get: [],
   create: [],

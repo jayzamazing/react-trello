@@ -67,6 +67,11 @@ var queryBoards = function(method, params, type) {
               case 'create board':
                 dispatch(createBoardSuccess(json.body));
                 break;
+              case 'create cardslist':
+                dispatch(queryBoards())
+              case 'create cardslist2':
+                dispatch(createCardSuccess(json.body));
+                break;
             }
           })
       };

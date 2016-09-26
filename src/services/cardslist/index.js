@@ -1,14 +1,14 @@
 'use strict';
 
 const service = require('feathers-mongoose');
-const cards-list = require('./cards-list-model');
+const cardslist = require('./cardslist-model');
 const hooks = require('./hooks');
 
 module.exports = function() {
   const app = this;
 
   const options = {
-    Model: cards-list,
+    Model: cardslist,
     paginate: {
       default: 5,
       max: 25
@@ -16,14 +16,14 @@ module.exports = function() {
   };
 
   // Initialize our service with any options it requires
-  app.use('/cards-lists', service(options));
+  app.use('/cardslists', service(options));
 
   // Get our initialize service to that we can bind hooks
-  const cards-listService = app.service('/cards-lists');
+  const cardslistService = app.service('/cardslists');
 
   // Set up our before hooks
-  cards-listService.before(hooks.before);
+  cardslistService.before(hooks.before);
 
   // Set up our after hooks
-  cards-listService.after(hooks.after);
+  cardslistService.after(hooks.after);
 };

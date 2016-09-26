@@ -94,13 +94,12 @@ describe('trelloReducer', () => {
             .to.include.members([7, 8]);
         });
     });
-    describe('createBoard', () => {
-
+    describe('board queries', () => {
       before(() => {
         //create a mock server response
         nock('http://localhost:3030/')
         //request to create a board
-        .put('/boards/1')
+        .post('/boards/')
         //send back reply to request
         .reply((uri, requestBody) => {
           //create json obj out of the request
@@ -116,11 +115,11 @@ describe('trelloReducer', () => {
       afterEach(() => {
         nock.cleanAll();
       });
-      it('should send data as Json body', (done) => {
+      it('should create a board', (done) => {
         //set up a mockstore
         const store = mockStore({boards: {}});
         //call createboard passing a title of the new board
-        return store.dispatch(actions.queryBoards('PUT', {title: 'blah'}, 'create board'))
+        return store.dispatch(actions.queryBoards('POST', {title: 'blah'}, 'create board'))
         .then(() => {
           //check response against expected values
           var response = store.getActions()[0];
