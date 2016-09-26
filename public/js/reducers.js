@@ -12,11 +12,12 @@ function trelloReducer(state, action) {
   //TODO remove in the future
   state = state || initialRepositoryState;
   //reducer for adding a board
-  if(action.type === actions.ADD_BOARD) {
+  if(action.type === actions.CREATE_BOARD_SUCCESS) {//TODO concat to state
     //return the previous state with the new board added to it
-    return Object.assign(
-      {}, state, {boards: state.boards.concat(action.board)}
-    );
+    //merge new entities into state
+    const normalizedBoard = normalize(action, {
+      boards: boardsSchema
+    });
   //reducer for adding a b
   } else if(action.type === actions.ADD_BOARD_CARDLIST_ITEM) {
     console.log(state.boards[action.board]);
