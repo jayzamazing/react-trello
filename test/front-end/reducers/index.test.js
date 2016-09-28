@@ -3,57 +3,63 @@ import actions from '../../../public/js/actions';
 import reducer from '../../../public/js/reducers';
 //use should
 var should = chai.should();
-const boards =
-    [{
-        "_id": 1,
-        "title": "blah",
-        "cardsList": [{
-            "_id": 1,
-            "title": "something",
-            "cards": [{
+    describe('trello reducer', () => {
+      var boards;
+      before(() => {
+        boards =
+            [{
                 "_id": 1,
-                "text": "ummmm"
+                "title": "blah",
+                "cardsList": [{
+                    "_id": 1,
+                    "title": "something",
+                    "cards": [{
+                        "_id": 1,
+                        "text": "ummmm"
+                    }, {
+                        "_id": 2,
+                        "text": "food"
+                    }]
+                }, {
+                    "_id": 2,
+                    "title": "hungry",
+                    "cards": [{
+                        "_id": 3,
+                        "text": "special"
+                    }, {
+                        "_id": 4,
+                        "text": "taco"
+                    }]
+                }]
             }, {
                 "_id": 2,
-                "text": "food"
-            }]
-        }, {
-            "_id": 2,
-            "title": "hungry",
-            "cards": [{
-                "_id": 3,
-                "text": "special"
-            }, {
-                "_id": 4,
-                "text": "taco"
-            }]
-        }]
-    }, {
-        "_id": 2,
-        "title": "shopping list",
-        "cardsList": [{
-            "_id": 3,
-            "title": "groceries",
-            "cards": [{
-                "_id": 5,
-                "text": "apple"
-            }, {
-                "_id": 6,
-                "text": "pie"
-            }]
-        }, {
-            "_id": 4,
-            "title": "clothes",
-            "cards": [{
-                "_id": 7,
-                "text": "pants"
-            }, {
-                "_id": 8,
-                "text": "shirt"
-            }]
-        }]
-    }];
-    describe('trello reducer', () => {
+                "title": "shopping list",
+                "cardsList": [{
+                    "_id": 3,
+                    "title": "groceries",
+                    "cards": [{
+                        "_id": 5,
+                        "text": "apple"
+                    }, {
+                        "_id": 6,
+                        "text": "pie"
+                    }]
+                }, {
+                    "_id": 4,
+                    "title": "clothes",
+                    "cards": [{
+                        "_id": 7,
+                        "text": "pants"
+                    }, {
+                        "_id": 8,
+                        "text": "shirt"
+                    }]
+                }]
+            }];
+      });
+      after(() => {
+        boards = [];
+      })
         describe('BOARD_DESERIALIZATION', () => {
             let state;
             before(() => {

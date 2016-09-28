@@ -43,7 +43,7 @@ var Lists = function(props) {
               {cards}
             <Form className="list-form" onSubmit={handleSubmit}>
               <Input onChange={props.onChange} />
-              <Submit onClick={props.onClick.bind(null, props.board, props.id )} />
+              <Submit onClick={props.onClick.bind(null, props.boardId, props.id )} />
             </Form>
           </ListItem>
       </List>
@@ -60,12 +60,13 @@ var ListContainer = React.createClass({
   render: function() {
     return (
       <Lists title={this.props.title} cards={this.props.cards}
-        onClick={this.onAddSubmit} onChange={this.onAddInputChanged} id={this.props.id} board={this.props.board}/>
+        onClick={this.onAddSubmit} onChange={this.onAddInputChanged} id={this.props.id} boardId={this.props.boardId}/>
     );
   }
 });
 var Container = connect()(ListContainer);
 module.exports = {
   Container,
+  ListContainer,
   Lists
 };

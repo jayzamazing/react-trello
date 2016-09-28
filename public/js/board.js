@@ -25,7 +25,9 @@ var Board = function(props) {
 };
 var mapStateToProps = function(state, props) {
   return {
-    boards: state.boards
+    boards: state.boards,
+    cardsList: state.cardsList,
+    cards: state.cards
   };
 };
 var Container = connect(mapStateToProps)(Board);

@@ -24,10 +24,10 @@ var addBoardCardListItem = function(boardName, id, itemName) {
   };
 };
 var BOARD_DESERIALIZATION = 'BOARD_DESERIALIZATION';
-var boardDeserialization = function(boards) {
+var boardDeserialization = function(data) {
   return {
     type: 'BOARD_DESERIALIZATION',
-    boards: boards
+    boards: data
   };
 };
 var CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
@@ -47,34 +47,53 @@ var createCardSuccess = function(data) {
   }}
 }
 /*
-* Function to create a single board
-* @params method - either PUT, GET, DELETE, or FIND
-* @return dispatch function based on type of query
+* Function to deal with queries to mongo and calling actions
+* @params method - either PUT, GET, DELETE, FIND, POST, PATCH
+* @params method - method of query to use
+* @params postData - data to send in the query
+* @params type - type of request
+* @params updateItem - id of specific item to update
+* @return promise dispatch function based on type of query
 */
 var queryBoards = function(service, method, postData, type, updateItem) {
   return function(dispatch) {
+    //call services to make services rest call
     return services(service, method, postData, updateItem)
+    //get the data
     .then((res) => res.body)
-      .then(json => dispatch(types(type, json, dispatch)));
+    //pass the data to action dispatch
+    .then(json => dispatch(types(type, json, dispatch)));
 
   };
 }
+/*
+* Function to determine which action to dispatch next based on type
+* @params type - type of request
+* @params json - data passed in to pass to dispatch
+* @params dispatch - action to dispatch
+* @return action to dispatch
+*/
 var types = function(type, json, dispatch) {
   switch(type) {
     case 'create board':
       return dispatch(createBoardSuccess(json));
     case 'create cardslist':
-      //create a wrapper adding board id to update
-      var boards = {};
-      boards['boards'] = json.body;
-      boards['_id'] = boardId;
-      return dispatch(queryBoards('PUT', json, 'create cardslist2'));
+      return dispatch(queryBoards('cardslist', 'PUT', json, 'create cardslist2'));
     case 'create cardslist2':
       return dispatch(createCardSuccess(json));
 
   };
 }
+/*
+* Function to determine which feathers rest service to run
+* @params service - name of mongodb document to query
+* @params method - method of query to use
+* @params postData - data to send in the query
+* @params updateItem - id of specific item to update
+* @return promise from feathers rest
+*/
 var services = function(service, method, postData, updateItem) {
+  //switch based on method
   switch (method) {
     case 'PUT':
       return app.service(service).update(updateItem, postData);

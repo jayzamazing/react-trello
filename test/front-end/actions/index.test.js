@@ -10,27 +10,27 @@ const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 
 describe('trello actions', () => {
+  before(() => {
+    //create a mock server response
+    nock('http://localhost:3030')
+    //request to create a board
+    .post('/boards')
+    //send back reply to request
+    .reply((uri, requestBody) => {
+      //create json obj out of the request
+      var jsonObj = JSON.parse(requestBody);
+      //add _id field to json
+      jsonObj['_id'] = ('1');
+      //return response
+      return [
+        200, {body: jsonObj}
+      ];
+    });
+  });
+  afterEach(() => {
+    nock.cleanAll();
+  });
     describe('board queries', () => {
-      before(() => {
-        //create a mock server response
-        nock('http://localhost:3030')
-        //request to create a board
-        .post('/boards')
-        //send back reply to request
-        .reply((uri, requestBody) => {
-          //create json obj out of the request
-          var jsonObj = JSON.parse(requestBody);
-          //add _id field to json
-          jsonObj['_id'] = ('1');
-          //return response
-          return [
-            200, {body: jsonObj}
-          ];
-        });
-      });
-      afterEach(() => {
-        nock.cleanAll();
-      });
       it('should create a board', (done) => {
         //set up a mockstore
         const store = mockStore({boards: []});
@@ -47,6 +47,9 @@ describe('trello actions', () => {
           response.boards._id.should.equal('1');
           done();
         });
+      });
+      it('should create a cardslist', () => {
+
       });
     });
 });
