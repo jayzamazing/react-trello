@@ -16,16 +16,13 @@ function deserialize(state, action) {
   //merge new entities into state
   return state.merge(normalizedBoard.entities);
 }
-
 function trelloReducer(state, action) {
   //TODO remove in the future
   state = state || initialRepositoryState;
   //reducer for adding a board
-  if (action.type === actions.CREATE_BOARD_SUCCESS) {//TODO concat to state
+  if (action.type === actions.CREATE_BOARD_SUCCESS || action.type === actions.BOARD_DESERIALIZATION) {
     return deserialize(state, action);
   //reducer for adding a b
-  } else if (action.type === actions.BOARD_DESERIALIZATION) {
-    return deserialize(state, action);
   }
   return state;
 }
