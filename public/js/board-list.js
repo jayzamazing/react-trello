@@ -6,7 +6,6 @@ var Route = router.Route;
 var hashHistory = router.hashHistory;
 var IndexRoute = router.IndexRoute;
 var Link = router.Link;
-var Board = require('./board');
 
 var BoardsListName = React.createClass({
   showBoard: function(boardName) {
@@ -15,7 +14,9 @@ var BoardsListName = React.createClass({
   render: function() {
     var context = this;
     var list = Object.keys(this.props.boards).map(function(item, index) {
-      return (<input key={index} type="button" onClick={context.showBoard.bind(null, item)} value={item}/>);
+      var temp = context.props.boards[item];
+      return (<input key={index} type="button"
+      onClick={context.showBoard.bind(null, item)} id={temp._id} value={temp.title}/>);
     });
     return (
       <div>
@@ -31,4 +32,7 @@ var mapStateToProps = function(state, props) {
   };
 };
 var Container = connect(mapStateToProps)(BoardsListName)
-module.exports = Container;
+module.exports = {
+  Container,
+  BoardsListName
+};

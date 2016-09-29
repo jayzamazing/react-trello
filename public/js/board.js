@@ -31,4 +31,7 @@ var mapStateToProps = function(state, props) {
   };
 };
 var Container = connect(mapStateToProps)(Board);
-module.exports = Container;
+module.exports = {
+  Container,
+  Board
+}

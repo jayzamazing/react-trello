@@ -8,69 +8,46 @@ var should = chai.should();
 var Board = require('../../../public/js/board');
 var List = require('../../../public/js/list');
 describe('Board component', function() {
-    var boards = [];
+    var boardItem = {};
     beforeEach((done) => {
-      boards =
-          [{
-              "_id": 1,
-              "title": "blah",
-              "cardsList": [{
-                  "_id": 1,
-                  "title": "something",
-                  "cards": [{
-                      "_id": 1,
-                      "text": "ummmm"
+      boardItem =
+          {   'board_name': 'super board',
+              
+              '_id': 1,
+              'title': 'blah',
+              'cardsList': [{
+                  '_id': 1,
+                  'title': 'something',
+                  'cards': [{
+                      '_id': 1,
+                      'text': 'ummmm'
                   }, {
-                      "_id": 2,
-                      "text": "food"
+                      '_id': 2,
+                      'text': 'food'
                   }]
               }, {
-                  "_id": 2,
-                  "title": "hungry",
-                  "cards": [{
-                      "_id": 3,
-                      "text": "special"
+                  '_id': 2,
+                  'title': 'hungry',
+                  'cards': [{
+                      '_id': 3,
+                      'text': 'special'
                   }, {
-                      "_id": 4,
-                      "text": "taco"
+                      '_id': 4,
+                      'text': 'taco'
                   }]
               }]
-          }, {
-              "_id": 2,
-              "title": "shopping list",
-              "cardsList": [{
-                  "_id": 3,
-                  "title": "groceries",
-                  "cards": [{
-                      "_id": 5,
-                      "text": "apple"
-                  }, {
-                      "_id": 6,
-                      "text": "pie"
-                  }]
-              }, {
-                  "_id": 4,
-                  "title": "clothes",
-                  "cards": [{
-                      "_id": 7,
-                      "text": "pants"
-                  }, {
-                      "_id": 8,
-                      "text": "shirt"
-                  }]
-              }]
-          }];
+          };
       done();
     });
     afterEach((done) => {
-      boardItem = [];
+      boardItem = {};
       done();
     });
     it('Renders the board item', function() {
         //create instance of render
         var renderer = TestUtils.createRenderer();
         //render an image component
-        renderer.render(<Board title={boardItem.title} cardsList={boardItem.cardsList} />);
+        renderer.render(<Board.Board title={boardItem.title} cardsList={boardItem.cardsList} />);
         // //get the rendered react component to test against
         // var board = renderer.getRenderOutput();
         // // console.log(result);
