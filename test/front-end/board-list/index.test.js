@@ -16,10 +16,6 @@ after(() => {
 });
 describe('List component', function() {
     it('Renders the list item', function() {
-      // var list = Object.keys(this.props.boards).map(function(item, index) {
-      //   return (<input key={index} type="button"
-      //   onClick={context.showBoard.bind(null, item)} id={item._id} value={item.title}/>);
-      // });
       //create instance of render
       var renderer = TestUtils.createRenderer();
       //render an image component
@@ -34,6 +30,6 @@ describe('List component', function() {
       board_list.children[0].type.should.shallowDeepEqual('input');
       var board_list_item = board_list.children[0].props;
       board_list_item.id.should.equal(boards[1]._id);
-      board_list_item.value.should.equal(boards[1].value);
+      board_list_item.value.should.equal(boards[1].title);
     });
   });

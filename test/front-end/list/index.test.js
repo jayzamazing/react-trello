@@ -9,7 +9,7 @@ var List = require('../../../public/js/list');
 describe('List component', function() {
     var listItem = {};
     before(() => {
-      var listItem = {
+      listItem = {
           _id: 1,
           boardId: 1,
           title: 'something',
@@ -41,6 +41,7 @@ describe('List component', function() {
         result.type.should.shallowDeepEqual(List.Lists);
         //get list prop
         var resultListItem = result.props;
+        //console.log(resultListItem);
         //check title is correct
         resultListItem.title.should.equal(listItem.title);
         //check cards match

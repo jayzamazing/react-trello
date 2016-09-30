@@ -8,15 +8,15 @@ var IndexRoute = router.IndexRoute;
 var Link = router.Link;
 
 var BoardsListName = React.createClass({
-  showBoard: function(boardName) {
-    hashHistory.push('/:' + boardName);
+  showBoard: function(boardId, boardName) {
+    hashHistory.push('/:' + boardId + '/:' + boardName);
   },
   render: function() {
     var context = this;
     var list = Object.keys(this.props.boards).map(function(item, index) {
       var temp = context.props.boards[item];
       return (<input key={index} type="button"
-      onClick={context.showBoard.bind(null, item)} id={temp._id} value={temp.title}/>);
+      onClick={context.showBoard.bind(null, temp._id, temp.title)} id={temp._id} value={temp.title}/>);
     });
     return (
       <div>
