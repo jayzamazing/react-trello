@@ -5,11 +5,11 @@ var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 var should = chai.should();
 
-var Board_List = require('../../../public/js/board-list');
+var BoardList = require('../../../public/js/board-list');
 var boards = {};
 before(() => {
   boards = { '1': { _id: 1, title: 'blah' },
-     '2': { _id: 2, title: 'shopping list' } }
+     '2': { _id: 2, title: 'shopping list' } };
 });
 after(() => {
   boards = {};
@@ -19,7 +19,7 @@ describe('List component', function() {
       //create instance of render
       var renderer = TestUtils.createRenderer();
       //render an image component
-      renderer.render(<Board_List.BoardsListName boards={boards}/>);
+      renderer.render(<BoardList.BoardsListName boards={boards}/>);
       //get the rendered react component to test against
       var result = renderer.getRenderOutput();
       //check class name is correct

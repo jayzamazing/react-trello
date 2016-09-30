@@ -63,7 +63,7 @@ var Board = function(props) {
             tempCards[item] = cards[item];
           }
         }
-        return (<List.Container title={elem.title} cards={tempCards} key={index}
+        return (<List.Container title={tempCardsList[elem].title} cards={tempCards} key={index}
           id={index} board={boardName}/>)
     });
     return (
@@ -77,6 +77,7 @@ var Board = function(props) {
         </div>
     );
 };
+//allows subcription to redux updates and access to data stored in redux store
 var mapStateToProps = function(state, props) {
   return {
     boards: state.boards,
@@ -84,6 +85,7 @@ var mapStateToProps = function(state, props) {
     cards: state.cards
   };
 };
+//connects component to redux store
 var Container = connect(mapStateToProps)(Board);
 module.exports = {
   Container,
