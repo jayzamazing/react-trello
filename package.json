@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "public/js/index.js",
   "keywords": [
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "chai-http": "^3.0.0",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
     "feathers": "^2.0.2",

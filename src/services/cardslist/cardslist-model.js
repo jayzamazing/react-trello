@@ -9,9 +9,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const cardslistSchema = new Schema({
-  _id: { type: Number, required: true },
+  // _id: { type: Number, required: true },
   title: { type: String, required: true },
-  cards: [{ type: Number, ref: 'card' }],
+  cards: [{ type: String, ref: 'card' }],
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });

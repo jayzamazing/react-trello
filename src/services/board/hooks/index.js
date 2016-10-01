@@ -18,9 +18,9 @@ exports.before = {
 };
 
 exports.after = {
-  all: [populateCardsList],
-  find: [],
-  get: [],
+  all: [],
+  find: [populateCardsList],
+  get: [populateCardsList],
   create: [],
   update: [],
   patch: [],
