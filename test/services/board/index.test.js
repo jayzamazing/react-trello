@@ -27,8 +27,6 @@ describe('board service', function() {
       Cards.create({
         'text': 'ummmm'
       }, (err, data) => {
-        console.error(err);
-        console.log(data);
         var temp = [];
         temp.push(data.id);
         CardsList.create({
@@ -37,14 +35,10 @@ describe('board service', function() {
         }, (err2, data2) => {
           var temp2 = [];
           temp2.push(data2);
-          console.error(err2);
-          console.log(data2);
           Board.create({
             title: 'blah',
             cardsList: [temp2]
-          }, (err3, data3) => {
-            console.error(err3);
-            console.log(data3);
+          }, () => {
             done();
           });
         });

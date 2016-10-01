@@ -1,6 +1,6 @@
 'use strict';
 
-const globalHooks = require('../../../hooks');
+// const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const populateCardsList = hooks.populate('cardsList', {
   service: 'cardsList',

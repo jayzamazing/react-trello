@@ -3,7 +3,7 @@ var React = require('react');
 var TestUtils = require('react-addons-test-utils');
 var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
-var should = chai.should();
+chai.should();
 
 var Board = require('../../../public/js/board');
 var List = require('../../../public/js/list');
@@ -84,7 +84,7 @@ describe('Board component', function() {
     params = {
       boardName: ':blah',
       boardId: ':1'
-    }
+    };
   });
   afterEach(() => {
     boardsList = {};
@@ -94,8 +94,7 @@ describe('Board component', function() {
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
-    renderer.render(<Board.Board params={params} boards={boardsList.boards}
-      cardsList={boardsList.cardsList} cards={boardsList.cards}/>);
+    renderer.render(<Board.Board params={params} boards={boardsList.boards} cardsList={boardsList.cardsList} cards={boardsList.cards}/>);
     //get the rendered react component to test against
     var board = renderer.getRenderOutput();
     // console.log(result);
@@ -109,7 +108,7 @@ describe('Board component', function() {
     h1_0.props.children.should.equal('blah');
     var board_list = board.props.children[1];
     board_list.type.should.equal('div');
-    board_list.props.className.should.equal('board-list')
+    board_list.props.className.should.equal('board-list');
     var listContainer = board_list.props.children[0];
     listContainer.type.should.shallowDeepEqual(List.Container);
     listContainer.props.title.should.equal('something');
