@@ -3,8 +3,7 @@
 // const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const populateCards = hooks.populate('cards', {
-  service: 'card',
-  field: '_id'
+  service: 'cards'
 });
 
 

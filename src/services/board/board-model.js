@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
 const boardSchema = new Schema({
   // _id: { type: Number, required: true },
   title: { type: String, required: true },
-  cardsList: [{ type: String, ref: 'cardslist' }],
+  cardsList: [{ type: Schema.Types.ObjectId, ref: 'cardslist' }],
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });

@@ -11,7 +11,7 @@ const Schema = mongoose.Schema;
 const cardslistSchema = new Schema({
   // _id: { type: Number, required: true },
   title: { type: String, required: true },
-  cards: [{ type: String, ref: 'card' }],
+  cards: [{ type: Schema.Types.ObjectId, ref: 'card' }],
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });
