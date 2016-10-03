@@ -69,11 +69,13 @@ describe('board service', function() {
   it('registered the boards service', () => {
     assert.ok(app.service('boards'));
   });
+  //check get request if all fields are filled
   it('should get the boards data', (done) => {
     //setup a request
     chai.request(app)
       //request to /boards
       .get('/boards')
+      //set headers
       .set('Accept', 'application/json')
       //when finished do the following
       .end((err, res) => {
@@ -89,6 +91,120 @@ describe('board service', function() {
         res.body.data[0].cardsList[0].cards.should.be.a('array');
         res.body.data[0].cardsList[0].cards[0].should.have.property('text');
         done();
+      });
+  });
+  //check post request
+  it('should post boards data', done => {
+    //setup a request
+    chai.request(app)
+    //post to /boards
+    .post('/boards')
+    //set headers
+    .set('Accept', 'application/json')
+    //send the following data
+    .send({
+      title: 'shopping list'
+    })
+    //when finished do the following
+    .end((err, res) => {
+      res.body.should.have.property('title');
+      res.body.title.should.equal('shopping list');
+      done();
+    });
+  });
+  //check update request
+  it('should update the boards data', function(done) {
+    chai.request(app)
+      //request to /boards
+      .get('/boards')
+      .set('Accept', 'application/json')
+      //when finished do the following
+      .end((err, res) => {
+        //setup a request
+        chai.request(app)
+          //request to /boards
+          .put('/boards/' + res.body.data[0]._id)
+          .set('Accept', 'application/json')
+          //attach data to request
+          .send({
+            title: 'shopping list'
+          })
+          //when finished do the following
+          .end(function(err, res) {
+            //check server response
+            res.status.should.equal(200);
+            //check expected results
+            res.body.should.have.property('title');
+            res.body.title.should.equal('shopping list');
+            //ensure that cardslist is empty
+            res.body.should.have.property('cardsList')
+            .to.include.members([]);;
+            done();
+          });
+      });
+  });
+  //check patch request
+  it('should patch the boards data', function(done) {
+    chai.request(app)
+      //request to /boards
+      .get('/boards')
+      .set('Accept', 'application/json')
+      //when finished do the following
+      .end((err, res) => {
+        //setup a request
+        chai.request(app)
+          //request to /boards
+          .patch('/boards/' + res.body.data[0]._id)
+          .set('Accept', 'application/json')
+          //attach data to request
+          .send({
+            title: 'shopping list'
+          })
+          //when finished do the following
+          .end(function(err, res) {
+            //check server response
+            res.status.should.equal(200);
+            //check expected results
+            res.body.should.have.property('title');
+            res.body.title.should.equal('shopping list');
+            res.body.should.have.property('cardsList');
+            res.body.cardsList.should.be.a('array');
+            res.body.cardsList[0].should.have.property('title');
+            res.body.cardsList[0].should.have.property('cards');
+            res.body.cardsList[0].cards.should.be.a('array');
+            res.body.cardsList[0].cards[0].should.have.property('text');
+            done();
+          });
+      });
+  });
+  //check delete request
+  it('should delete the guest data', function(done) {
+    chai.request(app)
+      //request to /boards
+      .get('/boards')
+      .set('Accept', 'application/json')
+      //when finished do the following
+      .end((err, res) => {
+        //setup a request
+        chai.request(app)
+          //request to /boards
+          .delete('/boards/' + res.body.data[0]._id)
+          .set('Accept', 'application/json')
+          //when finished do the following
+          .end(function(err, res) {
+            //check server response
+            res.status.should.equal(200);
+            //check expected results
+            res.body.should.have.property('title');
+            res.body.title.should.equal('blah');
+            res.body.should.have.property('cardsList');
+            res.body.cardsList.should.be.a('array');
+            res.body.cardsList[0].should.have.property('title');
+            res.body.cardsList[0].should.have.property('cards');
+            res.body.cardsList[0].cards.should.be.a('array');
+            res.body.cardsList[0].cards[0].should.have.property('text');
+            done();
+          });
       });
   });
 });
