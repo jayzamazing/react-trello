@@ -22,7 +22,7 @@ exports.after = {
   find: [populateCards],
   get: [populateCards],
   create: [],
-  update: [],
-  patch: [],
-  remove: []
+  update: [populateCards],
+  patch: [populateCards],
+  remove: [populateCards]
 };

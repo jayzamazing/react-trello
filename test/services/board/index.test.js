@@ -87,9 +87,11 @@ describe('board service', function() {
         res.body.data[0].should.have.property('cardsList');
         res.body.data[0].cardsList.should.be.a('array');
         res.body.data[0].cardsList[0].should.have.property('title');
+        res.body.data[0].cardsList[0].title.should.equal('something');
         res.body.data[0].cardsList[0].should.have.property('cards');
         res.body.data[0].cardsList[0].cards.should.be.a('array');
         res.body.data[0].cardsList[0].cards[0].should.have.property('text');
+        res.body.data[0].cardsList[0].cards[0].text.should.equal('ummmm');
         done();
       });
   });
@@ -138,7 +140,7 @@ describe('board service', function() {
             res.body.title.should.equal('shopping list');
             //ensure that cardslist is empty
             res.body.should.have.property('cardsList')
-            .to.include.members([]);;
+            .to.include.members([]);
             done();
           });
       });
@@ -173,6 +175,7 @@ describe('board service', function() {
             res.body.cardsList[0].should.have.property('cards');
             res.body.cardsList[0].cards.should.be.a('array');
             res.body.cardsList[0].cards[0].should.have.property('text');
+            res.body.cardsList[0].cards[0].text.should.equal('ummmm');
             done();
           });
       });
@@ -200,9 +203,11 @@ describe('board service', function() {
             res.body.should.have.property('cardsList');
             res.body.cardsList.should.be.a('array');
             res.body.cardsList[0].should.have.property('title');
+            res.body.cardsList[0].title.should.equal('something');
             res.body.cardsList[0].should.have.property('cards');
             res.body.cardsList[0].cards.should.be.a('array');
             res.body.cardsList[0].cards[0].should.have.property('text');
+            res.body.cardsList[0].cards[0].text.should.equal('ummmm');
             done();
           });
       });
