@@ -1,4 +1,6 @@
 var React = require('react');
+var connect = require('react-redux').connect;
+var actions = require('./actions');
 //function to render text
 var Card = function(props) {
     return (
@@ -41,7 +43,7 @@ var Lists = function(props) {
               {cards}
             <Form className="list-form" onSubmit={handleSubmit}>
               <Input onChange={props.onChange} />
-              <Submit onClick={props.onClick} />
+              <Submit onClick={props.onClick.bind(null, props.boardId, props.id )} />
             </Form>
           </ListItem>
       </List>
@@ -49,28 +51,22 @@ var Lists = function(props) {
   };
 //component to store list of cards and text
 var ListContainer = React.createClass({
-  getInitialState: function() {
-    return {
-      text: '',
-      cards: this.props.cards//anti-pattern, remove later
-    }
-  },
   onAddInputChanged: function(event) {
     this.setState({text: event.target.value});
   },
-  onAddSubmit: function() {
-    var temp = this.state.cards;
-    temp.push({text: this.state.text});
-    this.setState({cards: temp});
+  onAddSubmit: function(title, id) {
+    this.props.dispatch(actions.addBoardCardListItem(title, id, this.state.text));
   },
   render: function() {
     return (
-      <Lists title={this.props.title} cards={this.state.cards}
-        onClick={this.onAddSubmit} onChange={this.onAddInputChanged}/>
+      <Lists title={this.props.title} cards={this.props.cards}
+        onClick={this.onAddSubmit} onChange={this.onAddInputChanged} id={this.props.id} boardId={this.props.boardId}/>
     );
   }
 });
+var Container = connect()(ListContainer);
 module.exports = {
+  Container,
   ListContainer,
   Lists
 };
