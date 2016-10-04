@@ -3,13 +3,13 @@ var connect = require('react-redux').connect;
 var actions = require('./actions');
 //function to render text
 var Card = function(props) {
-    return (
-        <List>
-            <ListItem>
-                {props.text}
-            </ListItem>
-        </List>
-    );
+  return (
+    <List>
+      <ListItem>
+        {props.text}
+      </ListItem>
+    </List>
+  );
 };
 //function to create an input component
 var Input = function(props) {
@@ -20,35 +20,35 @@ var Submit = function(props) {
   return <input type="submit" onClick={props.onClick}></input>;
 };
 var Form = function(props) {
-  return <form className={props.className} onSubmit={props.onSubmit}>{props.children}</form>
+  return <form className={props.className} onSubmit={props.onSubmit}>{props.children}</form>;
 };
 var List = function(props) {
-  return <ul>{props.children}</ul>
+  return <ul>{props.children}</ul>;
 };
 var ListItem = function(props) {
-  return <li>{props.children}</li>
+  return <li>{props.children}</li>;
 };
 //function to render multiple cards
 var Lists = function(props) {
-    var handleSubmit = function(e) {
-      e.preventDefault();
-    };
-    var cards = props.cards.map((elem, index) => {
-        return (<Card key={index} text={elem.text}/>)
-    });
-    return (
-      <List>
-          <ListItem>
-            <h3>{props.title}</h3>
-              {cards}
-            <Form className="list-form" onSubmit={handleSubmit}>
-              <Input onChange={props.onChange} />
-              <Submit onClick={props.onClick.bind(null, props.boardId, props.id )} />
-            </Form>
-          </ListItem>
-      </List>
-    );
+  var handleSubmit = function(e) {
+    e.preventDefault();
   };
+  var cards = props.cards.map((elem, index) => {
+    return (<Card key={index} text={elem.text}/>);
+  });
+  return (
+    <List>
+      <ListItem>
+        <h3>{props.title}</h3>
+        {cards}
+        <Form className="list-form" onSubmit={handleSubmit}>
+          <Input onChange={props.onChange}/>
+          <Submit onClick={props.onClick.bind(null, props.boardId, props.id)}/>
+        </Form>
+      </ListItem>
+    </List>
+  );
+};
 //component to store list of cards and text
 var ListContainer = React.createClass({
   onAddInputChanged: function(event) {
@@ -58,10 +58,7 @@ var ListContainer = React.createClass({
     this.props.dispatch(actions.addBoardCardListItem(title, id, this.state.text));
   },
   render: function() {
-    return (
-      <Lists title={this.props.title} cards={this.props.cards}
-        onClick={this.onAddSubmit} onChange={this.onAddInputChanged} id={this.props.id} boardId={this.props.boardId}/>
-    );
+    return (<Lists title={this.props.title} cards={this.props.cards} onClick={this.onAddSubmit} onChange={this.onAddInputChanged} id={this.props.id} boardId={this.props.boardId}/>);
   }
 });
 var Container = connect()(ListContainer);

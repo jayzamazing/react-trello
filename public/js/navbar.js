@@ -1,6 +1,5 @@
 var React = require('react');
 var router = require('react-router');
-var Router = router.Router;
 var hashHistory = router.hashHistory;
 var NavBarContainer = React.createClass({
   showBoards: function() {

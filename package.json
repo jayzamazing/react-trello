@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "public/js/index.js",
   "keywords": [
@@ -30,7 +30,7 @@
     "build": "npm run clean && npm run mkdir && npm run build:html && npm run build:css && npm run build:js",
     "watch": "npm run watch:html & npm run watch:css & npm run watch:js",
     "clean": "rm -rf build",
-    "build:html": "npm run clean:html && cp public/index.html build/",
+    "build:html": "npm run clean:html && cp public/index.html build/ && cp public/favicon.ico build/",
     "watch:html": "npm run build:html && chokidar public/index.html -c 'npm run build:html'",
     "clean:html": "rm -f build/index.html",
     "build:css": "npm run build:css:unminified && npm run build:css:minified",

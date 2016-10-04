@@ -12,12 +12,12 @@ var Board = require('./board');
 var store = require('./store');
 //render the data onto div with id app
 document.addEventListener('DOMContentLoaded', function() {
-    ReactDOM.render(
+  ReactDOM.render(
       <Provider store={store}>
           <Router history={hashHistory}>
             <Route path='/' component={NavBar}>
-              <IndexRoute component={Board_List} />
-              <Route path='/:boardId:boardName' component={Board} />
+              <IndexRoute component={Board_List.Container} />
+              <Route path='/:boardId:boardName' component={Board.Container} />
             </Route>
           </Router>
       </Provider>,
