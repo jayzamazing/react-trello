@@ -8,7 +8,7 @@ var NavBarContainer = React.createClass({
   render: function() {
     return (
       <nav className="navBar">
-        <input type="button" onClick={this.showBoards} value="Boards"/>
+        <input type="button" onClick={this.showBoards} value="&#xf181; Boards"/>
       </nav>
     );
   }
