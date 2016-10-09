@@ -3,10 +3,17 @@ var connect = require('react-redux').connect;
 var router = require('react-router');
 var hashHistory = router.hashHistory;
 var CreateBoard = require('./create-board');
+var actions = require('./actions');
 
 var BoardsListName = React.createClass({
   getInitialState: function() {
     return {showCreateBoard: false};
+  },
+  componentDidMount() {
+    this.props.dispatch(
+      //dispatch query boards
+      actions.queryBoards('boards', 'FIND', {}, 'find boards')
+    );
   },
   showCreateBoard: function() {
     this.setState({showCreateBoard: true});
