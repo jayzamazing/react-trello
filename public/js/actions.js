@@ -11,6 +11,14 @@ host = 'http://localhost:3030';
 app = feathers()
   .configure(rest(host).superagent(superagent))
   .configure(hooks());
+
+var FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
+var findBoardsSuccess = function(data) {
+  return {
+    type: FIND_BOARDS_SUCCESS,
+    boards: data
+  };
+};
 /*
  * Should be able to add a board to list of boards
  */
@@ -62,9 +70,7 @@ var queryBoards = function(service, method, postData, type, updateItem) {
     //call services to make services rest call
     return services(service, method, postData, updateItem)
         //get the data
-        .then((res) => res.body)
-        //pass the data to action dispatch
-        .then(json => dispatch(types(type, json, dispatch)));
+        .then(res => dispatch(types(type, res.data, dispatch)));
 
   };
 };
@@ -83,7 +89,8 @@ var types = function(type, json, dispatch) {
     return dispatch(queryBoards('cardslist', 'PUT', json, 'create cardslist2'));
   case 'create cardslist2':
     return dispatch(createCardSuccess(json));
-
+  case 'find boards':
+    return dispatch(findBoardsSuccess(json));
   }
 };
   /*
@@ -120,3 +127,5 @@ exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
 exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
 exports.createCardSuccess = createCardSuccess;
+exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
+exports.findBoardsSuccess = findBoardsSuccess;
