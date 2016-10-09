@@ -9,4 +9,4 @@ addons:
     packages:
     - mongodb-org-server
 before_script:
-  - npm run postinstall
+  - npm run build
