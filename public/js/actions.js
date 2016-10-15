@@ -44,7 +44,7 @@ var createBoardSuccess = function(data) {
   boards[boards] = data;
   return {
     type: 'CREATE_BOARD_SUCCESS',
-    boards: data
+    boards: boards
   };
 };
 var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
@@ -70,7 +70,16 @@ var queryBoards = function(service, method, postData, type, updateItem) {
     //call services to make services rest call
     return services(service, method, postData, updateItem)
         //get the data
-        .then(res => dispatch(types(type, res.data, dispatch)));
+        .then(res =>
+          {
+            if (res.data) {
+              dispatch(types(type, res.data, dispatch));
+            } else {
+              dispatch(types(type, res, dispatch));
+            }
+
+          }
+      );
 
   };
 };
@@ -84,13 +93,13 @@ var queryBoards = function(service, method, postData, type, updateItem) {
 var types = function(type, json, dispatch) {
   switch (type) {
   case 'create board':
-    return dispatch(createBoardSuccess(json));
+    return createBoardSuccess(json);
   case 'create cardslist':
-    return dispatch(queryBoards('cardslist', 'PUT', json, 'create cardslist2'));
+    return queryBoards('cardslist', 'PUT', json, 'create cardslist2');
   case 'create cardslist2':
-    return dispatch(createCardSuccess(json));
+    return createCardSuccess(json);
   case 'find boards':
-    return dispatch(findBoardsSuccess(json));
+    return findBoardsSuccess(json);
   }
 };
   /*

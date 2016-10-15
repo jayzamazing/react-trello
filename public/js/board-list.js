@@ -9,6 +9,18 @@ var BoardsListName = React.createClass({
   getInitialState: function() {
     return {showCreateBoard: false};
   },
+  //keep track of text
+  onAddInputChanged: function(event) {
+    this.setState({board: event.target.value});
+  },
+  //function to add a new board by dispatching post request
+  addBoard: function() {
+    this.props.dispatch(
+      //dispatch query boards
+      actions.queryBoards('boards', 'POST', {title: this.state.board}, 'create board')
+    );
+    this.setState({showCreateBoard: false});
+  },
   componentDidMount() {
     this.props.dispatch(
       //dispatch query boards
@@ -35,7 +47,8 @@ var BoardsListName = React.createClass({
       <div>
         {list}
         <input type="button" value="Add Board" onClick={this.showCreateBoard}/>
-        {this.state.showCreateBoard ? <CreateBoard.Container /> : null}
+        {this.state.showCreateBoard ? <CreateBoard.Container
+          onAddInputChanged={this.onAddInputChanged} addBoard={this.addBoard}/> : null}
       </div>
     );
   }
