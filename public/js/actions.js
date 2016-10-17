@@ -90,7 +90,7 @@ var queryBoards = function(service, method, postData, type, updateItem) {
    * @params dispatch - action to dispatch
    * @return action to dispatch
    */
-var types = function(type, json, dispatch) {
+var types = function(type, json) {
   switch (type) {
   case 'create board':
     return createBoardSuccess(json);
