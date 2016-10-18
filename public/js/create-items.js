@@ -1,7 +1,7 @@
 var React = require('react');
 var connect = require('react-redux').connect;
 
-var CreateBoard = React.createClass({
+var CreateItems = React.createClass({
   //ignore form submit and use button
   handleSubmit: function(event) {
     event.preventDefault();
@@ -10,13 +10,13 @@ var CreateBoard = React.createClass({
     return (
       <form className="list-form" onSubmit={this.handleSubmit}>
         <input type="text" onChange={this.props.onAddInputChanged}/>
-        <input type="button" value="Submit" onClick={this.props.addBoard}/>
+        <input type="button" value="Submit" onClick={this.props.addItems}/>
       </form>
     );
   }
 });
-var Container = connect()(CreateBoard);
+var Container = connect()(CreateItems);
 module.exports = {
   Container,
-  CreateBoard
+  CreateItems
 };

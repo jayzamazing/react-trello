@@ -2,7 +2,7 @@ var React = require('react');
 var connect = require('react-redux').connect;
 var router = require('react-router');
 var hashHistory = router.hashHistory;
-var CreateBoard = require('./create-board');
+var CreateItems = require('./create-items');
 var actions = require('./actions');
 
 var BoardsListName = React.createClass({
@@ -47,8 +47,8 @@ var BoardsListName = React.createClass({
       <div>
         {list}
         <input type="button" value="Add Board" onClick={this.showCreateBoard}/>
-        {this.state.showCreateBoard ? <CreateBoard.Container
-          onAddInputChanged={this.onAddInputChanged} addBoard={this.addBoard}/> : null}
+        {this.state.showCreateBoard ? <CreateItems.Container
+          onAddInputChanged={this.onAddInputChanged} addItems={this.addBoard}/> : null}
       </div>
     );
   }
