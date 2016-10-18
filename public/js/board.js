@@ -7,7 +7,7 @@ var Board = function(props) {
   if (props.boards) {
     //remove : from variable due to routing
     var boardName = props.params.boardName.replace(':', '');
-    var boardId = parseInt(props.params.boardId.replace(':', ''));
+    var boardId = props.params.boardId.replace(':', '');
     //iterate over props.boards and get the item that matches the boardid
     var board = props.boards[Object.keys(props.boards).find(item => {
         //if the id of props.boards matches boardid

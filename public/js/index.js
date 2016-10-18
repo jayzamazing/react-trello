@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <Router history={hashHistory}>
             <Route path='/' component={NavBar}>
               <IndexRoute component={Board_List.Container} />
-              <Route path='/:boardId:boardName' component={Board.Container} />
+              <Route path='/:boardId/:boardName' component={Board.Container} />
             </Route>
           </Router>
       </Provider>,
