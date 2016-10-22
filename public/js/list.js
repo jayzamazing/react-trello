@@ -33,9 +33,12 @@ var Lists = function(props) {
   var handleSubmit = function(e) {
     e.preventDefault();
   };
-  var cards = props.cards.map((elem, index) => {
-    return (<Card key={index} text={elem.text}/>);
-  });
+  if (props.cards.length) {
+    var cards = props.cards.map((elem, index) => {
+      return (<Card key={index} text={elem.text}/>);
+    });
+  }
+
   return (
     <List>
       <ListItem>

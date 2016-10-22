@@ -41,7 +41,7 @@ var boardDeserialization = function(data) {
 var CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
 var createBoardSuccess = function(data) {
   var boards = {};
-  boards[boards] = data;
+  boards.boards = data;
   return {
     type: 'CREATE_BOARD_SUCCESS',
     boards: boards
@@ -49,11 +49,11 @@ var createBoardSuccess = function(data) {
 };
 var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
 var createCardSuccess = function(data) {
-  return function() {
-    return {
-      type: 'CREATE_CARD_SUCCESS',
-      boards: data
-    };
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'CREATE_CARD_SUCCESS',
+    boards: boards
   };
 };
   /*
@@ -65,24 +65,56 @@ var createCardSuccess = function(data) {
    * @params updateItem - id of specific item to update
    * @return promise dispatch function based on type of query
    */
-var queryBoards = function(service, method, postData, type, updateItem) {
-  return function(dispatch) {
-    //call services to make services rest call
-    return services(service, method, postData, updateItem)
-        //get the data
-        .then(res =>
-          {
-            if (res.data) {
-              dispatch(types(type, res.data, dispatch));
-            } else {
-              dispatch(types(type, res, dispatch));
-            }
-
-          }
-      );
-
-  };
+var queries = function(service, method, postData, type, updateItem) {
+ return function(dispatch) {
+   if (service === 'boards') {
+     return queryBoards(method, postData, type, updateItem)
+     .then(res =>
+       {
+         dispatch(types(type, res, dispatch));
+       });
+     } else if (service === 'cardslists') {
+       return queryCardsLists(method, postData, type, updateItem)
+       .then(res => {
+         dispatch(types(type, res, dispatch));
+       });
+   }
+ }
+}
+var queryBoards = function(method, postData, type, updateItem) {
+  return new Promise((resolve, reject) => {
+    services('boards', method, postData, updateItem)
+    .then(res => {
+      resolve(res.data || res);
+    });
+  });
+  // return function(dispatch) {
+  //   //call services to make services rest call
+  //   return services('boards', method, postData, updateItem)
+  //       //get the data
+  //       .then(res =>
+  //         {
+  //           var data = res || res.data;
+  //           dispatch(types(type, data, dispatch));
+  //         }
+  //     );
+  // };
 };
+var queryCardsLists = function(method, postData, type, updateItem) {
+  return new Promise((resolve, reject) => {
+    //call services to make services rest call
+    services('cardslists', method, postData, updateItem)
+    //get the data
+    .then(res => {
+      if (method === 'POST') {
+        services('boards', 'PATCH', { '$push': { 'cardsList': res._id } }, updateItem)
+        .then(res2 => {
+          resolve(res2);
+        });
+      }
+    });
+  });
+}
   /*
    * Function to determine which action to dispatch next based on type
    * @params type - type of request
@@ -95,8 +127,6 @@ var types = function(type, json) {
   case 'create board':
     return createBoardSuccess(json);
   case 'create cardslist':
-    return queryBoards('cardslist', 'PUT', json, 'create cardslist2');
-  case 'create cardslist2':
     return createCardSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
@@ -131,7 +161,7 @@ exports.ADD_BOARD_CARDLIST_ITEM = ADD_BOARD_CARDLIST_ITEM;
 exports.addBoardCardListItem = addBoardCardListItem;
 exports.BOARD_DESERIALIZATION = BOARD_DESERIALIZATION;
 exports.boardDeserialization = boardDeserialization;
-exports.queryBoards = queryBoards;
+exports.queries = queries;
 exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
 exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;

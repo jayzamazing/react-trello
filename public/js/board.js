@@ -19,7 +19,7 @@ var Board = React.createClass({
   addCardsList: function() {
     this.props.dispatch(
       //dispatch query boards
-      actions.queryBoards('cardslists', 'POST', {title: this.state.cardsList}, 'create cardslist')
+      actions.queries('cardslists', 'POST', {title: this.state.cardsList}, 'create cardslist', this.props.params.boardId.replace(':', ''))
     );
     this.setState({showCreateCardsList: false});
   },

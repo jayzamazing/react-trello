@@ -17,14 +17,14 @@ var BoardsListName = React.createClass({
   addBoard: function() {
     this.props.dispatch(
       //dispatch query boards
-      actions.queryBoards('boards', 'POST', {title: this.state.board}, 'create board')
+      actions.queries('boards', 'POST', {title: this.state.board}, 'create board')
     );
     this.setState({showCreateBoard: false});
   },
   componentDidMount() {
     this.props.dispatch(
       //dispatch query boards
-      actions.queryBoards('boards', 'FIND', {}, 'find boards')
+      actions.queries('boards', 'FIND', {}, 'find boards')
     );
   },
   showCreateBoard: function() {

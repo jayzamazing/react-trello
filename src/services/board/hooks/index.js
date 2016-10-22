@@ -21,7 +21,7 @@ exports.after = {
   find: [populateCardsList],
   get: [populateCardsList],
   create: [],
-  update: [populateCardsList],
+  update: [],
   patch: [populateCardsList],
-  remove: [populateCardsList]
+  remove: []
 };
