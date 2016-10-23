@@ -46,7 +46,7 @@ function trelloReducer(state, action) {
     return deserialize(state, action);
     //reducer for adding a b
   } else if (action.type === actions.CREATE_BOARD_SUCCESS ||
-    action.type === actions.CREATE_CARD_SUCCESS) {
+    action.type === actions.CREATE_CARDLIST_SUCCESS) {
     return createBoard(state, action);
   } else {
     return state;

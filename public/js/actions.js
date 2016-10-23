@@ -47,12 +47,12 @@ var createBoardSuccess = function(data) {
     boards: boards
   };
 };
-var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
-var createCardSuccess = function(data) {
+var CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
+var createCardListSuccess = function(data) {
   var boards = {};
   boards.boards = data;
   return {
-    type: 'CREATE_CARD_SUCCESS',
+    type: 'CREATE_CARDLIST_SUCCESS',
     boards: boards
   };
 };
@@ -127,7 +127,7 @@ var types = function(type, json) {
   case 'create board':
     return createBoardSuccess(json);
   case 'create cardslist':
-    return createCardSuccess(json);
+    return createCardListSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
   }
@@ -164,7 +164,7 @@ exports.boardDeserialization = boardDeserialization;
 exports.queries = queries;
 exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
-exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
-exports.createCardSuccess = createCardSuccess;
+exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
+exports.createCardListSuccess = createCardListSuccess;
 exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
 exports.findBoardsSuccess = findBoardsSuccess;
