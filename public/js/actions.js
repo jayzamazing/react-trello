@@ -19,18 +19,6 @@ var findBoardsSuccess = function(data) {
     boards: data
   };
 };
-/*
- * Should be able to add a board to list of boards
- */
-var ADD_BOARD_CARDLIST_ITEM = 'ADD_BOARD_CARDLIST_ITEM';
-var addBoardCardListItem = function(boardName, id, itemName) {
-  return {
-    type: ADD_BOARD_CARDLIST_ITEM,
-    board: boardName,
-    id: id,
-    item: itemName
-  };
-};
 var BOARD_DESERIALIZATION = 'BOARD_DESERIALIZATION';
 var boardDeserialization = function(data) {
   return {
@@ -56,6 +44,15 @@ var createCardListSuccess = function(data) {
     boards: boards
   };
 };
+var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
+var createCardSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'CREATE_CARD_SUCCESS',
+    boards: boards
+  };
+};
   /*
    * Function to deal with queries to mongo and calling actions
    * @params method - either PUT, GET, DELETE, FIND, POST, PATCH
@@ -65,7 +62,7 @@ var createCardListSuccess = function(data) {
    * @params updateItem - id of specific item to update
    * @return promise dispatch function based on type of query
    */
-var queries = function(service, method, postData, type, updateItem) {
+var queries = function(service, method, postData, type, updateItem, updateItem2) {
  return function(dispatch) {
    if (service === 'boards') {
      return queryBoards(method, postData, type, updateItem)
@@ -78,7 +75,12 @@ var queries = function(service, method, postData, type, updateItem) {
        .then(res => {
          dispatch(types(type, res, dispatch));
        });
-   }
+     } else if (service === 'cards') {
+       return queryCards(method, postData, type, updateItem, updateItem2)
+       .then(res => {
+         dispatch(types(type, res, dispatch));
+       });
+     }
  }
 }
 var queryBoards = function(method, postData, type, updateItem) {
@@ -88,28 +90,35 @@ var queryBoards = function(method, postData, type, updateItem) {
       resolve(res.data || res);
     });
   });
-  // return function(dispatch) {
-  //   //call services to make services rest call
-  //   return services('boards', method, postData, updateItem)
-  //       //get the data
-  //       .then(res =>
-  //         {
-  //           var data = res || res.data;
-  //           dispatch(types(type, data, dispatch));
-  //         }
-  //     );
-  // };
 };
-var queryCardsLists = function(method, postData, type, updateItem) {
+var queryCardsLists = function(method, postData, type, updateBoard) {
   return new Promise((resolve, reject) => {
-    //call services to make services rest call
-    services('cardslists', method, postData, updateItem)
+    //call services to make rest call
+    services('cardslists', method, postData, updateBoard)
     //get the data
     .then(res => {
       if (method === 'POST') {
-        services('boards', 'PATCH', { '$push': { 'cardsList': res._id } }, updateItem)
+        services('boards', 'PATCH', { '$push': { 'cardsList': res._id } }, updateBoard)
         .then(res2 => {
           resolve(res2);
+        });
+      }
+    });
+  });
+}
+var queryCards = function(method, postData, type, updateCardslists, updateBoard) {
+  return new Promise((resolve, reject) => {
+    //call services to make rest call
+    services('cards', method, postData, type, updateCardslists)
+    //get the data
+    .then(res => {
+      if (method === 'POST') {
+        services('cardslists', 'PATCH', { '$push': {'cards': res._id } }, updateCardslists)
+        .then(res2 => {
+          services('boards', 'GET', updateBoard)
+          .then(res3 => {
+            resolve(res3.data || res3);
+          });
         });
       }
     });
@@ -130,6 +139,8 @@ var types = function(type, json) {
     return createCardListSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
+  case 'create cards':
+    return createCardSuccess(json);
   }
 };
   /*
@@ -157,8 +168,6 @@ var services = function(service, method, postData, updateItem) {
     return app.service(service).patch(updateItem, postData);
   }
 };
-exports.ADD_BOARD_CARDLIST_ITEM = ADD_BOARD_CARDLIST_ITEM;
-exports.addBoardCardListItem = addBoardCardListItem;
 exports.BOARD_DESERIALIZATION = BOARD_DESERIALIZATION;
 exports.boardDeserialization = boardDeserialization;
 exports.queries = queries;
@@ -166,5 +175,7 @@ exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
 exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
 exports.createCardListSuccess = createCardListSuccess;
+exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
+exports.createCardSuccess = createCardSuccess;
 exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
 exports.findBoardsSuccess = findBoardsSuccess;
