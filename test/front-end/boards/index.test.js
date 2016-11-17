@@ -5,7 +5,7 @@ var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 chai.should();
 
-var BoardList = require('../../../public/js/board-list');
+var Boards = require('../../../public/js/boards');
 var boards = {};
 before(() => {
   boards = {
@@ -27,7 +27,7 @@ describe('List component', function() {
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
-    renderer.render(<BoardList.BoardsListName boards={boards}/>);
+    renderer.render(<Boards.BoardsListName boards={boards}/>);
     //get the rendered react component to test against
     var result = renderer.getRenderOutput();
     //check class name is correct
