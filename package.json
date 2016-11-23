@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "1.5.5",
+  "version": "1.6.5",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "public/js/index.js",
   "keywords": [
@@ -92,6 +92,7 @@
     "chokidar-cli": "^1.2.0",
     "eslint": "^3.7.0",
     "eslint-plugin-react": "^6.3.0",
+    "jsdom": "^9.8.3",
     "less": "^2.7.1",
     "less-plugin-clean-css": "^1.5.1",
     "mocha": "^3.0.2",
