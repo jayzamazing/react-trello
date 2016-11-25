@@ -5,8 +5,8 @@ var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 chai.should();
 
-var Board = require('../../../public/js/board');
-var List = require('../../../public/js/list');
+var Cardslist = require('../../../public/js/cardslist');
+var Cards = require('../../../public/js/cards');
 describe('Board component', function() {
   var boardsList = {},
     params = {};
@@ -46,40 +46,6 @@ describe('Board component', function() {
           cards: [7, 8]
         }
       },
-      cards: {
-        '1': {
-          _id: 1,
-          text: 'ummmm'
-        },
-        '2': {
-          _id: 2,
-          text: 'food'
-        },
-        '3': {
-          _id: 3,
-          text: 'special'
-        },
-        '4': {
-          _id: 4,
-          text: 'taco'
-        },
-        '5': {
-          _id: 5,
-          text: 'apple'
-        },
-        '6': {
-          _id: 6,
-          text: 'pie'
-        },
-        '7': {
-          _id: 7,
-          text: 'pants'
-        },
-        '8': {
-          _id: 8,
-          text: 'shirt'
-        }
-      }
     };
     params = {
       boardName: ':blah',
@@ -90,11 +56,11 @@ describe('Board component', function() {
     boardsList = {};
     params = {};
   });
-  it('Renders the board item', function() {
+  it('Renders the cardslist item', function() {
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
-    renderer.render(<Board.Board params={params} boards={boardsList.boards} cardsList={boardsList.cardsList} cards={boardsList.cards}/>);
+    renderer.render(<Cardslist.CardsListName params={params} boards={boardsList.boards} cardsList={boardsList.cardsList}/>);
     //get the rendered react component to test against
     var board = renderer.getRenderOutput();
     // console.log(result);
@@ -106,12 +72,10 @@ describe('Board component', function() {
     var h1_0 = board_name.props.children;
     h1_0.type.should.equal('h1');
     h1_0.props.children.should.equal('blah');
-    var board_list = board.props.children[1];
-    board_list.type.should.equal('div');
-    board_list.props.className.should.equal('board-list');
-    var listContainer = board_list.props.children[0];
-    listContainer.type.should.shallowDeepEqual(List.Container);
-    listContainer.props.title.should.equal('something');
-    listContainer.props.cards[1].text.should.equal('ummmm');
+    var cardslist = board.props.children[1];
+    cardslist.type.should.equal('div');
+    cardslist.props.className.should.equal('board-list');
+    var cards = cardslist.props.children[0];
+    cards.type.should.equal('ul');
   });
 });

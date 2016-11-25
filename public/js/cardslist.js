@@ -4,7 +4,7 @@ var connect = require('react-redux').connect;
 var actions = require('./actions');
 var CreateItems = require('./create-items');
 //function to render multiple lists of cards
-var Board = React.createClass({
+var CardsListName = React.createClass({
   getInitialState: function() {
     return {showCreateCardsList: false};
   },
@@ -31,7 +31,7 @@ var Board = React.createClass({
       //iterate over props.boards and get the item that matches the boardid
       var board = this.props.boards[Object.keys(this.props.boards).find(item => {
           //if the id of props.boards matches boardid
-        return this.props.boards[item]._id === boardId;
+        return this.props.boards[item]._id === parseInt(boardId);
       })];
       var cardsList = Object.keys(this.props.cardsList).map((item, index) => {
         if (board.cardsList.includes(item)) {
@@ -71,8 +71,8 @@ var mapStateToProps = function(state) {
   };
 };
 //connects component to redux store
-var Container = connect(mapStateToProps)(Board);
+var Container = connect(mapStateToProps)(CardsListName);
 module.exports = {
   Container,
-  Board
+  CardsListName
 };

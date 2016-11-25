@@ -32,7 +32,7 @@ describe('Boards component', () => {
     nock('http://localhost:3030')
       .get('/boards')
       //send back reply to request
-      .reply((uri, requestBody) => {
+      .reply(() => {
         //return response
         return [
           200, {

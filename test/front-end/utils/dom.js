@@ -11,13 +11,13 @@ global.window = window;
 let propagateToGlobal = (window) => {
   for (let key in window) {
     if (!window.hasOwnProperty(key)) {
-      continue
-    };
+      continue;
+    }
     if (key in global) {
-      continue
-    };
+      continue;
+    }
     global[key] = window[key];
   }
-}
+};
 //pass properties of the window object to the global
 propagateToGlobal(window);
