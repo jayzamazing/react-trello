@@ -4,9 +4,9 @@ var chai = require('chai');
 chai.use(require('chai-shallow-deep-equal'));
 chai.should();
 
-var List = require('../../../public/js/list');
+var Cards = require('../../../public/js/cards');
 
-describe('List component', function() {
+describe('Cards component', function() {
   var listItem = {};
   before(() => {
     listItem = {
@@ -52,17 +52,17 @@ describe('List component', function() {
   after(() => {
     listItem = {};
   });
-  it('Renders the list item', function() {
+  it('Renders the Cards item', function() {
 
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
-    renderer.render(<List.ListContainer title={listItem.title} cards={listItem.cards} id={listItem._id} boardId={listItem.boardId}/>);
+    renderer.render(<Cards.ListContainer title={listItem.title} cards={listItem.cards} id={listItem._id} boardId={listItem.boardId}/>);
     //get the rendered react component to test against
     var result = renderer.getRenderOutput();
     //test props for various values
     //check class name is correct
-    result.type.should.shallowDeepEqual(List.Lists);
+    result.type.should.shallowDeepEqual(Cards.Lists);
     //get list prop
     var resultListItem = result.props;
     //console.log(resultListItem);

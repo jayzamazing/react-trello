@@ -6,7 +6,6 @@ chai.use(require('chai-shallow-deep-equal'));
 chai.should();
 
 var Cardslist = require('../../../public/js/cardslist');
-var Cards = require('../../../public/js/cards');
 describe('Board component', function() {
   var boardsList = {},
     params = {};
