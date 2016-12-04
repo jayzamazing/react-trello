@@ -17,7 +17,7 @@ var CardsContainer = React.createClass({
   render: function() {
     var cardsList = this.props.cardsList[Object.keys(this.props.cardsList).find(item => {
         //if the id of props.cardslist matches cardslistid
-      return this.props.cardsList[item]._id === this.props.cardsListId;
+      return this.props.cardsList[item]._id === parseInt(this.props.cardsListId);
     })];
     //function to render multiple cards
     var cards = Object.keys(this.props.cards).map((item, index) => {
