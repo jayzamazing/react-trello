@@ -115,7 +115,7 @@ describe('Board component', function() {
     var cards = cardslist.props.children[0];
     cards.type.should.equal('ul');
   });
-  //test for performing click event on add board
+  //test for performing click event on add cardslist
   it('should simulate a click event on add CardsList input', () => {
     //set up a mockstore
     const store = mockStore({

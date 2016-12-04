@@ -1,9 +1,14 @@
 var React = require('react');
 var TestUtils = require('react-addons-test-utils');
 var chai = require('chai');
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { Provider } from 'react-redux';
+import nock from 'nock';
 chai.use(require('chai-shallow-deep-equal'));
 chai.should();
-
+const middlewares = [ thunk ];
+const mockStore = configureMockStore(middlewares);
 var Cards = require('../../../public/js/cards');
 
 describe('Cards component', function() {
@@ -89,5 +94,28 @@ describe('Cards component', function() {
     //check cards match
     resultListItem.children[0][0].props.children.should.equal(cardItems.cards[1].text);
     resultListItem.children[0][1].props.children.should.equal(cardItems.cards[2].text);
+  });
+  //test for performing click event on add cards
+  it('should simulate a click event on add Cards input', () => {
+    //set up a mockstore
+    const store = mockStore({
+      cardsList: cardItems.cardsList,
+      cards: cardItems.cards
+    });
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Cards.Container boardId={cardItems.boardId} cardsListId={cardItems.cardsListId}/>
+      </Provider>
+    );
+    //get the input for cards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(2);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[0]);
+    //get all buttons on the page after button press
+    let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    //check that previous input is there plus two inputs from create-items
+    inputs2.length.should.equal(2);
   });
 });
