@@ -34,7 +34,7 @@ var CardsListName = React.createClass({
         return this.props.boards[item]._id === parseInt(boardId);
       })];
       var cardsList = Object.keys(this.props.cardsList).map((item, index) => {
-        if (board.cardsList.includes(item)) {
+        if (board.cardsList.includes(this.props.cardsList[item]._id)) {
           return (
             <li key={index}>
               <h3>{this.props.cardsList[item].title}</h3>

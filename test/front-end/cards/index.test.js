@@ -7,12 +7,33 @@ chai.should();
 var Cards = require('../../../public/js/cards');
 
 describe('Cards component', function() {
-  var listItem = {};
+  var cardItems = {};
   before(() => {
-    listItem = {
-      _id: 1,
+    cardItems = {
+      cardsListId: 1,
       boardId: 1,
-      title: 'something',
+      cardsList: {
+        '1': {
+          _id: 1,
+          title: 'something',
+          cards: [1, 2]
+        },
+        '2': {
+          _id: 2,
+          title: 'hungry',
+          cards: [3, 4]
+        },
+        '3': {
+          _id: 3,
+          title: 'groceries',
+          cards: [5, 6]
+        },
+        '4': {
+          _id: 4,
+          title: 'clothes',
+          cards: [7, 8]
+        }
+      },
       cards: {
         '1': {
           _id: 1,
@@ -50,28 +71,23 @@ describe('Cards component', function() {
     };
   });
   after(() => {
-    listItem = {};
+    cardItems = {};
   });
   it('Renders the Cards item', function() {
 
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
-    renderer.render(<Cards.ListContainer title={listItem.title} cards={listItem.cards} id={listItem._id} boardId={listItem.boardId}/>);
+    renderer.render(<Cards.CardsContainer cards={cardItems.cards} boardId={cardItems.boardId}
+      cardsList={cardItems.cardsList} cardsListId={cardItems.cardsListId}/>);
     //get the rendered react component to test against
     var result = renderer.getRenderOutput();
     //test props for various values
-    //check class name is correct
-    result.type.should.shallowDeepEqual(Cards.Lists);
-    //get list prop
+    result.type.should.equal('ul');
+    //get cards prop
     var resultListItem = result.props;
-    //console.log(resultListItem);
-    //check title is correct
-    resultListItem.title.should.equal(listItem.title);
     //check cards match
-    resultListItem.cards[1].text.should.equal(listItem.cards[1].text);
-    resultListItem.cards[2].text.should.equal(listItem.cards[2].text);
-    resultListItem.boardId.should.equal(listItem.boardId);
-    resultListItem.id.should.equal(listItem._id);
+    resultListItem.children[0][0].props.children.should.equal(cardItems.cards[1].text);
+    resultListItem.children[0][1].props.children.should.equal(cardItems.cards[2].text);
   });
 });

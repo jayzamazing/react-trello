@@ -4,7 +4,7 @@ var actions = require('./actions');
 var CreateItems = require('./create-items');
 
 //component to store list of cards and text
-var ListContainer = React.createClass({
+var CardsContainer = React.createClass({
   onAddInputChanged: function(event) {
     this.setState({text: event.target.value});
   },
@@ -21,7 +21,7 @@ var ListContainer = React.createClass({
     })];
     //function to render multiple cards
     var cards = Object.keys(this.props.cards).map((item, index) => {
-      if (cardsList.cards.includes(item)) {
+      if (cardsList.cards.includes(this.props.cards[item]._id)) {
         return (
           <li key={index}>
             {this.props.cards[item].text}
@@ -46,8 +46,8 @@ var mapStateToProps = function(state) {
     cards: state.cards
   };
 };
-var Container = connect(mapStateToProps)(ListContainer);
+var Container = connect(mapStateToProps)(CardsContainer);
 module.exports = {
   Container,
-  ListContainer
+  CardsContainer
 };
