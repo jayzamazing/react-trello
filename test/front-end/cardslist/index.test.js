@@ -5,13 +5,12 @@ var chai = require('chai');
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import nock from 'nock';
 chai.use(require('chai-shallow-deep-equal'));
 chai.should();
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 var Cardslist = require('../../../public/js/cardslist');
-describe('Board component', function() {
+describe('Cardslist component', function() {
   var boardsList = {},
     params = {};
   beforeEach(() => {
