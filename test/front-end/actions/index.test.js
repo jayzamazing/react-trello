@@ -39,7 +39,7 @@ describe('trello actions', () => {
         boards: []
       });
       //call createboard passing a title of the new board
-      return store.dispatch(actions.queryBoards('boards', 'POST', {
+      return store.dispatch(actions.queries('boards', 'POST', {
         title: 'blah'
       }, 'create board'))
         .then(() => {
@@ -47,10 +47,12 @@ describe('trello actions', () => {
           var response = store.getActions()[0];
           response.should.have.property('type');
           response.type.should.equal('CREATE_BOARD_SUCCESS');
-          response.boards.should.have.property('title');
-          response.boards.title.should.equal('blah');
-          response.boards.should.have.property('_id');
-          response.boards._id.should.equal('1');
+          console.log(response.boards.boards.body.title);
+
+          response.boards.boards.body.should.have.property('title');
+          response.boards.boards.body.title.should.equal('blah');
+          response.boards.boards.body.should.have.property('_id');
+          response.boards.boards.body._id.should.equal('1');
         });
     });
     it('should create a cardslist', () => {
