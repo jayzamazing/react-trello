@@ -27,16 +27,45 @@ describe('trello actions', () => {
             body: jsonObj
           }
         ];
+      })
+      .patch('/boards/1')
+      //send back reply to request
+      .reply((uri, requestBody) => {
+        //create json obj out of the request
+        var jsonObj = JSON.parse(requestBody);
+        //add _id field to json
+        jsonObj['_id'] = ('1');
+        //return response
+        return [
+          200, {
+            body: jsonObj
+          }
+        ];
+      })
+      //request to create cardsList
+      .post('/cardslists')
+      //send back reply to request
+      .reply((uri, requestBody) => {
+        console.log('hereeeee');
+        //create json obj out of the request
+        var jsonObj = JSON.parse(requestBody);
+        //add _id field to json
+        jsonObj['_id'] = ('1');
+        //return response
+        return [
+          200, {
+            body: jsonObj
+          }
+        ];
       });
   });
-  afterEach(() => {
+  after(() => {
     nock.cleanAll();
   });
-  describe('board queries', () => {
     it('should create a board', () => {
       //set up a mockstore
       const store = mockStore({
-        boards: []
+        boards: {}
       });
       //call createboard passing a title of the new board
       return store.dispatch(actions.queries('boards', 'POST', {
@@ -47,8 +76,6 @@ describe('trello actions', () => {
           var response = store.getActions()[0];
           response.should.have.property('type');
           response.type.should.equal('CREATE_BOARD_SUCCESS');
-          console.log(response.boards.boards.body.title);
-
           response.boards.boards.body.should.have.property('title');
           response.boards.boards.body.title.should.equal('blah');
           response.boards.boards.body.should.have.property('_id');
@@ -56,7 +83,17 @@ describe('trello actions', () => {
         });
     });
     it('should create a cardslist', () => {
-
+      //set up a mockstore
+      const store = mockStore({
+        boards: {},
+        cardsList: {}
+      });
+      return store.dispatch(actions.queries('cardslists', 'POST', {title: 'fun'},
+      'create cardslist', 1))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        console.log(response);
+      });
     });
   });
-});
