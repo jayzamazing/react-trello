@@ -82,7 +82,6 @@ describe('trello reducer', () => {
       state.cards[1].should.have.property('text');
     });
     it('should deserialize the order', () => {
-      console.log(state);
       state.boards[1]._id.should.equal(1);
       state.boards[2].title.should.equal('shopping list');
       state.boards[2].cardsList.should.be.an('array')
@@ -96,9 +95,10 @@ describe('trello reducer', () => {
   describe('CREATE_BOARD_SUCCESS', () => {
     let state;
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.createBoardSuccess(
-        {title: 'blah', '_id': 1}
-      ));
+      state = reducer.trelloReducer(undefined, actions.createBoardSuccess({
+        title: 'blah',
+        '_id': 1
+      }));
     });
     it('should exist', () => {
       should.exist(state.boards);
@@ -112,26 +112,26 @@ describe('trello reducer', () => {
     it('should deserialize the order', () => {
       state.boards[1]._id.should.equal(1);
       state.boards[1].title.should.equal('blah');
+    });
   });
   describe('CREATE_CARDLIST_SUCCESS', () => {
     let state;
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.createCardListSuccess(
-        {
+      state = reducer.trelloReducer(undefined, actions.createCardListSuccess({
         '_id': 1,
         'title': 'blah',
         'cardsList': [{
           '_id': 1,
           'title': 'something'
         }]
-        }
-      ));
+      }));
     });
     it('should exist', () => {
       should.exist(state.boards);
       should.exist(state.cardsList);
       should.exist(state.cards);
     });
+    it('should have properties', () => {
       state.boards.should.have.property('1');
       state.boards[1].should.have.property('title');
       state.boards['1'].should.have.property('cardsList');
@@ -151,21 +151,19 @@ describe('trello reducer', () => {
   describe('CREATE_CARD_SUCCESS', () => {
     let state;
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.createCardSuccess(
-        {
+      state = reducer.trelloReducer(undefined, actions.createCardSuccess({
 
+        '_id': 1,
+        'title': 'blah',
+        'cardsList': [{
+          '_id': 1,
+          'title': 'something',
+          'cards': [{
             '_id': 1,
-            'title': 'blah',
-            'cardsList': [{
-              '_id': 1,
-              'title': 'something',
-              'cards': [{
-                '_id': 1,
-                'text': 'ummmm'
-              }]
-            }]
-        }
-      ));
+            'text': 'ummmm'
+          }]
+        }]
+      }));
     });
     it('should exist', () => {
       should.exist(state.boards);

@@ -23,5 +23,5 @@ exports.after = {
   create: [],
   update: [],
   patch: [populateCardsList],
-  remove: []
+  remove: [populateCardsList]
 };
