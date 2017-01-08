@@ -28,7 +28,8 @@ describe('trello actions', () => {
         ];
       })
       //request to create a board
-      .get('/boards')
+      .get('/boards/1')
+      .query(true)
       //send back reply to request
       .reply((uri, requestBody) => {
         var jsonObj;
@@ -156,7 +157,7 @@ describe('trello actions', () => {
     return store.dispatch(actions.queries('cards', 'POST', {
       test: 'superman'
     },
-    'create cards', 1))
+    'create cards', 1, 1))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
