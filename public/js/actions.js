@@ -9,18 +9,14 @@ var host, app;
 host = 'http://localhost:3030';
 //set up feathers client side
 app = feathers()
-.configure(rest(host).superagent(superagent))
-.configure(hooks());
-/*
-* Should be able to add a board to list of boards
-*/
-var ADD_BOARD_CARDLIST_ITEM = 'ADD_BOARD_CARDLIST_ITEM';
-var addBoardCardListItem = function(boardName, id, itemName) {
+  .configure(rest(host).superagent(superagent))
+  .configure(hooks());
+
+var FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
+var findBoardsSuccess = function(data) {
   return {
-    type: ADD_BOARD_CARDLIST_ITEM,
-    board: boardName,
-    id: id,
-    item: itemName
+    type: FIND_BOARDS_SUCCESS,
+    boards: data
   };
 };
 var BOARD_DESERIALIZATION = 'BOARD_DESERIALIZATION';
@@ -33,86 +29,153 @@ var boardDeserialization = function(data) {
 var CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
 var createBoardSuccess = function(data) {
   var boards = {};
-  boards[boards] = data;
+  boards.boards = data;
   return {
     type: 'CREATE_BOARD_SUCCESS',
-    boards: data
-  }
-}
+    boards: boards
+  };
+};
+var CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
+var createCardListSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'CREATE_CARDLIST_SUCCESS',
+    boards: boards
+  };
+};
 var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
 var createCardSuccess = function(data) {
-  return function(dispatch) {return {
+  var boards = {};
+  boards.boards = data;
+  return {
     type: 'CREATE_CARD_SUCCESS',
-    boards: data
-  }}
+    boards: boards
+  };
+};
+  /*
+   * Function to deal with queries to mongo and calling actions
+   * @params method - either PUT, GET, DELETE, FIND, POST, PATCH
+   * @params method - method of query to use
+   * @params postData - data to send in the query
+   * @params type - type of request
+   * @params updateItem - id of specific item to update
+   * @return promise dispatch function based on type of query
+   */
+var queries = function(service, method, postData, type, updateItem, updateItem2) {
+ return function(dispatch) {
+   if (service === 'boards') {
+     return queryBoards(method, postData, type, updateItem)
+     .then(res =>
+       {
+         dispatch(types(type, res, dispatch));
+       });
+     } else if (service === 'cardslists') {
+       return queryCardsLists(method, postData, type, updateItem)
+       .then(res => {
+         dispatch(types(type, res, dispatch));
+       });
+     } else if (service === 'cards') {
+       return queryCards(method, postData, type, updateItem, updateItem2)
+       .then(res => {
+         dispatch(types(type, res, dispatch));
+       });
+     }
+ }
 }
-/*
-* Function to deal with queries to mongo and calling actions
-* @params method - either PUT, GET, DELETE, FIND, POST, PATCH
-* @params method - method of query to use
-* @params postData - data to send in the query
-* @params type - type of request
-* @params updateItem - id of specific item to update
-* @return promise dispatch function based on type of query
-*/
-var queryBoards = function(service, method, postData, type, updateItem) {
-  return function(dispatch) {
-    //call services to make services rest call
-    return services(service, method, postData, updateItem)
+var queryBoards = function(method, postData, type, updateItem) {
+  return new Promise((resolve, reject) => {
+    services('boards', method, postData, updateItem)
+    .then(res => {
+      resolve(res.data || res);
+    });
+  });
+};
+var queryCardsLists = function(method, postData, type, updateBoard) {
+  return new Promise((resolve, reject) => {
+    //call services to make rest call
+    services('cardslists', method, postData, updateBoard)
     //get the data
-    .then((res) => res.body)
-    //pass the data to action dispatch
-    .then(json => dispatch(types(type, json, dispatch)));
-
-  };
+    .then(res => {
+      if (method === 'POST') {
+        services('boards', 'PATCH', { '$push': { 'cardsList': res._id } }, updateBoard)
+        .then(res2 => {
+          resolve(res2);
+        });
+      }
+    });
+  });
 }
-/*
-* Function to determine which action to dispatch next based on type
-* @params type - type of request
-* @params json - data passed in to pass to dispatch
-* @params dispatch - action to dispatch
-* @return action to dispatch
-*/
-var types = function(type, json, dispatch) {
-  switch(type) {
-    case 'create board':
-      return dispatch(createBoardSuccess(json));
-    case 'create cardslist':
-      return dispatch(queryBoards('cardslist', 'PUT', json, 'create cardslist2'));
-    case 'create cardslist2':
-      return dispatch(createCardSuccess(json));
-
-  };
+var queryCards = function(method, postData, type, updateCardslists, updateBoard) {
+  return new Promise((resolve, reject) => {
+    //call services to make rest call
+    services('cards', method, postData, type, updateCardslists)
+    //get the data
+    .then(res => {
+      if (method === 'POST') {
+        services('cardslists', 'PATCH', { '$push': {'cards': res._id } }, updateCardslists)
+        .then(res2 => {
+          services('boards', 'GET', updateBoard)
+          .then(res3 => {
+            resolve(res3.data || res3);
+          });
+        });
+      }
+    });
+  });
 }
-/*
-* Function to determine which feathers rest service to run
-* @params service - name of mongodb document to query
-* @params method - method of query to use
-* @params postData - data to send in the query
-* @params updateItem - id of specific item to update
-* @return promise from feathers rest
-*/
+  /*
+   * Function to determine which action to dispatch next based on type
+   * @params type - type of request
+   * @params json - data passed in to pass to dispatch
+   * @params dispatch - action to dispatch
+   * @return action to dispatch
+   */
+var types = function(type, json) {
+  switch (type) {
+  case 'create board':
+    return createBoardSuccess(json);
+  case 'create cardslist':
+    return createCardListSuccess(json);
+  case 'find boards':
+    return findBoardsSuccess(json);
+  case 'create cards':
+    return createCardSuccess(json);
+  }
+};
+  /*
+   * Function to determine which feathers rest service to run
+   * @params service - name of mongodb document to query
+   * @params method - method of query to use
+   * @params postData - data to send in the query
+   * @params updateItem - id of specific item to update
+   * @return promise from feathers rest
+   */
 var services = function(service, method, postData, updateItem) {
   //switch based on method
   switch (method) {
-    case 'PUT':
-      return app.service(service).update(updateItem, postData);
-    case 'GET':
-      return app.service(service).get(postData);
-    case 'DELETE':
-      return app.service(service).remove(updateItem, postData);
-    case 'FIND':
-      return app.service(service).find();
-    case 'POST':
-      return app.service(service).create(postData);
-    case 'PATCH':
-      return app.service(service).patch(updateItem, postData);
+  case 'PUT':
+    return app.service(service).update(updateItem, postData);
+  case 'GET':
+    return app.service(service).get(postData);
+  case 'DELETE':
+    return app.service(service).remove(updateItem, postData);
+  case 'FIND':
+    return app.service(service).find();
+  case 'POST':
+    return app.service(service).create(postData);
+  case 'PATCH':
+    return app.service(service).patch(updateItem, postData);
   }
-}
-exports.ADD_BOARD_CARDLIST_ITEM = ADD_BOARD_CARDLIST_ITEM;
-exports.addBoardCardListItem = addBoardCardListItem;
+};
 exports.BOARD_DESERIALIZATION = BOARD_DESERIALIZATION;
 exports.boardDeserialization = boardDeserialization;
-exports.queryBoards = queryBoards;
+exports.queries = queries;
 exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
+exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
+exports.createCardListSuccess = createCardListSuccess;
+exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
+exports.createCardSuccess = createCardSuccess;
+exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
+exports.findBoardsSuccess = findBoardsSuccess;
