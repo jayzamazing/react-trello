@@ -117,6 +117,13 @@ describe('trello actions', () => {
           200,
           jsonObj
         ];
+      }).delete('/cards/1')
+      .reply(() => {
+        //return response
+        return [
+          200,
+          {'title': 'hello', _id: 9}
+        ];
       });
   });
   after(() => {
@@ -219,5 +226,24 @@ describe('trello actions', () => {
       response.boards.boards.should.have.property('_id');
       response.boards.boards._id.should.equal(1);
     });
+  });
+  it('should delete a card', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+    return store.dispatch(actions.queries('cards', 'DELETE', 1,
+        'delete cards'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('DELETE_CARDS_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('hello');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(9);
+      });
   });
 });

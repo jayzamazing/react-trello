@@ -71,6 +71,15 @@ var createCardSuccess = function(data) {
     boards: boards
   };
 };
+var DELETE_CARDS_SUCCESS = 'DELETE_CARDS_SUCCESS';
+var deleteCardsSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'DELETE_CARDS_SUCCESS',
+    boards: boards
+  };
+};
   /*
    * Function to deal with queries to mongo and calling actions
    * @params method - either PUT, GET, DELETE, FIND, POST, PATCH
@@ -93,7 +102,6 @@ var queries = function(service, method, postData, type, updateItem, updateItem2)
       case 'cardslists':
         return queryCardsLists(method, postData, type, updateItem)
         .then(res => {
-          console.log(type + ' ' + res);
           dispatch(types(type, res, dispatch));
         });
         break;
@@ -116,7 +124,6 @@ var queryBoards = function(method, postData, type, updateItem) {
 };
 var queryCardsLists = function(method, postData, type, updateBoard) {
   return new Promise((resolve, reject) => {
-    console.log(method);
     //call services to make rest call
     services('cardslists', method, postData, updateBoard)
     //get the data
@@ -146,6 +153,8 @@ var queryCards = function(method, postData, type, updateCardslists, updateBoard)
             resolve(res3.data || res3);
           });
         });
+      } else if (method === 'DELETE') {
+        resolve(res.data || res);
       }
     });
   });
@@ -166,12 +175,13 @@ var types = function(type, json) {
   case 'create cardslist':
     return createCardListSuccess(json);
   case 'delete cardslist':
-    console.log('here');
     return deleteCardslistSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
   case 'create cards':
     return createCardSuccess(json);
+    case 'delete cards':
+      return deleteCardsSuccess(json);
   }
 };
   /*
@@ -212,5 +222,7 @@ exports.DELETE_CARDSLIST_SUCCESS = DELETE_CARDSLIST_SUCCESS;
 exports.deleteCardslistSuccess = deleteCardslistSuccess
 exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
 exports.createCardSuccess = createCardSuccess;
+exports.DELETE_CARDS_SUCCESS = DELETE_CARDS_SUCCESS;
+exports.deleteCardsSuccess = deleteCardsSuccess;
 exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
 exports.findBoardsSuccess = findBoardsSuccess;
