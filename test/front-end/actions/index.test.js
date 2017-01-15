@@ -97,6 +97,14 @@ describe('trello actions', () => {
           jsonObj
         ];
       })
+      .delete('/cardslists/1')
+      .reply(() => {
+        //return response
+        return [
+          200,
+          {'title': 'hello', _id: 5}
+        ];
+      })
       .post('/cards')
       //send back reply to request
       .reply((uri, requestBody) => {
@@ -171,6 +179,25 @@ describe('trello actions', () => {
         response.boards.boards.cardsList.should.equal(5);
         response.boards.boards.should.have.property('_id');
         response.boards.boards._id.should.equal(2);
+      });
+  });
+  it('should delete a cardslist', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+    return store.dispatch(actions.queries('cardslists', 'DELETE', 1,
+        'delete cardslist'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('DELETE_CARDSLIST_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('hello');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(5);
       });
   });
   it('should create a card', () => {
