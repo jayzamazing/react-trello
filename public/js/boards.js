@@ -21,6 +21,13 @@ var BoardsListName = React.createClass({
     );
     this.setState({showCreateBoard: false});
   },
+  //function to delete a board by dispatching delete request
+  deleteBoard: function(boardId) {
+    this.props.dispatch(
+      //dispatch query boards
+      actions.queries('boards', 'DELETE', boardId, 'delete board')
+    );
+  },
   componentDidMount() {
     this.props.dispatch(
       //dispatch query boards
@@ -39,8 +46,15 @@ var BoardsListName = React.createClass({
     if (this.props.boards) {
       var list = Object.keys(this.props.boards).map(function(item, index) {
         var temp = context.props.boards[item];
-        return (<input key={index} type="button"
-        onClick={context.showBoard.bind(null, temp._id, temp.title)} id={temp._id} value={temp.title}/>);
+        return (
+          <div>
+            <input key={index} type="button"
+            onClick={context.showBoard.bind(null, temp._id, temp.title)}
+            id={temp._id} value={temp.title}/>
+            <input key={index} type="button" value="Delete Board"
+              onClick={context.deleteBoard.bind(null, temp._id)}/>
+          </div>
+        );
       });
     }
     return (
