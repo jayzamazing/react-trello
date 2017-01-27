@@ -27,6 +27,7 @@ var BoardsListName = React.createClass({
       //dispatch query boards
       actions.queries('boards', 'DELETE', boardId, 'delete board')
     );
+    this.forceUpdate();
   },
   componentDidMount() {
     this.props.dispatch(
@@ -47,19 +48,19 @@ var BoardsListName = React.createClass({
       var list = Object.keys(this.props.boards).map(function(item, index) {
         var temp = context.props.boards[item];
         return (
-          <div>
-            <input key={index} type="button"
+          <li key={index}>
+            <input type="button"
             onClick={context.showBoard.bind(null, temp._id, temp.title)}
             id={temp._id} value={temp.title}/>
-            <input key={index} type="button" value="Delete Board"
-              onClick={context.deleteBoard.bind(null, temp._id)}/>
-          </div>
+            <input type="button" value="Delete Board"
+            onClick={context.deleteBoard.bind(null, temp._id)}/>
+          </li>
         );
       });
     }
     return (
       <div>
-        {list}
+        <ul>{list}</ul>
         <input type="button" value="Add Board" onClick={this.showCreateBoard}/>
         {this.state.showCreateBoard ? <CreateItems.Container
           onAddInputChanged={this.onAddInputChanged} addItems={this.addBoard}/> : null}

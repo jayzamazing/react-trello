@@ -67,19 +67,26 @@ function deleteBoard(state, action) {
   //if there is a board
   if (normalizedBoard.entities.boards){
     //remove it from state and store in newstate
-    newState.boards = state.boards.without(normalizedBoard.entities.boards, "boards");
+    newState.boards = Immutable.without(state.boards,
+        Object.keys(normalizedBoard.entities.boards));
   }
   //if there is a cardsList
   if (normalizedBoard.entities.cardsList) {
     //remove it from state and store in newstate
-    newState.cardsList = state.cardsList.without(normalizedBoard.entities.cardsList, "cardsList");
+    newState.cardsList = Immutable.without(state.cardsList,
+       Object.keys(normalizedBoard.entities.boards));
   }
   //if there is a card
   if (normalizedBoard.entities.cards) {
     //remove it from state and store in newstate
-    newState.cards = state.cards.without(normalizedBoard.entities.cards, "cards");
+    newState.cards = Immutable.without(state.cards,
+       Object.keys(normalizedBoard.entities.cards));
   }
-  return state.merge(newState);
+  return state = Immutable({
+    boards: newState.boards || {},
+    cardsList: newState.cardsList || {},
+    cards: newState.cards || {}
+  });
 }
 
 function trelloReducer(state, action) {

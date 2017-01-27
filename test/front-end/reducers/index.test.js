@@ -237,7 +237,7 @@ describe('trello reducer', () => {
   describe('DELETE_CARD_SUCCESS', () => {
     let state;
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.deleteCardSuccess({
+      state = reducer.trelloReducer(undefined, actions.deleteCardsSuccess({
         '_id': 1,
         'title': 'blah',
         'cardsList': [{
