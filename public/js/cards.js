@@ -21,7 +21,7 @@ var CardsContainer = React.createClass({
     })];
     //function to render multiple cards
     var cards = Object.keys(this.props.cards).map((item, index) => {
-      if (cardsList.cards.includes(this.props.cards[item]._id)) {
+      if (cardsList.cards.indexOf(this.props.cards[item]._id) > -1) {
         return (
           <li key={index}>
             {this.props.cards[item].text}
