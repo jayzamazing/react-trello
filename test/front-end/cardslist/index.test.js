@@ -10,6 +10,7 @@ chai.should();
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 var Cardslist = require('../../../public/js/cardslist');
+var Cards = require('../../../public/js/cards');
 describe('Cardslist component', function() {
   var boardsList = {},
     params = {};
@@ -113,6 +114,13 @@ describe('Cardslist component', function() {
     cardslist.props.className.should.equal('board-list');
     var cards = cardslist.props.children[0];
     cards.type.should.equal('ul');
+    var cardItem = cards.props.children[0];
+    cardItem.type.should.equal('li');
+    cardItem.props.children[0].type.should.equal('h3');
+    cardItem.props.children[0].props.children.should.equal(boardsList.cardsList[1].title);
+    cardItem.props.children[1].type.WrappedComponent.should.shallowDeepEqual(Cards.CardsContainer);
+    cardItem.props.children[1].props.cardsListId.should.equal('1');
+    cardItem.props.children[1].props.boardId.should.equal('1');
   });
   //test for performing click event on add cardslist
   it('should simulate a click event on add CardsList input', () => {
