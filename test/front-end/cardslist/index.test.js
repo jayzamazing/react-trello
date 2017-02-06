@@ -138,12 +138,33 @@ describe('Cardslist component', function() {
     );
     //get the input for cards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(5);
+    inputs.length.should.equal(7);
     //simulate button click
-    TestUtils.Simulate.click(inputs[4]);
+    TestUtils.Simulate.click(inputs[6]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(7);
+    inputs2.length.should.equal(9);
+    inputs2[7].value = 'happy';
+    TestUtils.Simulate.change(inputs2[7]);
+    TestUtils.Simulate.click(inputs2[8]);
+  });
+  it('should simulate a click event on delete cardslist input', () => {
+    const store = mockStore({
+      boards: boardsList.boards,
+      cardsList: boardsList.cardsList,
+      cards: boardsList.cards
+    });
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Cardslist.Container params={params} />
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(7);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[2]);
   });
 });

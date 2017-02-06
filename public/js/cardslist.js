@@ -24,27 +24,39 @@ var CardsListName = React.createClass({
     );
     this.setState({showCreateCardsList: false});
   },
+  deleteCardsList: function(cardsListId) {
+    this.props.dispatch(
+      //dispatch query boards
+      actions.queries('cards', 'DELETE', cardsListId, 'delete cards')
+    );
+    this.forceUpdate();
+  },
   render: function() {
-      //remove : from variable due to routing
-      var boardName = this.props.params.boardName.replace(':', '');
-      var boardId = this.props.params.boardId.replace(':', '');
-      //iterate over props.boards and get the item that matches the boardid
-      var board = this.props.boards[Object.keys(this.props.boards).find(item => {
-          //if the id of props.boards matches boardid
-        return this.props.boards[item]._id === parseInt(boardId);
-      })];
-      var cardsList = Object.keys(this.props.cardsList).map((item, index) => {
-        if (board.cardsList.indexOf(this.props.cardsList[item]._id) > -1) {
-          return (
-            <li key={index}>
-              <h3>{this.props.cardsList[item].title}</h3>
-              <Cards.Container
-                  cardsListId={item} key={index} boardId={boardId}/>
-            </li>
-          );
-        }
-      });
-
+      var context = this;
+      if (this.props.cardsList) {
+        //remove : from variable due to routing
+        var boardName = context.props.params.boardName.replace(':', '');
+        var boardId = context.props.params.boardId.replace(':', '');
+        //iterate over props.boards and get the item that matches the boardid
+        var board = context.props.boards[Object.keys(context.props.boards).find(item => {
+            //if the id of props.boards matches boardid
+          return context.props.boards[item]._id == boardId;
+        })];
+        var cardsList = Object.keys(context.props.cardsList).map((item, index) => {
+          if (board.cardsList.indexOf(context.props.cardsList[item]._id) > -1) {
+            var temp = context.props.cardsList[item];
+            return (
+              <li key={index}>
+                <h3>{context.props.cardsList[item].title}</h3>
+                <Cards.Container
+                    cardsListId={item} key={index} boardId={boardId}/>
+                  <input type="button" value="Delete Cardslist"
+                    onClick={context.deleteCardsList.bind(null, temp._id)}/>
+              </li>
+            );
+          }
+        });
+      }
       return (
         <div className="board">
           <div className="board-name">
