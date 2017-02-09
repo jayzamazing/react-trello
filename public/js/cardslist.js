@@ -26,10 +26,10 @@ var CardsListName = React.createClass({
   },
   deleteCardsList: function(cardsListId) {
     this.props.dispatch(
-      //dispatch query boards
-      actions.queries('cards', 'DELETE', cardsListId, 'delete cards')
+      //dispatch query cardslist
+      actions.queries('cardslists', 'DELETE', cardsListId, 'delete cardslist')
     );
-    this.forceUpdate();
+    // this.forceUpdate();
   },
   render: function() {
       var context = this;

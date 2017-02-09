@@ -14,7 +14,15 @@ var CardsContainer = React.createClass({
       'create cards', this.props.cardsListId, this.props.boardId)
     );
   },
+  deleteCards: function(cardId) {
+    //dispatch query cards
+    this.props.dispatch(
+      actions.queries('cards', 'DELETE', cardId, 'delete cards')
+    );
+    // this.forceUpdate();
+  },
   render: function() {
+    var context = this;
     var cardsList = this.props.cardsList[Object.keys(this.props.cardsList).find(item => {
         //if the id of props.cardslist matches cardslistid
       return this.props.cardsList[item]._id === parseInt(this.props.cardsListId);
@@ -22,20 +30,25 @@ var CardsContainer = React.createClass({
     //function to render multiple cards
     var cards = Object.keys(this.props.cards).map((item, index) => {
       if (cardsList.cards.indexOf(this.props.cards[item]._id) > -1) {
+        var temp = context.props.cards[item];
         return (
           <li key={index}>
             {this.props.cards[item].text}
+            <input type="button" value="Delete Card"
+              onClick={context.deleteCards.bind(null, temp._id)}/>
           </li>
         );
       }
     });
     return (
-      <ul>
-        {cards}
-        <CreateItems.Container
-          onAddInputChanged={this.onAddInputChanged}
-          addItems={this.addCards.bind(null, this.props.cardsListId)}/>
-      </ul>
+      <div>
+        <ul>
+          {cards}
+        </ul>
+          <CreateItems.Container
+            onAddInputChanged={this.onAddInputChanged}
+            addItems={this.addCards.bind(null, this.props.cardsListId)}/>
+      </div>
     );
   }
 });
