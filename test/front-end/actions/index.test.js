@@ -20,7 +20,7 @@ describe('trello actions', () => {
         //create json obj out of the request
         var jsonObj = JSON.parse(requestBody);
         //add _id field to json
-        jsonObj['_id'] = ('7');
+        jsonObj['_id'] = (7);
         //return response
         return [
           200,
@@ -37,9 +37,9 @@ describe('trello actions', () => {
           //create json obj out of the request
           jsonObj = JSON.parse(requestBody);
           //add _id field to json
-          jsonObj['_id'] = ('1');
+          jsonObj['_id'] = (1);
         } else {
-          jsonObj = {_id: '1'};
+          jsonObj = {_id: 1};
         }
         //return response
         return [
@@ -54,11 +54,19 @@ describe('trello actions', () => {
         var temp = JSON.parse(requestBody);
         var jsonObj = temp.$push;
         //add _id field to json
-        jsonObj['_id'] = ('2');
+        jsonObj['_id'] = (2);
         //return response
         return [
           200,
           jsonObj
+        ];
+      })
+      .delete('/boards/1')
+      .reply(() => {
+        //return response
+        return [
+          200,
+          {'title': 'blah', _id: 7}
         ];
       })
       //request to create cardsList
@@ -68,7 +76,7 @@ describe('trello actions', () => {
         //create json obj out of the request
         var jsonObj = JSON.parse(requestBody);
         //add _id field to json
-        jsonObj['_id'] = ('5');
+        jsonObj['_id'] = (5);
         //return response
         return [
           200,
@@ -82,11 +90,19 @@ describe('trello actions', () => {
         var temp = JSON.parse(requestBody);
         var jsonObj = temp.$push;
         //add _id field to json
-        jsonObj['_id'] = ('1');
+        jsonObj['_id'] = (1);
         //return response
         return [
           200,
           jsonObj
+        ];
+      })
+      .delete('/cardslists/1')
+      .reply(() => {
+        //return response
+        return [
+          200,
+          {'title': 'hello', _id: 5}
         ];
       })
       .post('/cards')
@@ -95,11 +111,18 @@ describe('trello actions', () => {
         //create json obj out of the request
         var jsonObj = JSON.parse(requestBody);
         //add _id field to json
-        jsonObj['_id'] = ('1');
+        jsonObj['_id'] = (1);
         //return response
         return [
           200,
           jsonObj
+        ];
+      }).delete('/cards/1')
+      .reply(() => {
+        //return response
+        return [
+          200,
+          {'title': 'hello', _id: 9}
         ];
       });
   });
@@ -123,7 +146,25 @@ describe('trello actions', () => {
         response.boards.boards.should.have.property('title');
         response.boards.boards.title.should.equal('blah');
         response.boards.boards.should.have.property('_id');
-        response.boards.boards._id.should.equal('7');
+        response.boards.boards._id.should.equal(7);
+      });
+  });
+  it('should delete a board', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {}
+    });
+    //call createboard passing a title of the new board
+    return store.dispatch(actions.queries('boards', 'DELETE', 1, 'delete board'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('DELETE_BOARD_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('blah');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(7);
       });
   });
   it('should create a cardslist', () => {
@@ -142,9 +183,28 @@ describe('trello actions', () => {
         response.should.have.property('type');
         response.type.should.equal('CREATE_CARDLIST_SUCCESS');
         response.boards.boards.should.have.property('cardsList');
-        response.boards.boards.cardsList.should.equal('5');
+        response.boards.boards.cardsList.should.equal(5);
         response.boards.boards.should.have.property('_id');
-        response.boards.boards._id.should.equal('2');
+        response.boards.boards._id.should.equal(2);
+      });
+  });
+  it('should delete a cardslist', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+    return store.dispatch(actions.queries('cardslists', 'DELETE', 1,
+        'delete cardslist'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('DELETE_CARDSLIST_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('hello');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(5);
       });
   });
   it('should create a card', () => {
@@ -164,7 +224,26 @@ describe('trello actions', () => {
       response.should.have.property('type');
       response.type.should.equal('CREATE_CARD_SUCCESS');
       response.boards.boards.should.have.property('_id');
-      response.boards.boards._id.should.equal('1');
+      response.boards.boards._id.should.equal(1);
     });
+  });
+  it('should delete a card', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+    return store.dispatch(actions.queries('cards', 'DELETE', 1,
+        'delete cards'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('DELETE_CARDS_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('hello');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(9);
+      });
   });
 });

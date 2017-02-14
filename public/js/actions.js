@@ -35,6 +35,15 @@ var createBoardSuccess = function(data) {
     boards: boards
   };
 };
+var DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
+var deleteBoardSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'DELETE_BOARD_SUCCESS',
+    boards: boards
+  };
+};
 var CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
 var createCardListSuccess = function(data) {
   var boards = {};
@@ -44,12 +53,30 @@ var createCardListSuccess = function(data) {
     boards: boards
   };
 };
+var DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';
+var deleteCardslistSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'DELETE_CARDSLIST_SUCCESS',
+    boards: boards
+  };
+};
 var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
 var createCardSuccess = function(data) {
   var boards = {};
   boards.boards = data;
   return {
     type: 'CREATE_CARD_SUCCESS',
+    boards: boards
+  };
+};
+var DELETE_CARDS_SUCCESS = 'DELETE_CARDS_SUCCESS';
+var deleteCardsSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'DELETE_CARDS_SUCCESS',
     boards: boards
   };
 };
@@ -64,23 +91,27 @@ var createCardSuccess = function(data) {
    */
 var queries = function(service, method, postData, type, updateItem, updateItem2) {
  return function(dispatch) {
-   if (service === 'boards') {
-     return queryBoards(method, postData, type, updateItem)
-     .then(res =>
-       {
-         dispatch(types(type, res, dispatch));
-       });
-     } else if (service === 'cardslists') {
-       return queryCardsLists(method, postData, type, updateItem)
-       .then(res => {
-         dispatch(types(type, res, dispatch));
-       });
-     } else if (service === 'cards') {
-       return queryCards(method, postData, type, updateItem, updateItem2)
-       .then(res => {
-         dispatch(types(type, res, dispatch));
-       });
-     }
+   switch(service) {
+     case 'boards':
+       return queryBoards(method, postData, type, updateItem)
+       .then(res =>
+         {
+           dispatch(types(type, res, dispatch));
+         });
+       break;
+      case 'cardslists':
+        return queryCardsLists(method, postData, type, updateItem)
+        .then(res => {
+          dispatch(types(type, res, dispatch));
+        });
+        break;
+      case 'cards':
+        return queryCards(method, postData, type, updateItem, updateItem2)
+        .then(res => {
+          dispatch(types(type, res, dispatch));
+        });
+        break;
+   }
  }
 }
 var queryBoards = function(method, postData, type, updateItem) {
@@ -102,6 +133,8 @@ var queryCardsLists = function(method, postData, type, updateBoard) {
         .then(res2 => {
           resolve(res2);
         });
+      } else if (method === 'DELETE') {
+        resolve(res.data || res);
       }
     });
   });
@@ -120,6 +153,8 @@ var queryCards = function(method, postData, type, updateCardslists, updateBoard)
             resolve(res3.data || res3);
           });
         });
+      } else if (method === 'DELETE') {
+        resolve(res.data || res);
       }
     });
   });
@@ -135,12 +170,18 @@ var types = function(type, json) {
   switch (type) {
   case 'create board':
     return createBoardSuccess(json);
+  case 'delete board':
+    return deleteBoardSuccess(json);
   case 'create cardslist':
     return createCardListSuccess(json);
+  case 'delete cardslist':
+    return deleteCardslistSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
   case 'create cards':
     return createCardSuccess(json);
+    case 'delete cards':
+      return deleteCardsSuccess(json);
   }
 };
   /*
@@ -159,7 +200,7 @@ var services = function(service, method, postData, updateItem) {
   case 'GET':
     return app.service(service).get(postData);
   case 'DELETE':
-    return app.service(service).remove(updateItem, postData);
+    return app.service(service).remove(postData);
   case 'FIND':
     return app.service(service).find();
   case 'POST':
@@ -173,9 +214,15 @@ exports.boardDeserialization = boardDeserialization;
 exports.queries = queries;
 exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
+exports.DELETE_BOARD_SUCCESS = DELETE_BOARD_SUCCESS;
+exports.deleteBoardSuccess = deleteBoardSuccess;
 exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
 exports.createCardListSuccess = createCardListSuccess;
+exports.DELETE_CARDSLIST_SUCCESS = DELETE_CARDSLIST_SUCCESS;
+exports.deleteCardslistSuccess = deleteCardslistSuccess
 exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
 exports.createCardSuccess = createCardSuccess;
+exports.DELETE_CARDS_SUCCESS = DELETE_CARDS_SUCCESS;
+exports.deleteCardsSuccess = deleteCardsSuccess;
 exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
 exports.findBoardsSuccess = findBoardsSuccess;

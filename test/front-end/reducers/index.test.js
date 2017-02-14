@@ -195,4 +195,70 @@ describe('trello reducer', () => {
       state.cards[1].text.should.equal('ummmm');
     });
   });
+  describe('DELETE_BOARD_SUCCESS', () => {
+    let state;
+    before(() => {
+      state = reducer.trelloReducer(undefined, actions.deleteBoardSuccess({
+        title: 'blah',
+        '_id': 1
+      }));
+    });
+    it('should exist', () => {
+      should.exist(state.boards);
+      should.exist(state.cardsList);
+      should.exist(state.cards);
+    });
+    it('should not have properties', () => {
+      state.boards.should.not.have.property('1');
+    });
+  });
+  describe('DELETE_CARDLIST_SUCCESS', () => {
+    let state;
+    before(() => {
+      state = reducer.trelloReducer(undefined, actions.deleteCardslistSuccess({
+        '_id': 1,
+        'title': 'blah',
+        'cardsList': [{
+          '_id': 1,
+          'title': 'something'
+        }]
+      }));
+    });
+    it('should exist', () => {
+      should.exist(state.boards);
+      should.exist(state.cardsList);
+      should.exist(state.cards);
+    });
+    it('should not have properties', () => {
+      state.boards.should.not.have.property('1');
+      state.cardsList.should.not.have.property('1');
+    });
+  });
+  describe('DELETE_CARD_SUCCESS', () => {
+    let state;
+    before(() => {
+      state = reducer.trelloReducer(undefined, actions.deleteCardsSuccess({
+        '_id': 1,
+        'title': 'blah',
+        'cardsList': [{
+          '_id': 1,
+          'title': 'something',
+          'cards': [{
+            '_id': 1,
+            'text': 'ummmm'
+          }]
+        }]
+      }));
+    });
+    it('should exist', () => {
+      should.exist(state.boards);
+      should.exist(state.cardsList);
+      should.exist(state.cards);
+    });
+    it('should not have properties', () => {
+      state.boards.should.not.have.property('1');
+      state.cardsList.should.not.have.property('1');
+      state.cards.should.not.have.property('1');
+    });
+  });
 });

@@ -57,20 +57,32 @@ describe('Boards component', () => {
     //check class name is correct
     result.type.should.shallowDeepEqual('div');
     //get props
-    let board = result.props;
+    let board = result.props.children;
     //test props for various values
-    board.children[0][0].type.should.shallowDeepEqual('input');
-    let board_item = board.children[0][0].props;
-    board_item.id.should.equal(boards[1]._id);
-    board_item.value.should.equal(boards[1].title);
-    board_item = board.children[0][1].props;
-    board_item.id.should.equal(boards[2]._id);
-    board_item.value.should.equal(boards[2].title);
+    board[0].type.should.equal('ul');
+    board[1].type.should.equal('input');
+    board[1].props.type.should.equal('button');
+    board[1].props.value.should.equal('Add Board');
+    let board_list = board[0].props.children;
+    board_list[0].type.should.shallowDeepEqual('li');
+    board_list[0].props.children[0].type.should.equal('input');
+    board_list[0].props.children[0].props.type.should.equal('button');
+    board_list[0].props.children[0].props.value.should.equal('blah');
+    board_list[0].props.children[1].type.should.equal('input');
+    board_list[0].props.children[1].props.type.should.equal('button');
+    board_list[0].props.children[1].props.value.should.equal('Delete Board');
+    board_list[1].type.should.shallowDeepEqual('li');
+    board_list[1].props.children[0].type.should.equal('input');
+    board_list[1].props.children[0].props.type.should.equal('button');
+    board_list[1].props.children[0].props.value.should.equal('shopping list');
+    board_list[1].props.children[1].type.should.equal('input');
+    board_list[1].props.children[1].props.type.should.equal('button');
+    board_list[1].props.children[1].props.value.should.equal('Delete Board');
   });
   //test for performing click event on add board
   it('should simulate a click event on add board input', () => {
     //set up a mockstore
-    const store = mockStore();
+    const store = mockStore({'boards': boards});
     //create instance of render and pass store to it
     let renderer = TestUtils.renderIntoDocument(
       <Provider store={store}>
@@ -79,12 +91,31 @@ describe('Boards component', () => {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(1);
+    inputs.length.should.equal(5);
     //simulate button click
-    TestUtils.Simulate.click(inputs[0]);
+    TestUtils.Simulate.click(inputs[4]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(3);
+    inputs2.length.should.equal(7);
+    inputs2[5].value = 'happy';
+    TestUtils.Simulate.change(inputs2[5]);
+    TestUtils.Simulate.click(inputs2[6]);
+  });
+  //test for performing clic event on delete board
+  it('should simulate a click event on delete board input', () => {
+    //set up a mockstore
+    const store = mockStore({'boards': boards});
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Boards.Container/>
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(5);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[1]);
   });
 });

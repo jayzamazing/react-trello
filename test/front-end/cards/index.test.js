@@ -9,6 +9,7 @@ chai.should();
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 var Cards = require('../../../public/js/cards');
+var CreateItems = require('../../../public/js/create-items');
 
 describe('Cards component', function() {
   var cardItems = {};
@@ -87,12 +88,14 @@ describe('Cards component', function() {
     //get the rendered react component to test against
     var result = renderer.getRenderOutput();
     //test props for various values
-    result.type.should.equal('ul');
-    //get cards prop
-    var resultListItem = result.props;
+    result.type.should.equal('div');
+    var resultListItem = result.props.children;
+    resultListItem[0].type.should.equal('ul');
+    var cards = resultListItem[0].props.children;
     //check cards match
-    resultListItem.children[0][0].props.children.should.equal(cardItems.cards[1].text);
-    resultListItem.children[0][1].props.children.should.equal(cardItems.cards[2].text);
+    cards[0].props.children[0].should.equal(cardItems.cards[1].text);
+    cards[1].props.children[0].should.equal(cardItems.cards[2].text);
+    resultListItem[1].type.WrappedComponent.should.shallowDeepEqual(CreateItems.CreateItems);
   });
   //test for performing click event on add cards
   it('should simulate a click event on add Cards input', () => {
@@ -109,12 +112,33 @@ describe('Cards component', function() {
     );
     //get the input for cards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(2);
+    inputs.length.should.equal(4);
+    inputs[0].value = 'happy';
+    TestUtils.Simulate.change(inputs[0]);
     //simulate button click
-    TestUtils.Simulate.click(inputs[0]);
+    TestUtils.Simulate.click(inputs[1]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(2);
+    inputs2.length.should.equal(4);
+  });
+  //test for deleting a card
+  it('should simulate a click event on delete cardslist input', () => {
+    //set up a mockstore
+    const store = mockStore({
+      cardsList: cardItems.cardsList,
+      cards: cardItems.cards
+    });
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Cards.Container boardId={cardItems.boardId} cardsListId={cardItems.cardsListId}/>
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(4);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[1]);
   });
 });
