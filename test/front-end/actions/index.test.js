@@ -27,7 +27,7 @@ describe('trello actions', () => {
           jsonObj
         ];
       })
-      //request to create a board
+      //request to get a board
       .get('/boards/1')
       .query(true)
       //send back reply to request
@@ -67,6 +67,14 @@ describe('trello actions', () => {
         return [
           200,
           {'title': 'blah', _id: 7}
+        ];
+      })
+      //update a board
+      .put('/boards/1')
+      .reply(() => {
+        return [
+          200,
+          {'title': 'bleh', _id: 1}
         ];
       })
       //request to create cardsList
@@ -165,6 +173,26 @@ describe('trello actions', () => {
         response.boards.boards.title.should.equal('blah');
         response.boards.boards.should.have.property('_id');
         response.boards.boards._id.should.equal(7);
+      });
+  });
+  it('should update a board', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {'1': 'blah'}
+    });
+    //call to update a board
+    return store.dispatch(actions.queries('boards', 'PUT', {
+      title: 'bleh'
+    }, 'update board', 1))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('UPDATE_BOARD_SUCCESS');
+        response.boards.boards.should.have.property('title');
+        response.boards.boards.title.should.equal('bleh');
+        response.boards.boards.should.have.property('_id');
+        response.boards.boards._id.should.equal(1);
       });
   });
   it('should create a cardslist', () => {

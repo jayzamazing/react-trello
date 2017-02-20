@@ -44,6 +44,15 @@ var deleteBoardSuccess = function(data) {
     boards: boards
   };
 };
+var UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
+var updateBoardSuccess = function(data) {
+  var boards = {};
+  boards.boards = data;
+  return {
+    type: 'UPDATE_BOARD_SUCCESS',
+    boards: boards
+  };
+};
 var CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
 var createCardListSuccess = function(data) {
   var boards = {};
@@ -172,6 +181,8 @@ var types = function(type, json) {
     return createBoardSuccess(json);
   case 'delete board':
     return deleteBoardSuccess(json);
+  case 'update board':
+    return updateBoardSuccess(json);
   case 'create cardslist':
     return createCardListSuccess(json);
   case 'delete cardslist':
@@ -180,8 +191,8 @@ var types = function(type, json) {
     return findBoardsSuccess(json);
   case 'create cards':
     return createCardSuccess(json);
-    case 'delete cards':
-      return deleteCardsSuccess(json);
+  case 'delete cards':
+    return deleteCardsSuccess(json);
   }
 };
   /*
@@ -216,6 +227,8 @@ exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
 exports.createBoardSuccess = createBoardSuccess;
 exports.DELETE_BOARD_SUCCESS = DELETE_BOARD_SUCCESS;
 exports.deleteBoardSuccess = deleteBoardSuccess;
+exports.UPDATE_BOARD_SUCCESS = UPDATE_BOARD_SUCCESS;
+exports.updateBoardSuccess = updateBoardSuccess;
 exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
 exports.createCardListSuccess = createCardListSuccess;
 exports.DELETE_CARDSLIST_SUCCESS = DELETE_CARDSLIST_SUCCESS;
