@@ -28,67 +28,85 @@ var boardDeserialization = function(data) {
 };
 var CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
 var createBoardSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'CREATE_BOARD_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
 var DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
 var deleteBoardSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'DELETE_BOARD_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
 var UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
 var updateBoardSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'UPDATE_BOARD_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
 var CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
 var createCardListSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'CREATE_CARDLIST_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
 var DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';
 var deleteCardslistSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'DELETE_CARDSLIST_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
+var UPDATE_CARDSLIST_SUCCESS = 'UPDATE_CARDSLIST_SUCCESS';
+var updateCardsListSuccess = function(data) {
+  // var boards = {};
+  // boards.boards = data;
+  return {
+    type: 'UPDATE_CARDSLIST_SUCCESS',
+    boards: data
+  };
+}
 var CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
 var createCardSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'CREATE_CARD_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
 var DELETE_CARDS_SUCCESS = 'DELETE_CARDS_SUCCESS';
 var deleteCardsSuccess = function(data) {
-  var boards = {};
-  boards.boards = data;
+  // var boards = {};
+  // boards.boards = data;
   return {
     type: 'DELETE_CARDS_SUCCESS',
-    boards: boards
+    boards: data
   };
 };
+var UPDATE_CARDS_SUCCESS = 'UPDATE_CARDS_SUCCESS';
+var updateCardsSuccess = function(data) {
+  // var boards = {};
+  // boards.boards = data;
+  return {
+    type: 'UPDATE_CARDS_SUCCESS',
+    boards: data
+  };
+}
   /*
    * Function to deal with queries to mongo and calling actions
    * @params method - either PUT, GET, DELETE, FIND, POST, PATCH
@@ -142,7 +160,7 @@ var queryCardsLists = function(method, postData, type, updateBoard) {
         .then(res2 => {
           resolve(res2);
         });
-      } else if (method === 'DELETE') {
+      } else if (method === 'DELETE' || method === 'PUT') {
         resolve(res.data || res);
       }
     });
@@ -151,7 +169,7 @@ var queryCardsLists = function(method, postData, type, updateBoard) {
 var queryCards = function(method, postData, type, updateCardslists, updateBoard) {
   return new Promise((resolve, reject) => {
     //call services to make rest call
-    services('cards', method, postData, type, updateCardslists)
+    services('cards', method, postData, updateCardslists)
     //get the data
     .then(res => {
       if (method === 'POST') {
@@ -162,7 +180,7 @@ var queryCards = function(method, postData, type, updateCardslists, updateBoard)
             resolve(res3.data || res3);
           });
         });
-      } else if (method === 'DELETE') {
+      } else if (method === 'DELETE' || method === 'PUT') {
         resolve(res.data || res);
       }
     });
@@ -187,12 +205,16 @@ var types = function(type, json) {
     return createCardListSuccess(json);
   case 'delete cardslist':
     return deleteCardslistSuccess(json);
+  case 'update cardslist':
+    return updateCardsListSuccess(json);
   case 'find boards':
     return findBoardsSuccess(json);
   case 'create cards':
     return createCardSuccess(json);
   case 'delete cards':
     return deleteCardsSuccess(json);
+  case 'update cards':
+    return updateCardsSuccess(json);
   }
 };
   /*
@@ -232,10 +254,14 @@ exports.updateBoardSuccess = updateBoardSuccess;
 exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
 exports.createCardListSuccess = createCardListSuccess;
 exports.DELETE_CARDSLIST_SUCCESS = DELETE_CARDSLIST_SUCCESS;
-exports.deleteCardslistSuccess = deleteCardslistSuccess
+exports.deleteCardslistSuccess = deleteCardslistSuccess;
+exports.UPDATE_CARDSLIST_SUCCESS = UPDATE_CARDSLIST_SUCCESS;
+exports.updateCardsListSuccess = updateCardsListSuccess;
 exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
 exports.createCardSuccess = createCardSuccess;
 exports.DELETE_CARDS_SUCCESS = DELETE_CARDS_SUCCESS;
 exports.deleteCardsSuccess = deleteCardsSuccess;
+exports.UPDATE_CARDS_SUCCESS = UPDATE_CARDS_SUCCESS;
+exports.updateCardsSuccess = updateCardsSuccess;
 exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
 exports.findBoardsSuccess = findBoardsSuccess;
