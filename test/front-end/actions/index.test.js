@@ -9,7 +9,7 @@ chai.should();
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 var board = function(board, cardsList, cards) {
-var temp = {
+  var temp = {
     'title': null,
     '_id': null,
     'cardsList': [{
@@ -20,7 +20,7 @@ var temp = {
         '_id': null,
       }]
     }]
-};
+  };
   if (board) {
     temp.title = board.title;
     temp._id = board._id;
@@ -34,7 +34,7 @@ var temp = {
     temp.cardsList[0].cards[0]._id = cards._id;
   }
   return temp;
-}
+};
 describe('trello actions', () => {
   before(() => {
     //create a mock server response
@@ -47,13 +47,13 @@ describe('trello actions', () => {
         return [
           200,
           board({'title': JSON.parse(requestBody).title, '_id': 7})
-        ]
+        ];
       })
       //request to get a board
       .get('/boards/1')
       .query(true)
       //send back reply to request
-      .reply((uri, requestBody) => {
+      .reply(() => {
         //return response
         return [
           200,
@@ -68,7 +68,7 @@ describe('trello actions', () => {
           200,
           board({'_id': 1,'title': 'blah'}, {'_id': JSON.parse(requestBody).$push.cardsList, 'title': 'fun'},
           {'_id': 1, 'text': 'ummmm'})
-        ]
+        ];
       })
       .delete('/boards/1')
       .reply(() => {
@@ -80,7 +80,7 @@ describe('trello actions', () => {
       })
       //update a board
       .put('/boards/1')
-      .reply((uri, requestBody) => {
+      .reply(() => {
         return [
           200,
           board({'title': 'bleh', _id: 1})
