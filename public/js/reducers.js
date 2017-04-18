@@ -30,7 +30,7 @@ function deserialize(state, action) {
 function createBoard(state, action) {
   //normalize boards
   const normalizedBoard = normalize(action, {
-    boards: arrayOf(boardsSchema)
+    boards: boardsSchema
   });
   //create empty object
   var newState = {};
@@ -60,7 +60,7 @@ function createBoard(state, action) {
 function deleteBoard(state, action) {
   //normalize boards
   const normalizedBoard = normalize(action, {
-    boards: arrayOf(boardsSchema)
+    boards: boardsSchema
   });
   //create empty object
   var newState = {};
