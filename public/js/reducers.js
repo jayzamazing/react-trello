@@ -58,6 +58,7 @@ function createBoard(state, action) {
 * params action- action with data to update state
 */
 function deleteBoard(state, action) {
+  console.log(state);
   //normalize boards
   const normalizedBoard = normalize(action, {
     boards: boardsSchema
@@ -92,20 +93,35 @@ function deleteBoard(state, action) {
 function trelloReducer(state, action) {
   state = state || initialRepositoryState;
   //reducer for adding a board
-  if (action.type === actions.BOARD_DESERIALIZATION ||
-    action.type === actions.FIND_BOARDS_SUCCESS) {
-    return deserialize(state, action);
-    //reducer for adding a b
-  } else if (action.type === actions.CREATE_BOARD_SUCCESS ||
-    action.type === actions.CREATE_CARDLIST_SUCCESS ||
-    action.type === actions.CREATE_CARD_SUCCESS) {
-    return createBoard(state, action);
-  } else if (action.type === actions.DELETE_BOARD_SUCCESS ||
-    action.type === actions.DELETE_CARDSLIST_SUCCESS ||
-    action.type === action.type === actions.DELETE_CARDS_SUCCESS) {
-    return deleteBoard(state, action);
-  } else {
-    return state;
+  // if (action.type === actions.BOARD_DESERIALIZATION ||
+  //   action.type === actions.FIND_BOARDS_SUCCESS) {
+  //   return deserialize(state, action);
+  //   //reducer for adding a b
+  // } else if (action.type === actions.CREATE_BOARD_SUCCESS ||
+  //   action.type === actions.CREATE_CARDLIST_SUCCESS ||
+  //   action.type === actions.CREATE_CARD_SUCCESS) {
+  //   return createBoard(state, action);
+  // } else if (action.type === actions.DELETE_BOARD_SUCCESS ||
+  //   action.type === actions.DELETE_CARDSLIST_SUCCESS ||
+  //   action.type === action.type === actions.DELETE_CARDS_SUCCESS) {
+  //   return deleteBoard(state, action);
+  // } else {
+  //   return state;
+  // }
+  switch (action.type) {
+    case 'BOARD_DESERIALIZATION':
+    case 'FIND_BOARDS_SUCCESS':
+      return deserialize(state, action);
+    case 'CREATE_BOARD_SUCCESS':
+    case 'CREATE_CARDLIST_SUCCESS':
+    case 'CREATE_CARD_SUCCESS':
+      return createBoard(state, action);
+    case 'DELETE_BOARD_SUCCESS':
+    case 'DELETE_CARDSLIST_SUCCESS':
+    case 'DELETE_CARDS_SUCCESS':
+      return deleteBoard(state, action);
+    default:
+      return state;
   }
 }
 exports.trelloReducer = trelloReducer;
