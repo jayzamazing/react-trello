@@ -50,7 +50,7 @@ describe('trello actions', () => {
         ];
       })
       //request to get a board
-      .get('/boards/1')
+      .get('/boards')
       .query(true)
       //send back reply to request
       .reply(() => {
@@ -153,6 +153,26 @@ describe('trello actions', () => {
   });
   after(() => {
     nock.cleanAll();
+  });
+  it('should get boards', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {}
+    });
+    //call createboard passing a title of the new board
+    return store.dispatch(actions.queries('boards', 'FIND', {
+      title: 'blah'
+    }, 'create board'))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('CREATE_BOARD_SUCCESS');
+        response.boards.should.have.property('title');
+        response.boards.title.should.equal('bleh');
+        response.boards.should.have.property('_id');
+        response.boards._id.should.equal(1);
+      });
   });
   it('should create a board', () => {
     //set up a mockstore
