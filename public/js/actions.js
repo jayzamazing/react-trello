@@ -12,71 +12,71 @@ app = feathers()
   .configure(rest(host).superagent(superagent))
   .configure(hooks());
 
-exports.FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
-exports.findBoardsSuccess = function(data) {
+const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
+var findBoardsSuccess = function(data) {
   return {
     type: 'FIND_BOARDS_SUCCESS',
     boards: data
   };
 };
-exports.CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
-exports.createBoardSuccess = function(data) {
+const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
+var createBoardSuccess = function(data) {
   return {
     type: 'CREATE_BOARD_SUCCESS',
     boards: data
   };
 };
-exports.DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
-exports.deleteBoardSuccess = function(data) {
+const DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
+var deleteBoardSuccess = function(data) {
   return {
     type: 'DELETE_BOARD_SUCCESS',
     boards: data
   };
 };
-exports.UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
-exports.updateBoardSuccess = function(data) {
+const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
+var updateBoardSuccess = function(data) {
   return {
     type: 'UPDATE_BOARD_SUCCESS',
     boards: data
   };
 };
-exports.CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
-exports.createCardListSuccess = function(data) {
+const CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
+var createCardListSuccess = function(data) {
   return {
     type: 'CREATE_CARDLIST_SUCCESS',
     boards: data
   };
 };
-exports.DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';
-exports.deleteCardslistSuccess = function(data) {
+const DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';
+var deleteCardslistSuccess = function(data) {
   return {
     type: 'DELETE_CARDSLIST_SUCCESS',
     boards: data
   };
 };
-exports.UPDATE_CARDSLIST_SUCCESS = 'UPDATE_CARDSLIST_SUCCESS';
-exports.updateCardsListSuccess = function(data) {
+const UPDATE_CARDSLIST_SUCCESS = 'UPDATE_CARDSLIST_SUCCESS';
+var updateCardsListSuccess = function(data) {
   return {
     type: 'UPDATE_CARDSLIST_SUCCESS',
     boards: data
   };
 }
-exports.CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
-exports.createCardSuccess = function(data) {
+const CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
+var createCardSuccess = function(data) {
   return {
     type: 'CREATE_CARD_SUCCESS',
     boards: data
   };
 };
-exports.DELETE_CARDS_SUCCESS = 'DELETE_CARDS_SUCCESS';
-exports.deleteCardsSuccess = function(data) {
+const DELETE_CARDS_SUCCESS = 'DELETE_CARDS_SUCCESS';
+var deleteCardsSuccess = function(data) {
   return {
     type: 'DELETE_CARDS_SUCCESS',
     boards: data
   };
 };
-exports.UPDATE_CARDS_SUCCESS = 'UPDATE_CARDS_SUCCESS';
-exports.updateCardsSuccess = function(data) {
+const UPDATE_CARDS_SUCCESS = 'UPDATE_CARDS_SUCCESS';
+var updateCardsSuccess = function(data) {
   return {
     type: 'UPDATE_CARDS_SUCCESS',
     boards: data
@@ -91,7 +91,7 @@ exports.updateCardsSuccess = function(data) {
    * @params updateItem - id of specific item to update
    * @return promise dispatch function based on type of query
    */
-exports.queries = function(service, method, postData, type, updateItem, updateItem2) {
+var queries = function(service, method, postData, type, updateItem, updateItem2) {
  return function(dispatch) {
    switch(service) {
      case 'boards':
@@ -150,10 +150,7 @@ var queryCards = function(method, postData, type, updateCardslists, updateBoard)
       if (method === 'POST') {
         services('cardslists', 'PATCH', { '$push': {'cards': res._id } }, updateCardslists)
         .then(res2 => {
-          services('boards', 'GET', updateBoard)
-          .then(res3 => {
-            resolve(res3.data || res3);
-          });
+          resolve(res2.data || res2);
         });
       } else if (method === 'DELETE' || method === 'PUT') {
         resolve(res.data || res);
@@ -217,3 +214,24 @@ var services = function(service, method, postData, updateItem) {
     return app.service(service).patch(updateItem, postData);
   }
 };
+exports.queries = queries;
+exports.CREATE_BOARD_SUCCESS = CREATE_BOARD_SUCCESS;
+exports.createBoardSuccess = createBoardSuccess;
+exports.DELETE_BOARD_SUCCESS = DELETE_BOARD_SUCCESS;
+exports.deleteBoardSuccess = deleteBoardSuccess;
+exports.UPDATE_BOARD_SUCCESS = UPDATE_BOARD_SUCCESS;
+exports.updateBoardSuccess = updateBoardSuccess;
+exports.CREATE_CARDLIST_SUCCESS = CREATE_CARDLIST_SUCCESS;
+exports.createCardListSuccess = createCardListSuccess;
+exports.DELETE_CARDSLIST_SUCCESS = DELETE_CARDSLIST_SUCCESS;
+exports.deleteCardslistSuccess = deleteCardslistSuccess;
+exports.UPDATE_CARDSLIST_SUCCESS = UPDATE_CARDSLIST_SUCCESS;
+exports.updateCardsListSuccess = updateCardsListSuccess;
+exports.CREATE_CARD_SUCCESS = CREATE_CARD_SUCCESS;
+exports.createCardSuccess = createCardSuccess;
+exports.DELETE_CARDS_SUCCESS = DELETE_CARDS_SUCCESS;
+exports.deleteCardsSuccess = deleteCardsSuccess;
+exports.UPDATE_CARDS_SUCCESS = UPDATE_CARDS_SUCCESS;
+exports.updateCardsSuccess = updateCardsSuccess;
+exports.FIND_BOARDS_SUCCESS = FIND_BOARDS_SUCCESS;
+exports.findBoardsSuccess = findBoardsSuccess;

@@ -298,7 +298,7 @@ describe('trello reducer', () => {
       state.cardsList.should.not.have.property('title');
     });
   });
-  describe.only('DELETE_CARD_SUCCESS', () => {
+  describe('DELETE_CARD_SUCCESS', () => {
     let state;
     const tempState = Immutable({
       boards: {
