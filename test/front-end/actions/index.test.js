@@ -46,7 +46,10 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': JSON.parse(requestBody).title, '_id': 7})
+          board({
+            'title': JSON.parse(requestBody).title,
+            '_id': 7
+          })
         ];
       })
       //request to get a board
@@ -57,7 +60,16 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'bleh', '_id': 1}, {'title': 'bleh', '_id': 1}, {'_id': 1, 'text': 'superman'})
+          board({
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            '_id': 1,
+            'text': 'superman'
+          })
         ];
       })
       .patch('/boards/1')
@@ -66,8 +78,16 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'_id': 1,'title': 'blah'}, {'_id': JSON.parse(requestBody).$push.cardsList, 'title': 'fun'},
-          {'_id': 1, 'text': 'ummmm'})
+          board({
+            '_id': 1,
+            'title': 'blah'
+          }, {
+            '_id': JSON.parse(requestBody).$push.cardsList,
+            'title': 'fun'
+          }, {
+            '_id': 1,
+            'text': 'ummmm'
+          })
         ];
       })
       .delete('/boards/1')
@@ -75,7 +95,10 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'blah', _id: 7})
+          board({
+            'title': 'blah',
+            _id: 7
+          })
         ];
       })
       //update a board
@@ -83,7 +106,10 @@ describe('trello actions', () => {
       .reply(() => {
         return [
           200,
-          board({'title': 'bleh', _id: 1})
+          board({
+            'title': 'bleh',
+            _id: 1
+          })
         ];
       })
       //request to create cardsList
@@ -93,7 +119,13 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'bleh', '_id': 1}, {'_id': 1, 'title': JSON.parse(requestBody).title})
+          board({
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            '_id': 1,
+            'title': JSON.parse(requestBody).title
+          })
         ];
       })
       .patch('/cardslists/1')
@@ -107,7 +139,16 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'bleh', '_id': 1}, {'title': 'bleh', '_id': 1}, {'_id': 1, 'text': 'superman'})
+          board({
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            '_id': 1,
+            'text': 'superman'
+          })
         ];
       })
       .delete('/cardslists/1')
@@ -115,7 +156,13 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'bleh', '_id': 1}, {'title': 'hello', _id: 5})
+          board({
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            'title': 'hello',
+            _id: 5
+          })
         ];
       })
       //update a cardslist
@@ -123,7 +170,13 @@ describe('trello actions', () => {
       .reply(() => {
         return [
           200,
-          board({'title': 'bleh', '_id': 1}, {'title': 'supah man', _id: 2})
+          board({
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            'title': 'supah man',
+            _id: 2
+          })
         ];
       })
       .post('/cards')
@@ -132,14 +185,26 @@ describe('trello actions', () => {
         //return response
         return [
           200,
-          board({'title': 'blah', '_id': 1}, {'title': 'bleh', '_id': 1}, {'_id': 1, 'text': JSON.parse(requestBody).title})
+          board({
+            'title': 'blah',
+            '_id': 1
+          }, {
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            '_id': 1,
+            'text': JSON.parse(requestBody).title
+          })
         ];
       }).delete('/cards/1')
       .reply(() => {
         //return response
         return [
           200,
-          board(null, null, {'text': 'hello', _id: 9})
+          board(null, null, {
+            'text': 'hello',
+            _id: 9
+          })
         ];
       })
       //update a card
@@ -147,7 +212,16 @@ describe('trello actions', () => {
       .reply((uri, requestBody) => {
         return [
           200,
-          board({'title': 'blah', '_id': 1}, {'title': 'bleh', '_id': 1}, {'text': JSON.parse(requestBody).title, _id: 2})
+          board({
+            'title': 'blah',
+            '_id': 1
+          }, {
+            'title': 'bleh',
+            '_id': 1
+          }, {
+            'text': JSON.parse(requestBody).title,
+            _id: 2
+          })
         ];
       });
   });
@@ -161,8 +235,8 @@ describe('trello actions', () => {
     });
     //call createboard passing a title of the new board
     return store.dispatch(actions.queries('boards', 'FIND', {
-      title: 'blah'
-    }, 'create board'))
+        title: 'blah'
+      }, 'create board'))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -181,8 +255,8 @@ describe('trello actions', () => {
     });
     //call createboard passing a title of the new board
     return store.dispatch(actions.queries('boards', 'POST', {
-      title: 'blah'
-    }, 'create board'))
+        title: 'blah'
+      }, 'create board'))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -219,8 +293,8 @@ describe('trello actions', () => {
     });
     //call to update a board
     return store.dispatch(actions.queries('boards', 'PUT', {
-      title: 'bleh'
-    }, 'update board', 1))
+        title: 'bleh'
+      }, 'update board', 1))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -239,8 +313,8 @@ describe('trello actions', () => {
       cardsList: {}
     });
     return store.dispatch(actions.queries('cardslists', 'POST', {
-      title: 'fun'
-    },
+          title: 'fun'
+        },
         'create cardslist', 1))
       .then(() => {
         //check response against expected values
@@ -281,8 +355,8 @@ describe('trello actions', () => {
     });
     //call to update a cardslist
     return store.dispatch(actions.queries('cardslists', 'PUT', {
-      title: 'supah man'
-    }, 'update cardslist', 2))
+        title: 'supah man'
+      }, 'update cardslist', 2))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -302,26 +376,26 @@ describe('trello actions', () => {
       cards: {}
     });
     return store.dispatch(actions.queries('cards', 'POST', {
-      text: 'superman'
-    },
-    'create cards', 1, 1))
-    .then(() => {
-      //check response against expected values
-      var response = store.getActions()[0];
-      response.should.have.property('type');
-      response.type.should.equal('CREATE_CARD_SUCCESS');
-      response.boards.cardsList[0].cards[0].should.have.property('text');
-      response.boards.cardsList[0].cards[0].text.should.equal('superman');
-      response.boards.cardsList[0].cards[0].should.have.property('_id');
-      response.boards.cardsList[0].cards[0]._id.should.equal(1);
-    });
+          text: 'superman'
+        },
+        'create cards', 1, 1))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal('CREATE_CARD_SUCCESS');
+        response.boards.cardsList[0].cards[0].should.have.property('text');
+        response.boards.cardsList[0].cards[0].text.should.equal('superman');
+        response.boards.cardsList[0].cards[0].should.have.property('_id');
+        response.boards.cardsList[0].cards[0]._id.should.equal(1);
+      });
   });
   it('should delete a card', () => {
     //set up a mockstore
     const store = mockStore({
       boards: {},
       cardsList: {},
-      cards:{}
+      cards: {}
     });
     return store.dispatch(actions.queries('cards', 'DELETE', 1,
         'delete cards'))
@@ -341,12 +415,12 @@ describe('trello actions', () => {
     const store = mockStore({
       boards: {},
       cardsList: {},
-      cards:{}
+      cards: {}
     });
     //call to update a cardslist
     return store.dispatch(actions.queries('cards', 'PUT', {
-      title: 'supah man'
-    }, 'update cards', 2))
+        title: 'supah man'
+      }, 'update cards', 2))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
