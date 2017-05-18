@@ -58,7 +58,6 @@ function createBoard(state, action) {
 * params action- action with data to update state
 */
 function deleteBoard(state, action) {
-  console.log(state);
   //normalize boards
   const normalizedBoard = normalize(action, {
     boards: boardsSchema
@@ -66,22 +65,28 @@ function deleteBoard(state, action) {
   //create empty object
   var newState = {};
   //if there is a board
-  if (normalizedBoard.entities.boards){
+  if (normalizedBoard.entities.boards && action.type == 'DELETE_BOARD_SUCCESS'){
     //remove it from state and store in newstate
     newState.boards = Immutable.without(state.boards,
         Object.keys(normalizedBoard.entities.boards));
+  } else {
+    newState.boards = state.boards;
   }
   //if there is a cardsList
-  if (normalizedBoard.entities.cardsList) {
+  if (normalizedBoard.entities.cardsList && action.type == 'DELETE_CARDSLIST_SUCCESS') {
     //remove it from state and store in newstate
     newState.cardsList = Immutable.without(state.cardsList,
-       Object.keys(normalizedBoard.entities.boards));
+       Object.keys(normalizedBoard.entities.cardsList));
+  } else {
+    newState.cardsList = state.cardsList;
   }
   //if there is a card
-  if (normalizedBoard.entities.cards) {
+  if (normalizedBoard.entities.cards && action.type == 'DELETE_CARDS_SUCCESS') {
     //remove it from state and store in newstate
     newState.cards = Immutable.without(state.cards,
        Object.keys(normalizedBoard.entities.cards));
+  } else {
+    newState.cards = state.cards;
   }
   return state = Immutable({
     boards: newState.boards || {},
@@ -109,7 +114,6 @@ function trelloReducer(state, action) {
   //   return state;
   // }
   switch (action.type) {
-    case 'BOARD_DESERIALIZATION':
     case 'FIND_BOARDS_SUCCESS':
       return deserialize(state, action);
     case 'CREATE_BOARD_SUCCESS':

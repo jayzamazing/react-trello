@@ -60,10 +60,10 @@ describe('trello reducer', () => {
   after(() => {
     boards = [];
   });
-  describe('BOARD_DESERIALIZATION', () => {
+  describe('FIND_BOARDS_SUCCESS', () => {
     let state;
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.boardDeserialization(boards));
+      state = reducer.trelloReducer(undefined, actions.findBoardsSuccess(boards));
     });
     it('should exist', () => {
       should.exist(state.boards);
@@ -247,7 +247,6 @@ describe('trello reducer', () => {
       should.exist(state.cards);
     });
     it('should not have properties', () => {
-      console.log(state);
       state.boards.should.not.have.property('1');
       state.boards.should.not.have.property('title');
     });
@@ -285,15 +284,45 @@ describe('trello reducer', () => {
       should.exist(state.cardsList);
       should.exist(state.cards);
     });
+    it('should have properties', () => {
+      state.boards.should.have.property('1');
+      state.boards[1].should.have.property('title');
+      state.boards[1].should.have.property('_id');
+    });
+    it('should deserialize the order', () => {
+      state.boards[1]._id.should.equal(1);
+      state.boards[1].title.should.equal('blah');
+    });
     it('should not have properties', () => {
-      console.log(state);
       state.cardsList.should.not.have.property('1');
+      state.cardsList.should.not.have.property('title');
     });
   });
-  describe('DELETE_CARD_SUCCESS', () => {
+  describe.only('DELETE_CARD_SUCCESS', () => {
     let state;
+    const tempState = Immutable({
+      boards: {
+        '1': {
+          '_id': 1,
+          'title': 'blah',
+          'cardsList': [1]
+        }
+      },
+      cardsList: {
+        '1': {
+          '_id': 1,
+          'title': 'something'
+        }
+      },
+      cards: {
+        '1': {
+          '_id': 1,
+          'text': 'ummmm'
+        }
+      }
+    });
     before(() => {
-      state = reducer.trelloReducer(undefined, actions.deleteCardsSuccess({
+      state = reducer.trelloReducer(tempState, actions.deleteCardsSuccess({
         '_id': 1,
         'title': 'blah',
         'cardsList': [{
@@ -311,10 +340,25 @@ describe('trello reducer', () => {
       should.exist(state.cardsList);
       should.exist(state.cards);
     });
+    it('should have properties', () => {
+      state.boards.should.have.property('1');
+      state.boards[1].should.have.property('title');
+      state.boards[1].should.have.property('_id');
+      state.cardsList.should.have.property('1');
+      state.cardsList[1].should.have.property('_id');
+      state.cardsList[1].should.have.property('title');
+    });
+    it('should deserialize the order', () => {
+      state.boards[1]._id.should.equal(1);
+      state.boards[1].title.should.equal('blah');
+      state.boards[1].cardsList.should.be.an('array')
+        .to.include.members([1]);
+      state.cardsList[1]._id.should.equal(1);
+      state.cardsList[1].title.should.equal('something');
+    });
     it('should not have properties', () => {
-      state.boards.should.not.have.property('1');
-      state.cardsList.should.not.have.property('1');
       state.cards.should.not.have.property('1');
+      state.cards.should.not.have.property('title');
     });
   });
   describe('UPDATE_BOARD_SUCCESS', () => {
