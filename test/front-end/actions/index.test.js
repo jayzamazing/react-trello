@@ -235,8 +235,8 @@ describe('trello actions', () => {
     });
     //call createboard passing a title of the new board
     return store.dispatch(actions.queries('boards', 'FIND', {
-        title: 'blah'
-      }, 'create board'))
+      title: 'blah'
+    }, 'create board'))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -255,8 +255,8 @@ describe('trello actions', () => {
     });
     //call createboard passing a title of the new board
     return store.dispatch(actions.queries('boards', 'POST', {
-        title: 'blah'
-      }, 'create board'))
+      title: 'blah'
+    }, 'create board'))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -293,8 +293,8 @@ describe('trello actions', () => {
     });
     //call to update a board
     return store.dispatch(actions.queries('boards', 'PUT', {
-        title: 'bleh'
-      }, 'update board', 1))
+      title: 'bleh'
+    }, 'update board', 1))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -313,9 +313,8 @@ describe('trello actions', () => {
       cardsList: {}
     });
     return store.dispatch(actions.queries('cardslists', 'POST', {
-          title: 'fun'
-        },
-        'create cardslist', 1))
+      title: 'fun'
+    }, 'create cardslist', 1))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -334,8 +333,7 @@ describe('trello actions', () => {
       boards: {},
       cardsList: {}
     });
-    return store.dispatch(actions.queries('cardslists', 'DELETE', 1,
-        'delete cardslist'))
+    return store.dispatch(actions.queries('cardslists', 'DELETE', 1, 'delete cardslist'))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -355,8 +353,8 @@ describe('trello actions', () => {
     });
     //call to update a cardslist
     return store.dispatch(actions.queries('cardslists', 'PUT', {
-        title: 'supah man'
-      }, 'update cardslist', 2))
+      title: 'supah man'
+    }, 'update cardslist', 2))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
@@ -376,8 +374,8 @@ describe('trello actions', () => {
       cards: {}
     });
     return store.dispatch(actions.queries('cards', 'POST', {
-          text: 'superman'
-        },
+      text: 'superman'
+    },
         'create cards', 1, 1))
       .then(() => {
         //check response against expected values
@@ -419,8 +417,8 @@ describe('trello actions', () => {
     });
     //call to update a cardslist
     return store.dispatch(actions.queries('cards', 'PUT', {
-        title: 'supah man'
-      }, 'update cards', 2))
+      title: 'supah man'
+    }, 'update cards', 2))
       .then(() => {
         //check response against expected values
         var response = store.getActions()[0];
