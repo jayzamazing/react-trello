@@ -7,7 +7,8 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import Boards from '../../../public/js/boards';
 import deepEqual from 'chai-shallow-deep-equal';
-import nock from 'nock';
+const history = require('history');
+const historyObj = history.createMemoryHistory();
 
 chai.use(deepEqual);
 chai.should();
@@ -28,23 +29,10 @@ describe('Boards component', () => {
         title: 'shopping list'
       }
     };
-    //create a mock server response
-    nock('http://localhost:3030')
-      .get('/boards')
-      //send back reply to request
-      .reply(() => {
-        //return response
-        return [
-          200, {
-            body: boards
-          }
-        ];
-      });
   });
   //tear down after tests are complete
   after(() => {
     boards = {};
-    nock.cleanAll();
   });
   //test showing board data
   it('should render the board items', function() {
@@ -65,19 +53,23 @@ describe('Boards component', () => {
     board[1].props.value.should.equal('Add Board');
     let board_list = board[0].props.children;
     board_list[0].type.should.shallowDeepEqual('li');
-    board_list[0].props.children[0].type.should.equal('input');
-    board_list[0].props.children[0].props.type.should.equal('button');
-    board_list[0].props.children[0].props.value.should.equal('blah');
+    board_list[0].props.children[0].type.should.equal('span');
+    let span_input = board_list[0].props.children[0];
+    span_input.props.children.type.should.equal('input');
+    span_input.props.children.props.value.should.equal('blah');
     board_list[0].props.children[1].type.should.equal('input');
     board_list[0].props.children[1].props.type.should.equal('button');
     board_list[0].props.children[1].props.value.should.equal('Delete Board');
     board_list[1].type.should.shallowDeepEqual('li');
-    board_list[1].props.children[0].type.should.equal('input');
-    board_list[1].props.children[0].props.type.should.equal('button');
-    board_list[1].props.children[0].props.value.should.equal('shopping list');
+    let span_input2 = board_list[1].props.children[0];
+    span_input2.props.children.type.should.equal('input');
+    span_input2.props.children.props.value.should.equal('shopping list');
     board_list[1].props.children[1].type.should.equal('input');
     board_list[1].props.children[1].props.type.should.equal('button');
     board_list[1].props.children[1].props.value.should.equal('Delete Board');
+    board_list[1].props.children[2].type.should.equal('input');
+    board_list[1].props.children[2].props.type.should.equal('button');
+    board_list[1].props.children[2].props.value.should.equal('edit Board');
   });
   //test for performing click event on add board
   it('should simulate a click event on add board input', () => {
@@ -91,7 +83,7 @@ describe('Boards component', () => {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(5);
+    inputs.length.should.equal(7);
     //simulate button click
     TestUtils.Simulate.click(inputs[4]);
     //get all buttons on the page after button press
@@ -114,8 +106,25 @@ describe('Boards component', () => {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(5);
+    inputs.length.should.equal(7);
     //simulate button click
     TestUtils.Simulate.click(inputs[1]);
+  });
+  it('should simulate a click event on edit board input', () => {
+    //set up a mockstore
+    const store = mockStore({'boards': boards});
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Boards.Container/>
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(7);
+    inputs[1].value = 'happy';
+    TestUtils.Simulate.change(inputs[1]);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[2]);
   });
 });
