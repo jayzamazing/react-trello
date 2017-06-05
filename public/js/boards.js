@@ -11,27 +11,33 @@ var BoardsListName = React.createClass({
     return {
       showCreateBoard: false,
       editBoard: {},
-      boards: {}
+      boards: {},
+      boardTitle: ''
     };
   },
   //keep track of text
   onAddInputChanged: function(event) {
-    var temp = this.state.boards;
-    // temp[event.target.id].title = event.target.value;
-    var temp = Immutable.update(temp,
-      event.target.id,
-      function() {
-        return {
-          title: event.target.value
-        }
-      });
-    this.setState({boards: temp});
+    if (event.target.name == 'addBoard') {
+      this.setState({boardTitle: event.target.value})
+    } else {
+      var temp = this.state.boards;
+      // temp[event.target.id].title = event.target.value;
+      var temp = Immutable.update(temp,
+        event.target.id,
+        function() {
+          return {
+            title: event.target.value
+          }
+        });
+      this.setState({boards: temp});
+    }
+
   },
   //function to add a new board by dispatching post request
   addBoard: function() {
     this.props.dispatch(
       //dispatch query boards
-      actions.queries('boards', 'POST', {title: this.state.board}, 'create board')
+      actions.queries('boards', 'POST', {title: this.state.boardTitle}, 'create board')
     );
     this.setState({showCreateBoard: false});
   },
@@ -112,7 +118,7 @@ var BoardsListName = React.createClass({
         <ul>{list}</ul>
         <input type="button" value="Add Board" onClick={this.showCreateBoard}/>
         {this.state.showCreateBoard ? <CreateItems.Container
-          onAddInputChanged={this.onAddInputChanged} addItems={this.addBoard}/> : null}
+          onAddInputChanged={this.onAddInputChanged} addItems={this.addBoard} name="addBoard"/> : null}
       </div>
     );
   }

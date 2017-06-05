@@ -7,8 +7,6 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import Boards from '../../../public/js/boards';
 import deepEqual from 'chai-shallow-deep-equal';
-const history = require('history');
-const historyObj = history.createMemoryHistory();
 
 chai.use(deepEqual);
 chai.should();

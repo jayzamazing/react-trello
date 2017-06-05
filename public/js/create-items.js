@@ -9,7 +9,7 @@ var CreateItems = React.createClass({
   render: function() {
     return (
       <form className="list-form" onSubmit={this.handleSubmit}>
-        <input type="text" onChange={this.props.onAddInputChanged}/>
+        <input type="text" onChange={this.props.onAddInputChanged} name={this.props.name}/>
         <input type="button" value="Submit" onClick={this.props.addItems}/>
       </form>
     );
