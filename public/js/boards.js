@@ -5,8 +5,9 @@ var hashHistory = router.hashHistory;
 var CreateItems = require('./create-items');
 var actions = require('./actions');
 var Immutable = require('seamless-immutable');
-
+//function to render multiple lists of boards
 var BoardsListName = React.createClass({
+  //set up initial data state
   getInitialState: function() {
     return {
       showCreateBoard: false,
@@ -17,11 +18,15 @@ var BoardsListName = React.createClass({
   },
   //keep track of text
   onAddInputChanged: function(event) {
+    //if the addBoard input is being used
     if (event.target.name == 'addBoard') {
+      //store title for board
       this.setState({boardTitle: event.target.value})
+      //otherwise assume we are editing board name
     } else {
+      //get boards from state
       var temp = this.state.boards;
-      // temp[event.target.id].title = event.target.value;
+      //update the title for the selected board
       var temp = Immutable.update(temp,
         event.target.id,
         function() {
@@ -29,9 +34,9 @@ var BoardsListName = React.createClass({
             title: event.target.value
           }
         });
+      //store the updated board title
       this.setState({boards: temp});
     }
-
   },
   //function to add a new board by dispatching post request
   addBoard: function() {
@@ -106,9 +111,9 @@ var BoardsListName = React.createClass({
                 onKeyPress={context.handleKeyPress}/>
             </span>
             <input type="button" value="Delete Board"
-            onClick={context.deleteBoard.bind(null, temp._id)}/>
-            <input type="button" value="edit Board"
-            onClick={context.editBoardName.bind(null, temp._id)}/>
+              onClick={context.deleteBoard.bind(null, temp._id)}/>
+            <input type="button" value="Edit Board"
+              onClick={context.editBoardName.bind(null, temp._id)}/>
           </li>
         );
       });
