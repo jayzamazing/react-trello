@@ -67,7 +67,7 @@ describe('Boards component', () => {
     board_list[1].props.children[1].props.value.should.equal('Delete Board');
     board_list[1].props.children[2].type.should.equal('input');
     board_list[1].props.children[2].props.type.should.equal('button');
-    board_list[1].props.children[2].props.value.should.equal('edit Board');
+    board_list[1].props.children[2].props.value.should.equal('Edit Board');
   });
   //test for performing click event on add board
   it('should simulate a click event on add board input', () => {
