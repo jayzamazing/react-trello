@@ -35,21 +35,22 @@ var CardsListName = React.createClass({
     this.setState({cardsList: temp});
   }
   },
-  //function to add a new board by dispatching post request
+  //function to add a new board
   addCardsList: function() {
     this.props.dispatch(
       //dispatch query boards
       actions.queries('cardslists', 'POST', {title: this.state.cardsList},
       'create cardslist', this.props.params.boardId.replace(':', ''))
     );
+    //hide the following input
     this.setState({showCreateCardsList: false});
   },
+  //function to delete a cardslist
   deleteCardsList: function(cardsListId) {
     this.props.dispatch(
       //dispatch query cardslist
       actions.queries('cardslists', 'DELETE', cardsListId, 'delete cardslist')
     );
-    // this.forceUpdate();
   },
   //function to edit the name of the cardsList
   updateCardsList: function(cardsListId, cardsListName) {
@@ -80,7 +81,6 @@ var CardsListName = React.createClass({
   render: function() {
       var context = this;
       if (this.props.cardsList) {
-        //remove : from variable due to routing
         var boardName = context.props.params.boardName.replace(':', '');
         var boardId = context.props.params.boardId.replace(':', '');
         //iterate over props.boards and get the item that matches the boardid
@@ -88,6 +88,7 @@ var CardsListName = React.createClass({
             //if the id of props.boards matches boardid
           return context.props.boards[item]._id == boardId;
         })];
+        //function to render multiple cardslist
         var cardsList = Object.keys(context.props.cardsList).map((item, index) => {
           if (board.cardsList.indexOf(context.props.cardsList[item]._id) > -1) {
             var temp = context.props.cardsList[item];
