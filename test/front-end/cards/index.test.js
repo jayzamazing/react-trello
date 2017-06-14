@@ -21,56 +21,13 @@ describe('Cards component', function() {
         '1': {
           _id: 1,
           title: 'something',
-          cards: [1, 2]
-        },
-        '2': {
-          _id: 2,
-          title: 'hungry',
-          cards: [3, 4]
-        },
-        '3': {
-          _id: 3,
-          title: 'groceries',
-          cards: [5, 6]
-        },
-        '4': {
-          _id: 4,
-          title: 'clothes',
-          cards: [7, 8]
+          cards: [1]
         }
       },
       cards: {
         '1': {
           _id: 1,
           text: 'ummmm'
-        },
-        '2': {
-          _id: 2,
-          text: 'food'
-        },
-        '3': {
-          _id: 3,
-          text: 'special'
-        },
-        '4': {
-          _id: 4,
-          text: 'taco'
-        },
-        '5': {
-          _id: 5,
-          text: 'apple'
-        },
-        '6': {
-          _id: 6,
-          text: 'pie'
-        },
-        '7': {
-          _id: 7,
-          text: 'pants'
-        },
-        '8': {
-          _id: 8,
-          text: 'shirt'
         }
       }
     };
@@ -79,7 +36,6 @@ describe('Cards component', function() {
     cardItems = {};
   });
   it('Renders the Cards item', function() {
-
     //create instance of render
     var renderer = TestUtils.createRenderer();
     //render an image component
@@ -92,10 +48,8 @@ describe('Cards component', function() {
     var resultListItem = result.props.children;
     resultListItem[0].type.should.equal('ul');
     var cards = resultListItem[0].props.children;
-    //check cards match
-    cards[0].props.children[0].should.equal(cardItems.cards[1].text);
-    cards[1].props.children[0].should.equal(cardItems.cards[2].text);
-    resultListItem[1].type.WrappedComponent.should.shallowDeepEqual(CreateItems.CreateItems);
+    // console.log(result);
+    cards[0].props.children[0].props.value.should.equal(cardItems.cards[1].text);
   });
   //test for performing click event on add cards
   it('should simulate a click event on add Cards input', () => {

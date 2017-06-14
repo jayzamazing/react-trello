@@ -7,10 +7,12 @@ var CreateItems = require('./create-items');
 var CardsContainer = React.createClass({
   //set up initial data state
   getInitialState: function() {
-    showCreateCards: false,
-    editCards: {},
-    cards: {},
-    text: ''
+    return {
+      showCreateCards: false,
+      editCards: {},
+      cards: {},
+      text: ''
+    };
   },
   //keep track of text
   onAddInputChanged: function(event) {
@@ -87,7 +89,7 @@ var CardsContainer = React.createClass({
         var temp = context.props.cards[item];
         return (
           <li key={index}>
-            <input type="text" id={temp._id} value={context.state.cards[temp._id] ? context.state.cards[temp._id].title : temp.title}
+            <input type="text" id={temp._id} value={context.state.cards[temp._id] ? context.state.cards[temp._id].text : temp.text}
               disabled={(context.state.editCards[temp._id] == undefined) ? true : context.state.editCards[temp._id]}
               onChange={context.onAddInputChanged}
               onKeyPress={context.handleKeyPress}/>
