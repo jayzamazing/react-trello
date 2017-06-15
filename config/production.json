@@ -1,6 +1,6 @@
 {
-  "host": "react-trello-app.feathersjs.com",
-  "port": 80,
+  "host": "HOST",
+  "port": "PORT",
   "mongodb": "DATABASE_URL",
   "build": "../build/",
   "node_modules": "../node_modules",

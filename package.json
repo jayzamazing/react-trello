@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "1.21.19",
+  "version": "2.0.0",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "public/js/index.js",
   "keywords": [
@@ -28,6 +28,7 @@
     "mocha": "mocha --compilers js:babel-register test/ --recursive",
     "mochaIndividual": "mocha --compilers js:babel-register --require test/front-end/utils/dom.js",
     "mkdir": "mkdir -p build",
+    "postinstall": "npm run build",
     "build": "npm run clean && npm run mkdir && npm run build:html && npm run build:css && npm run build:js",
     "watch": "npm run watch:html & npm run watch:css & npm run watch:js",
     "clean": "rm -rf build",
