@@ -21,11 +21,6 @@ describe('Cardslist component', function() {
           _id: 1,
           title: 'blah',
           cardsList: [1, 2]
-        },
-        '2': {
-          _id: 2,
-          title: 'shopping list',
-          cardsList: [3, 4]
         }
       },
       cardsList: {
@@ -33,55 +28,12 @@ describe('Cardslist component', function() {
           _id: 1,
           title: 'something',
           cards: [1, 2]
-        },
-        '2': {
-          _id: 2,
-          title: 'hungry',
-          cards: [3, 4]
-        },
-        '3': {
-          _id: 3,
-          title: 'groceries',
-          cards: [5, 6]
-        },
-        '4': {
-          _id: 4,
-          title: 'clothes',
-          cards: [7, 8]
         }
       },
       cards: {
         '1': {
           _id: 1,
           text: 'ummmm'
-        },
-        '2': {
-          _id: 2,
-          text: 'food'
-        },
-        '3': {
-          _id: 3,
-          text: 'special'
-        },
-        '4': {
-          _id: 4,
-          text: 'taco'
-        },
-        '5': {
-          _id: 5,
-          text: 'apple'
-        },
-        '6': {
-          _id: 6,
-          text: 'pie'
-        },
-        '7': {
-          _id: 7,
-          text: 'pants'
-        },
-        '8': {
-          _id: 8,
-          text: 'shirt'
         }
       }
     };
@@ -116,11 +68,17 @@ describe('Cardslist component', function() {
     cards.type.should.equal('ul');
     var cardItem = cards.props.children[0];
     cardItem.type.should.equal('li');
-    cardItem.props.children[0].type.should.equal('h3');
-    cardItem.props.children[0].props.children.should.equal(boardsList.cardsList[1].title);
+    cardItem.props.children[0].type.should.equal('input');
+    cardItem.props.children[0].props.value.should.equal(boardsList.cardsList[1].title);
     cardItem.props.children[1].type.WrappedComponent.should.shallowDeepEqual(Cards.CardsContainer);
     cardItem.props.children[1].props.cardsListId.should.equal('1');
     cardItem.props.children[1].props.boardId.should.equal('1');
+    cardItem.props.children[2].type.should.equal('input');
+    cardItem.props.children[2].props.type.should.equal('button');
+    cardItem.props.children[2].props.value.should.equal('Delete Cardslist');
+    cardItem.props.children[3].type.should.equal('input');
+    cardItem.props.children[3].props.type.should.equal('button');
+    cardItem.props.children[3].props.value.should.equal('Edit Cardslist');
   });
   //test for performing click event on add cardslist
   it('should simulate a click event on add CardsList input', () => {
@@ -138,16 +96,16 @@ describe('Cardslist component', function() {
     );
     //get the input for cards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(11);
+    inputs.length.should.equal(8);
     //simulate button click
-    TestUtils.Simulate.click(inputs[10]);
+    TestUtils.Simulate.click(inputs[7]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(13);
-    inputs2[7].value = 'happy';
-    TestUtils.Simulate.change(inputs2[10]);
-    TestUtils.Simulate.click(inputs2[11]);
+    inputs2.length.should.equal(10);
+    inputs2[8].value = 'happy';
+    TestUtils.Simulate.change(inputs2[8]);
+    TestUtils.Simulate.click(inputs2[9]);
   });
   it('should simulate a click event on delete cardslist input', () => {
     const store = mockStore({
@@ -163,8 +121,29 @@ describe('Cardslist component', function() {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(11);
+    inputs.length.should.equal(8);
     //simulate button click
-    TestUtils.Simulate.click(inputs[2]);
+    TestUtils.Simulate.click(inputs[5]);
+  });
+  it('should simulate a click event on edit cardslist input', () => {
+    const store = mockStore({
+      boards: boardsList.boards,
+      cardsList: boardsList.cardsList,
+      cards: boardsList.cards
+    });
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Cardslist.Container params={params} />
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(8);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[6]);
+    inputs[3].value = 'happy';
+    TestUtils.Simulate.change(inputs[0]);
+    TestUtils.Simulate.keyDown(inputs[0], {key: 'Enter', keyCode: 13, which: 13});
   });
 });

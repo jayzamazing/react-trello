@@ -9,4 +9,12 @@ addons:
     packages:
     - mongodb-org-server
 before_script:
-  - npm run build
+  - npm run postinstall
+deploy:
+  provider: heroku
+  api_key:
+    secure:
+      T7YU0+w3f9gAJwh2ZHrdrrOmcCVgbmm8YLWGCkOK+GTjLaZvF92PUUmRHCITPWErRZl73l8aYL300NkAo8Eib0pxUXQHw+N7Q+lNeWViWm2Ntheba2QnsRuQBH5OJEgCvWFCO4/iuHyz5PxCsBuAh6rmuqEw+MCRDSuiNPZBRBHWi7GQiP1HxWFMUxb/OAwlbwnb1QF5dTQLcFUp1N4gpHrpBwlFfdoiFStufgu7tfOdsPHibDGnmRyJG4iEARl0AFEi2hzQMtxNPLAD9GqKgoyz6H0ay3/SWeacRdIdAxsNG3dqAsTu8g3jhnuhPPP6xndHtC7NmCM5AqAkOUHpLeWWZWvU7Z5VQh1d+PfYqPXaP9KPkIrOAsVp724AYN4ee9GTrRYdx6rIunWVwdxux7sJYkn430+k8byIo6zUrS6VvFrA0esw5L3DxIBtHosmtVJfi/PNajdGLjpPu2qQUnYAp8Qar0JfWH4xP+ICwPNcYc0ZAV3CgkaxVHikBmUaXavtw09YGiPcEcCJx+PD5/apmXaYqnKUtSOkJkKaAmzIxu9ws/IrfnoalYw13AHeOoRH8hoa5AhgxaNjJ/oDloL1WhZ+PDuI8F1pvTRhPyBPYGMHrkpHukvb6aSMKOseUtyXPiqvR/yIuyuXOxw0A48uRiNb9duBulF2rriThbw=
+  app: react-trello
+  on:
+    repo: jayzamazing/react-trello
