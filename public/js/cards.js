@@ -2,7 +2,7 @@ var React = require('react');
 var connect = require('react-redux').connect;
 var actions = require('./actions');
 var CreateItems = require('./create-items');
-
+var Immutable = require('seamless-immutable');
 //component to store list of cards and text
 var CardsContainer = React.createClass({
   //set up initial data state
@@ -109,7 +109,7 @@ var CardsContainer = React.createClass({
           <input type="button" value="Add Cards" onClick={this.showCreateCards}/>
           {this.state.showCreateCards ? <CreateItems.Container
               onAddInputChanged={this.onAddInputChanged}
-              addItems={this.addCards.bind(null, this.props.cardsListId)}/> : null}
+              addItems={this.addCards} name="addCards"/> : null}
       </div>
     );
   }

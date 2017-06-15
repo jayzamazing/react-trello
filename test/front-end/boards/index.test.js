@@ -83,14 +83,14 @@ describe('Boards component', () => {
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     inputs.length.should.equal(7);
     //simulate button click
-    TestUtils.Simulate.click(inputs[4]);
+    TestUtils.Simulate.click(inputs[6]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(7);
+    inputs2.length.should.equal(9);
     inputs2[5].value = 'happy';
-    TestUtils.Simulate.change(inputs2[5]);
-    TestUtils.Simulate.click(inputs2[6]);
+    TestUtils.Simulate.change(inputs2[7]);
+    TestUtils.Simulate.click(inputs2[8]);
   });
   //test for performing clic event on delete board
   it('should simulate a click event on delete board input', () => {
@@ -106,7 +106,7 @@ describe('Boards component', () => {
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     inputs.length.should.equal(7);
     //simulate button click
-    TestUtils.Simulate.click(inputs[1]);
+    TestUtils.Simulate.click(inputs[4]);
   });
   it('should simulate a click event on edit board input', () => {
     //set up a mockstore
@@ -120,9 +120,11 @@ describe('Boards component', () => {
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     inputs.length.should.equal(7);
-    inputs[1].value = 'happy';
-    TestUtils.Simulate.change(inputs[1]);
     //simulate button click
-    TestUtils.Simulate.click(inputs[2]);
+    TestUtils.Simulate.click(inputs[5]);
+    inputs[3].value = 'happy';
+    TestUtils.Simulate.change(inputs[3]);
+    //simulate button click
+    TestUtils.Simulate.keyDown(inputs[3], {key: 'Enter', keyCode: 13, which: 13});
   });
 });

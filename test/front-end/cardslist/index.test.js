@@ -96,16 +96,16 @@ describe('Cardslist component', function() {
     );
     //get the input for cards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(7);
+    inputs.length.should.equal(8);
     //simulate button click
-    TestUtils.Simulate.click(inputs[6]);
+    TestUtils.Simulate.click(inputs[7]);
     //get all buttons on the page after button press
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(9);
-    inputs2[7].value = 'happy';
-    TestUtils.Simulate.change(inputs2[7]);
-    TestUtils.Simulate.click(inputs2[8]);
+    inputs2.length.should.equal(10);
+    inputs2[8].value = 'happy';
+    TestUtils.Simulate.change(inputs2[8]);
+    TestUtils.Simulate.click(inputs2[9]);
   });
   it('should simulate a click event on delete cardslist input', () => {
     const store = mockStore({
@@ -121,9 +121,9 @@ describe('Cardslist component', function() {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(7);
+    inputs.length.should.equal(8);
     //simulate button click
-    TestUtils.Simulate.click(inputs[4]);
+    TestUtils.Simulate.click(inputs[5]);
   });
   it('should simulate a click event on edit cardslist input', () => {
     const store = mockStore({
@@ -139,8 +139,11 @@ describe('Cardslist component', function() {
     );
     //get the input for boards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    inputs.length.should.equal(7);
+    inputs.length.should.equal(8);
     //simulate button click
-    TestUtils.Simulate.click(inputs[5]);
+    TestUtils.Simulate.click(inputs[6]);
+    inputs[3].value = 'happy';
+    TestUtils.Simulate.change(inputs[0]);
+    TestUtils.Simulate.keyDown(inputs[0], {key: 'Enter', keyCode: 13, which: 13});
   });
 });

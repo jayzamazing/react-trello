@@ -9,7 +9,6 @@ chai.should();
 const middlewares = [ thunk ];
 const mockStore = configureMockStore(middlewares);
 var Cards = require('../../../public/js/cards');
-var CreateItems = require('../../../public/js/create-items');
 
 describe('Cards component', function() {
   var cardItems = {};
@@ -67,14 +66,14 @@ describe('Cards component', function() {
     //get the input for cards
     let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
     inputs.length.should.equal(4);
-    inputs[0].value = 'happy';
-    TestUtils.Simulate.change(inputs[0]);
-    //simulate button click
-    TestUtils.Simulate.click(inputs[1]);
-    //get all buttons on the page after button press
+    TestUtils.Simulate.click(inputs[3]);
     let inputs2 = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
-    //check that previous input is there plus two inputs from create-items
-    inputs2.length.should.equal(4);
+    // //check that previous input is there plus two inputs from create-items
+    inputs2.length.should.equal(6);
+    inputs2[4].value = 'happy';
+    TestUtils.Simulate.change(inputs2[4]);
+    //simulate button click
+    TestUtils.Simulate.click(inputs2[5]);
   });
   //test for deleting a card
   it('should simulate a click event on delete cardslist input', () => {
@@ -94,5 +93,27 @@ describe('Cards component', function() {
     inputs.length.should.equal(4);
     //simulate button click
     TestUtils.Simulate.click(inputs[1]);
+  });
+  it('should simulate a click event on edit cards input', () => {
+    //set up a mockstore
+    const store = mockStore({
+      cardsList: cardItems.cardsList,
+      cards: cardItems.cards
+    });
+    //create instance of render and pass store to it
+    let renderer = TestUtils.renderIntoDocument(
+      <Provider store={store}>
+        <Cards.Container boardId={cardItems.boardId} cardsListId={cardItems.cardsListId}/>
+      </Provider>
+    );
+    //get the input for boards
+    let inputs = TestUtils.scryRenderedDOMComponentsWithTag(renderer, 'input');
+    inputs.length.should.equal(4);
+    //simulate button click
+    TestUtils.Simulate.click(inputs[2]);
+    inputs[3].value = 'happy';
+    TestUtils.Simulate.change(inputs[0]);
+    //simulate button click
+    TestUtils.Simulate.keyDown(inputs[0], {key: 'Enter', keyCode: 13, which: 13});
   });
 });

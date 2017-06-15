@@ -3,6 +3,7 @@ var Cards = require('./cards');
 var connect = require('react-redux').connect;
 var actions = require('./actions');
 var CreateItems = require('./create-items');
+var Immutable = require('seamless-immutable');
 //function to render multiple lists of cards
 var CardsListName = React.createClass({
   //set up initial data state
