@@ -8,22 +8,43 @@ const populateCardsList = hooks.populate('cardsList', {
 });
 
 exports.before = {
-  all: [
+  all: [],
+  find: [
+    auth.verifyToken(),
+    auth.populateUser(),
     auth.restrictToAuthenticated()
   ],
-  find: [],
   get: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.verifyToken(),
+    auth.restrictToAuthenticated(),
+    auth.populateUser(),
+    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
   ],
-  create: [],
+  create: [
+    auth.restrictToAuthenticated(),
+    auth.verifyToken(),
+    auth.populateUser(),
+    auth.associateCurrentUser({ idField: 'id', as: 'owner' })
+  ],
   update: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.verifyToken(),
+    auth.restrictToAuthenticated(),
+    auth.populateUser(),
+    auth.associateCurrentUser({ idField: 'id', as: 'owner' }),
+    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
   ],
   patch: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.verifyToken(),
+    auth.restrictToAuthenticated(),
+    auth.populateUser(),
+    auth.associateCurrentUser({ idField: 'id', as: 'owner' }),
+    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
   ],
   remove: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.verifyToken(),
+    auth.restrictToAuthenticated(),
+    auth.populateUser(),
+    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
   ]
 };
 
