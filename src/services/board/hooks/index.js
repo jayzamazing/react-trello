@@ -18,33 +18,33 @@ exports.before = {
     auth.verifyToken(),
     auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
+    auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   create: [
     auth.restrictToAuthenticated(),
     auth.verifyToken(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: 'id', as: 'owner' })
+    auth.associateCurrentUser({ idField: '_id', as: 'owner' })
   ],
   update: [
     auth.verifyToken(),
     auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: 'id', as: 'owner' }),
-    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
+    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
+    auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   patch: [
     auth.verifyToken(),
     auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: 'id', as: 'owner' }),
-    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
+    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
+    auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   remove: [
     auth.verifyToken(),
     auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.restrictToOwner({idField: 'id', ownerField: 'owner' })
+    auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ]
 };
 
