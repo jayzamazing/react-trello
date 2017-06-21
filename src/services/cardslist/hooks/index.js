@@ -10,21 +10,21 @@ const populateCards = hooks.populate('cards', {
 
 exports.before = {
   all: [
-    auth.restrictToAuthenticated()
+    // auth.restrictToAuthenticated()
   ],
   find: [],
   get: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    // auth.restrictToOwner({ ownerField: '_id' })
   ],
   create: [],
   update: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    // auth.restrictToOwner({ ownerField: '_id' })
   ],
   patch: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    // auth.restrictToOwner({ ownerField: '_id' })
   ],
   remove: [
-    auth.restrictToOwner({ ownerField: '_id' })
+    // auth.restrictToOwner({ ownerField: '_id' })
   ]
 };
 

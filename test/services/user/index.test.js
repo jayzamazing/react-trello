@@ -11,7 +11,6 @@ import localstorage from 'feathers-localstorage';
 import authentication from 'feathers-authentication/client';
 import superagent from 'superagent';
 const bodyParser = require('body-parser');
-var User = server.service('users');
 var token, id;
 //use http plugin
 chai.use(chaiHttp);
@@ -27,6 +26,7 @@ var app = feathers()
     .configure(rest(host).superagent(superagent))
     .configure(hooks())
     .configure(authentication({ storage: window.localStorage }));
+    var User = app.service('users');
 
 /*
 * All tests that should be run
@@ -42,14 +42,21 @@ describe('user service', function() {
   });
   //teardown after tests
   after((done) => {
-    //stop the server
-    this.server.close(() => {
+    app.authenticate({
+      email: 'blah',
+      password: 'kablah',
+      type: 'local'
+    }).then(() => {
       //delete user
       User.remove(id)
       .then(() => {
-        done();
+        //stop the server
+        this.server.close(() => {
+          done();
+        });
       })
     });
+  });
   });
   it('registered the users service', () => {
     assert.ok(app.service('users'));

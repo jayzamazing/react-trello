@@ -11,10 +11,7 @@ import localstorage from 'feathers-localstorage';
 import authentication from 'feathers-authentication/client';
 import superagent from 'superagent';
 const bodyParser = require('body-parser');
-var User = server.service('users');
-var Board = server.service('boards');
-var CardsList = server.service('cardslists');
-var Cards = server.service('cards');
+
 var token, id;
 //use http plugin
 chai.use(chaiHttp);
@@ -30,7 +27,10 @@ var app = feathers()
     .configure(rest(host).superagent(superagent))
     .configure(hooks())
     .configure(authentication({ storage: window.localStorage }));
-
+var User = app.service('users');
+var Board = app.service('boards');
+var CardsList = app.service('cardslists');
+var Cards = app.service('cards');
 /*
 * All tests that should be run
 */
@@ -52,13 +52,20 @@ describe('board service', function() {
     });
   });
   //teardown after tests
+  //teardown after tests
   after((done) => {
-    //stop the server
-    this.server.close(() => {
+    app.authenticate({
+      email: 'blah',
+      password: 'kablah',
+      type: 'local'
+    }).then(() => {
       //delete user
       User.remove(id)
       .then(() => {
-        done();
+        //stop the server
+        this.server.close(() => {
+          done();
+        });
       })
     });
   });
@@ -67,7 +74,14 @@ describe('board service', function() {
       email: 'blah',
       password: 'kablah',
       type: 'local'
-    }).then((res) => {
+    })
+    .then(() => {
+      Board.create({
+        title: 'blah'
+      }).then(() => {
+        done();
+      });
+    })
       // console.log(res);
       // Cards.create({
       //   'text': 'ummmm'
@@ -84,30 +98,32 @@ describe('board service', function() {
       //       title: 'blah',
       //       cardsList: temp2
       //     }, () => {
-      //       done();
+            // done();
       //     });
       //   });
       // });
-          Board.create({
-            title: 'blah',
-          }).then((res2) => {
-            // console.log(res2);
-            done();
-          }).catch((err) => {
-              // console.log(err);
-            }
-          );
-    }).catch((err3) => {
-      // console.error(err3);
-    });
+
+    // );
 
   });
   afterEach((done) => {
+    //TODO
+    // app.authenticate({
+    //   email: 'blah',
+    //   password: 'kablah',
+    //   type: 'local'
+    // })
+    // .then(() => {
+    //   Board.remove(null)
+    //   .then(() => {
+        done();
+    //   });
+    // })
     // delete contents of menu in mongodb
     // Cards.remove(null, () => {
     //   CardsList.remove(null, () => {
     //     Board.remove(null, () => {
-          done();
+          // done();
     //     });
     //   });
     // });
@@ -117,12 +133,28 @@ describe('board service', function() {
   });
   //check get request if all fields are filled
   it('should get the boards data', function(done) {
-    // app.authenticate({
-    //   email: 'blah',
-    //   password: 'kablah',
-    //   type: local
-    // }).then(() => {
-      done();
-    // });
+    app.authenticate({
+      email: 'blah',
+      password: 'kablah',
+      type: local
+    }).then(() => {
+      Board.find()
+      .then((res) => {
+        //check server response
+        res.status.should.equal(200);
+        //check expected results
+        res.body.data[0].should.have.property('title');
+        res.body.data[0].title.should.equal('blah');
+        res.body.data[0].should.have.property('cardsList');
+        res.body.data[0].cardsList.should.be.a('array');
+        res.body.data[0].cardsList[0].should.have.property('title');
+        res.body.data[0].cardsList[0].title.should.equal('something');
+        res.body.data[0].cardsList[0].should.have.property('cards');
+        res.body.data[0].cardsList[0].cards.should.be.a('array');
+        res.body.data[0].cardsList[0].cards[0].should.have.property('text');
+        res.body.data[0].cardsList[0].cards[0].text.should.equal('ummmm');
+        done();
+      });
+    });
   });
 });

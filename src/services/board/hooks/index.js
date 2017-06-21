@@ -21,10 +21,11 @@ exports.before = {
     auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   create: [
-    auth.restrictToAuthenticated(),
     auth.verifyToken(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: '_id', as: 'owner' })
+    auth.restrictToAuthenticated(),
+    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
+
   ],
   update: [
     auth.verifyToken(),
@@ -42,8 +43,8 @@ exports.before = {
   ],
   remove: [
     auth.verifyToken(),
-    auth.restrictToAuthenticated(),
     auth.populateUser(),
+    auth.restrictToAuthenticated(),
     auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ]
 };
