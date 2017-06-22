@@ -16,36 +16,33 @@ exports.before = {
   ],
   get: [
     auth.verifyToken(),
-    auth.restrictToAuthenticated(),
     auth.populateUser(),
+    auth.restrictToAuthenticated(),
     auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   create: [
     auth.verifyToken(),
     auth.populateUser(),
     auth.restrictToAuthenticated(),
-    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
-
+    auth.associateCurrentUser({ idField: '_id', as: 'owner' })
   ],
   update: [
     auth.verifyToken(),
-    auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
+    auth.restrictToAuthenticated(),
     auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   patch: [
     auth.verifyToken(),
-    auth.restrictToAuthenticated(),
     auth.populateUser(),
-    auth.associateCurrentUser({ idField: '_id', as: 'owner' }),
+    auth.restrictToAuthenticated(),
     auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
   ],
   remove: [
     auth.verifyToken(),
     auth.populateUser(),
     auth.restrictToAuthenticated(),
-    auth.restrictToOwner({idField: '_id', ownerField: 'owner' })
+    auth.restrictToOwner({idField: '_id', ownerField: 'owner' }),
   ]
 };
 
