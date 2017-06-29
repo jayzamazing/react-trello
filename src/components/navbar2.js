@@ -1,26 +1,15 @@
-var React = require('react');
-var router = require('react-router');
-var hashHistory = router.hashHistory;
-var NavBarContainer = React.createClass({
-  showBoards: function() {
-    hashHistory.push('/boards');
-  },
-  render: function() {
-    return (
+import React from 'react';
+import browserHistory from 'react-router';
+
+export default class NavBar2 extends React.Component {
+  showBoards() {
+    browserHistory.push('/boards');
+  }
+  render() {
+    <section>
       <nav className="navBar">
         <input type="button" onClick={this.showBoards} value="&#xf181; Boards"/>
       </nav>
-    );
+    </section>
   }
-});
-var NavBar = React.createClass({
-  render: function() {
-    return (
-      <section>
-        <NavBarContainer />
-        {this.props.children}
-      </section>
-    );
-  }
-});
-module.exports = NavBar;
+}
