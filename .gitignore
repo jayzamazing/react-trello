@@ -1,4 +1,6 @@
 node_modules/
 build/
 run_mongod
- 
+babel_cache/
+src/static/css/*
+src/static/js/*

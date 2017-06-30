@@ -1,14 +1,12 @@
 //init app in browser using #app in html
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './components/routes.js';
+import AppRoutes from './components/AppRoutes.js';
 // import { Provider } from 'react-redux';
-
+// <Provider store={store}></Provider>
 window.onload = () => {
   ReactDOM.render(
-    // <Provider store={store}>
-      <Routes>
-    // </Provider>
-    ,document.getElementById('app')
+      <Routes/>,
+      document.getElementById('app')
     );
 };

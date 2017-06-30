@@ -14,19 +14,11 @@ import PageNotFound from './components/pagenotfound';
 //render the data onto div with id app
 // document.addEventListener('DOMContentLoaded', function() {
   // ReactDOM.render
-  cost routes = (
-      // <Provider store={store}>
-          // <Router>
-          <Route path='/' component={NavBar1}>
-            //   //TODO
-            // </Route>
-            <Route path='boards' component={NavBar2}>
+  const routes = (
+          <Route path="/" component={NavBar1}>
+            <Route path="boards" component={NavBar2}/>
               // <IndexRoute component={Boards.Container}/>
               <Route path="*" component={PageNotFound}/>
-              // <Route path='/:boardId/:boardName' component={Cardslist.Container} />
           </Route>
-          // </Router>
-      // </Provider>
-// }
 );
 export default routes;
