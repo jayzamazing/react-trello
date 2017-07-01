@@ -1,7 +1,5 @@
 import path from 'path';
 import Express from 'express';
-import mongoose from 'mongoose';
-import { PORT, DATABASE_URL, NODE_ENV } from './config';
 const app = Express();
 app.use(Express.static(path.join(__dirname, '../static')));
 
@@ -15,26 +13,4 @@ app.get('*', function(req, res) {
   }
 });
 
-let server;
-
-function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(databaseUrl, err => {
-      if (err) {
-        return reject(err);
-      }
-      // listen for requests and log when you've started doing it
-      server = app.listen(port, () => {
-        console.log(`Server running on http://localhost:${port} [${env}]`);
-        resolve();
-      }).on('error', err => {
-        mongoose.disconnect();
-        reject(err)
-      });
-    });
-  });
-}
-
-if (require.main === module) {
-  runServer().catch(err => console.error(err));
-};
+export default app;

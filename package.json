@@ -4,7 +4,7 @@
   "version": "2.1.0",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "client.js",
-  "server": "server.js",
+  "server": "app.js",
   "keywords": [
     "React",
     "Trello"
