@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const packageData = require('./package.json');
 const minify = process.argv.indexOf('--minify') != -1;
+const nodeExternals = require('webpack-node-externals');
 var filename = [packageData.name, packageData.version, 'js'];
 var cssname = ['styles', packageData.version, '.css'];
 var plugins = [];
@@ -22,7 +23,7 @@ if (minify) {
     plugins.push(new webpack.optimize.OccurenceOrderPlugin());
 }
 plugins.push(new ExtractTextPlugin(cssname.join('.')));
-module.exports = {
+module.exports = [{
     entry: path.join(__dirname, 'src', packageData.main),
     output: {
         path: path.join(__dirname, 'src', 'static', 'js'),
@@ -50,4 +51,29 @@ module.exports = {
       ]
     },
     plugins: plugins
-};
+}, {
+  entry: path.join(__dirname, 'src', packageData.server),
+  target: 'node',
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
+  externals: [nodeExternals()],
+  output: {
+      path: path.join(__dirname, 'src', 'server'),
+      filename: 'app.js',
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015']
+        }
+      }
+    ]
+  },
+  plugins: []
+}];

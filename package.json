@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "client.js",
+  "server": "server.js",
   "keywords": [
     "React",
     "Trello"
@@ -24,13 +25,13 @@
   "scripts": {
     "test": "npm run jshint && npm run mocha",
     "jshint": "eslint src/. test/.",
-    "start": "node src/",
+    "start": "node src/server/app.js",
     "mocha": "mocha --compilers js:babel-register test/ --recursive",
     "mochaIndividual": "mocha --compilers js:babel-register --require test/front-end/utils/dom.js",
     "mkdir": "mkdir -p src/static/css src/static/js",
     "build": "npm run clean && npm run mkdir && npm run build:html && npm run build:js",
     "watch": "npm run watch:html & npm run watch:css & npm run watch:js",
-    "clean": "rm -rf src/static/*",
+    "clean": "rm -rf src/static/* && rm -rf src/server/*",
     "build:html": "npm run clean:html && cp src/components/index.html src/static/ && cp src/components/favicon.ico src/static/",
     "watch:html": "npm run build:html && chokidar src/components/index.html -c 'npm run build:html'",
     "clean:html": "rm -f src/static/index.html",
@@ -41,10 +42,10 @@
     "clean:js": "npm run clean:css:unminified && npm run clean:js:unminified && npm run clean:js:minified",
     "build:js:unminified": "npm run clean:js:unminified && webpack",
     "watch:js:unminified": "npm run build:js:unminified && webpack --watch",
-    "clean:js:unminified": "rm -f src/static/js/$npm_package_name.$npm_package_version.js src/static/js/$npm_package_name.$npm_package_version.js.map",
+    "clean:js:unminified": "rm -rf src/server/app.js && rm -f src/static/js/$npm_package_name.$npm_package_version.js src/static/js/$npm_package_name.$npm_package_version.js.map",
     "build:js:minified": "npm run clean:css:minified && npm run clean:js:minified && webpack --minify",
     "watch:js:minified": "npm run build:js:minified && webpack --watch --minify",
-    "clean:js:minified": "rm -f src/static/js/$npm_package_name.$npm_package_version.min.js src/static/js/$npm_package_name.$npm_package_version.min.js.map"
+    "clean:js:minified": "rm -rf src/server/app.js && rm -f src/static/js/$npm_package_name.$npm_package_version.min.js src/static/js/$npm_package_name.$npm_package_version.min.js.map"
   },
   "dependencies": {
     "body-parser": "1.15.2",
@@ -54,7 +55,7 @@
     "normalizr": "2.2.1",
     "passport": "0.3.2",
     "react": "15.3.1",
-    "react-dom": "15.3.1",
+    "react-dom": "^15.3.1",
     "react-redux": "4.4.5",
     "react-router": "2.8.1",
     "redux": "3.6.0",
@@ -74,9 +75,10 @@
     "chai-shallow-deep-equal": "1.4.0",
     "chokidar": "1.6.0",
     "chokidar-cli": "1.2.0",
+    "cross-env": "^5.0.1",
     "eslint": "3.7.0",
     "eslint-plugin-react": "6.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "1.0.1",
     "jsdom": "9.8.3",
     "less": "2.7.1",
     "less-loader": "2.2.3",
@@ -87,6 +89,7 @@
     "redux-mock-store": "1.2.1",
     "style-loader": "0.13.1",
     "uglify-js": "2.7.3",
-    "webpack": "1.13.2"
+    "webpack": "1.13.2",
+    "webpack-node-externals": "^1.6.0"
   }
 }

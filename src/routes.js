@@ -5,8 +5,8 @@ import { Route, IndexRoute } from 'react-router';
 // var Router = router.Router;
 // var Route = router.Route;
 // var IndexRoute = router.IndexRoute;
-// var NavBar1 = require('./navbar1');
-var NavBar2 = require('./components/navbar2');
+// var NavBar1 = require('./components/navbar1');
+// var NavBar2 = require('./components/navbar2');
 // var Boards = require('./components/boards');
 // var Cardslist = require('./components/cardslist');
 // var store = require('./components/store');
@@ -14,11 +14,11 @@ import PageNotFound from './components/pagenotfound';
 //render the data onto div with id app
 // document.addEventListener('DOMContentLoaded', function() {
   // ReactDOM.render
+  // <IndexRoute component={Boards.Container}/>
   const routes = (
-          <Route path="/" component={NavBar1}>
-            <Route path="boards" component={NavBar2}/>
-              // <IndexRoute component={Boards.Container}/>
-              <Route path="*" component={PageNotFound}/>
+          <Route path="/">
+            <Route path="boards"/>
+            <Route path="*" component={PageNotFound}/>
           </Route>
 );
 export default routes;
