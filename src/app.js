@@ -1,3 +1,4 @@
+'use strict';
 import app from './server.js';
 import mongoose from 'mongoose';
 import { PORT, DATABASE_URL, NODE_ENV } from './config';

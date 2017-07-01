@@ -1,3 +1,4 @@
+'use strict';
 import path from 'path';
 import Express from 'express';
 const app = Express();
@@ -12,5 +13,5 @@ app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, '../static/index.html'));
   }
 });
-
+app.get()
 export default app;
