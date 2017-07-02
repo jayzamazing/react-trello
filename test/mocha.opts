@@ -1,1 +1,1 @@
---require test/front-end/utils/dom.js
+--require test/utils/dom.js
