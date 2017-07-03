@@ -9,6 +9,14 @@ const userSchema = mongoose.Schema({
   updatedAt: { type: Date, 'default': Date.now }
 });
 
+userSchema.methods.apiRepr = function() {
+  return {
+    email: this.email,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  };
+}
+
 const userModel = mongoose.model('user', userSchema);
 
 module.exports = userModel;

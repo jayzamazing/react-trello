@@ -20,11 +20,8 @@ app.get('*', (req, res) => {
   }
 });
 app.post('/users', (req, res) => {
-  console.log(req.body);
-  //TODO
   userModel.create(req.body)
-  .then((res) => {
-    console.log(res);
-  });
+  .then(users => res.status(201).json(users.apiRepr()))
+  .catch(err => console.error(err));
 });
 export default app;
