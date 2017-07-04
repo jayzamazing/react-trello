@@ -1,5 +1,6 @@
 'use strict';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
 //schema representing a user
 const userSchema = mongoose.Schema({
@@ -17,6 +18,17 @@ userSchema.methods.apiRepr = function() {
   };
 }
 
-const userModel = mongoose.model('user', userSchema);
+userSchema.methods.validatePassword = function(password) {
+  return bcrypt
+    .compare(password, this.password)
+    .then(isValid => isValid);
+}
 
-module.exports = userModel;
+userSchema.statics.hashPassword = function(password) {
+  return bcrypt
+    .hash(password, 10);
+}
+
+const User = mongoose.model('user', userSchema);
+
+module.exports = User;

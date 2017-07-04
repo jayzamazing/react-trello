@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { PORT, DATABASE_URL, NODE_ENV } from './config';
 let server;
 
-
+//start the server and connect to mongo db
 function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
   return new Promise((resolve, reject) => {
     mongoose.Promise = global.Promise;
@@ -23,7 +23,7 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
     });
   });
 }
-
+//close the server and disconnect from mongo db
 function closeServer() {
     server.close(() => {
       mongoose.disconnect();

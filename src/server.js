@@ -1,12 +1,11 @@
 'use strict';
 import path from 'path';
 import Express from 'express';
-import userModel from './models/users.js';
-import boardModel from './models/boards.js';
-import cardModel from './models/cards.js';
-import cardslistModel from './models/cardslist';
+import morgan from 'morgan';
+import { Router as userRouter } from './models/users';
 import bodyParser from 'body-parser';
 const app = Express();
+app.use(morgan('common'));
 app.use(Express.static(path.join(__dirname, '../static')));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
@@ -19,9 +18,5 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../static/index.html'));
   }
 });
-app.post('/users', (req, res) => {
-  userModel.create(req.body)
-  .then(users => res.status(201).json(users.apiRepr()))
-  .catch(err => console.error(err));
-});
+app.use('/users/', userRouter);
 export default app;

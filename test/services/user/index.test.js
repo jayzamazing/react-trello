@@ -4,34 +4,28 @@ import chaiHttp from 'chai-http';
 import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
-import userModel from '../../../src/models/users';
+import {DATABASE_URL} from '../../../src/config';
 const should = chai.should();
 
 chai.use(chaiHttp);
 
-// function seedUserData() {
-//   console.info('seeding user data');
-//   const seedData = [];
-//   //iterate and create store user data in array
-//   for (let i = 0; i < 10; i++) {
-//     seedData.push(generateUserData());
-//   }
-//   //insert all the generated users
-//   return userModel.insertMany(seedData);
-// }
-// function generateUserData() {
-//   return {
-//     email: faker.internet.email(),
-//     password: faker.internet.password()
-//   }
-// }
+
+function deleteDb() {
+  return mongoose.connection.db.dropDatabase();
+}
 describe('user service', () => {
   //setup
   before(() => {
-    return runServer();
+    return runServer(DATABASE_URL);
     });
   after(() => {
     return closeServer();
+  });
+  beforeEach(() => {
+
+  });
+  afterEach(() => {
+    return deleteDb();
   });
   describe('create user', () => {
     after(() => {
@@ -49,7 +43,11 @@ describe('user service', () => {
           password: 'kablah'
         })
         .then((res) => {
-          console.log(res);
+          console.log(res.body);
+          done();
+        })
+        .catch((err) => {
+          console.error(err);
           done();
         });
     });
