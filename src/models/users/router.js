@@ -1,40 +1,12 @@
 'use strict';
-import {BasicStrategy} from 'passport-http';
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import User from './model';
-
+import strategy from '../auth/strategy';
 const Router = express.Router();
 Router.use(bodyParser.json());
-//strategy to verify the user against
-const strategy = new BasicStrategy(
-  (username, password, cb) => {
-    User.findOne({username})
-    .exec()
-    .then(user => {
-      //if the user does not exist
-      if (!user) {
-        return cb(null, false, {
-          message: 'Incorrect credentials'
-        })
-      }
-      //otherwise try and validate the password
-      return user.validatePassword(password);
-    })
-    .then(isValid => {
-      //if the password is incorrect
-      if (!isValid) {
-        return cb(null, false, {
-          message: 'Incorrect credentials'
-        })
-      } else {
-        return cb(null, user);
-      }
-    })
-    .catch(err => cb(err));
-  }
-);
 
 passport.use(strategy);
 Router.use(passport.initialize());
@@ -90,7 +62,7 @@ Router.post('/', (req, res) => {
       return User
         .create({
           email: email,
-          password: password
+          password: hash
         })
     })
     .then(user => {
@@ -101,8 +73,8 @@ Router.post('/', (req, res) => {
     });
 });
 //deal with authentication and setting up session
-Router.get('/me',
-  passport.authenticate('basic', {session: true}),
+Router.get('/login',
+  passport.authenticate('basic', {session: false}),
   (req, res) => res.json({user: req.user.apiRepr()})
 );
 
