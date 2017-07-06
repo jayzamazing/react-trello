@@ -26,7 +26,7 @@ plugins.push(new ExtractTextPlugin(cssname.join('.')));
 module.exports = [{
     entry: path.join(__dirname, 'src', packageData.main),
     output: {
-        path: path.join(__dirname, 'src', 'static', 'js'),
+        path: path.join(__dirname, 'build', 'static', 'js'),
         filename: filename.join('.'),
     },
     devtool: 'source-map',
@@ -59,7 +59,7 @@ module.exports = [{
   },
   externals: [nodeExternals()],
   output: {
-      path: path.join(__dirname, 'src', 'server'),
+      path: path.join(__dirname, 'build', 'server'),
       filename: 'app.js',
   },
   module: {

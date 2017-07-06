@@ -5,11 +5,11 @@ import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-const should = chai.should();
+chai.should();
 
 chai.use(chaiHttp);
 
-
+let user;
 function deleteDb() {
   return mongoose.connection.db.dropDatabase();
 }
@@ -17,41 +17,34 @@ function createUser() {
   return {
     email: faker.internet.email(),
     password: faker.internet.password()
-  }
+  };
 }
 describe('auth service', () => {
   //setup
   before(() => {
     return runServer(DATABASE_URL);
-    });
+  });
   after(() => {
     return closeServer();
   });
-  beforeEach(() => {
-
+  beforeEach((done) => {
+    user = createUser();
+    chai.request(app)
+      .post('/users')
+      //set headers
+      .set('Accept', 'application/json')
+      //send the following data
+      .send(user)
+      .then((res) => {
+        res.should.have.status(201);
+        done();
+      });
   });
   afterEach(() => {
     return deleteDb();
   });
   describe('user auth', () => {
-    let user = createUser();
-    before((done) => {
-      chai.request(app)
-        .post('/users')
-        //set headers
-        .set('Accept', 'application/json')
-        //send the following data
-        .send(user)
-        .then((res) => {
-          res.should.have.status(201);
-          done();
-        })
-        .catch((err) => {
-          // console.error(err);
-          done();
-        });
-    });
-    it('should not allow user to access endpoint', done => {
+    it('should not allow user to login', done => {
       chai.request(app)
         .get('/login')
         .catch((err) => {
@@ -59,7 +52,7 @@ describe('auth service', () => {
           done();
         });
     });
-    it('should allow user to access endpoint', done => {
+    it('should allow user to login', done => {
       chai.request(app)
         .get('/login')
         //set headers

@@ -1,7 +1,7 @@
 import React from 'react';
 // var ReactDOM = require('react-dom');
 // var Provider = require('react-redux').Provider;
-import { Route, IndexRoute } from 'react-router';
+import {Route} from 'react-router';
 // var Router = router.Router;
 // var Route = router.Route;
 // var IndexRoute = router.IndexRoute;
@@ -13,12 +13,12 @@ import { Route, IndexRoute } from 'react-router';
 import PageNotFound from './components/pagenotfound';
 //render the data onto div with id app
 // document.addEventListener('DOMContentLoaded', function() {
-  // ReactDOM.render
-  // <IndexRoute component={Boards.Container}/>
-  const routes = (
-          <Route path="/">
-            <Route path="boards"/>
-            <Route path="*" component={PageNotFound}/>
-          </Route>
+// ReactDOM.render
+// <IndexRoute component={Boards.Container}/>
+const routes = (
+  <Route path="/">
+    <Route path="boards"/>
+    <Route path="*" component={PageNotFound}/>
+  </Route>
 );
 export default routes;

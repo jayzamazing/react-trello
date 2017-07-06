@@ -16,18 +16,18 @@ userSchema.methods.apiRepr = function() {
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };
-}
+};
 
 userSchema.methods.validatePassword = function(password) {
   return bcrypt
     .compare(password, this.password)
     .then(isValid => isValid);
-}
+};
 
 userSchema.statics.hashPassword = function(password) {
   return bcrypt
     .hash(password, 10);
-}
+};
 
 const User = mongoose.model('user', userSchema);
 

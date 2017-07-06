@@ -12,7 +12,7 @@ export default new BasicStrategy(
       if (!user) {
         return cb(null, false, {
           message: 'Incorrect credentials'
-        })
+        });
       }
       //otherwise try and validate the password
       return user.validatePassword(password);
@@ -22,7 +22,7 @@ export default new BasicStrategy(
       if (!isValid) {
         return cb(null, false, {
           message: 'Incorrect credentials'
-        })
+        });
       } else {
         return cb(null, user);
       }

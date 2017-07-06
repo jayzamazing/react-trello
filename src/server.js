@@ -8,7 +8,7 @@ import bodyParser from 'body-parser';
 const app = Express();
 app.use(morgan('common'));
 app.use(Express.static(path.join(__dirname, './static')));
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use('/', authRouter);
 app.use('/users/', userRouter);

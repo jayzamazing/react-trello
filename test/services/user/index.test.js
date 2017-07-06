@@ -5,7 +5,7 @@ import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-const should = chai.should();
+chai.should();
 
 chai.use(chaiHttp);
 
@@ -16,21 +16,19 @@ function createUser() {
   return {
     email: faker.internet.email(),
     password: faker.internet.password()
-  }
+  };
 }
 describe('user service', () => {
+
   //setup
   before(() => {
     return runServer(DATABASE_URL);
-    });
+  });
   after(() => {
     return closeServer();
   });
-  beforeEach(() => {
-
-  });
   afterEach(() => {
-    // return deleteDb();
+    return deleteDb();
   });
   describe('create user', () => {
     it('should create a user', done => {
@@ -47,10 +45,6 @@ describe('user service', () => {
           res.should.be.json;
           res.body.should.include.keys('email', 'createdAt', 'updatedAt');
           res.body.email.should.equal(user.email);
-          done();
-        })
-        .catch((err) => {
-          console.error(err);
           done();
         });
     });

@@ -14,25 +14,29 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
       }
       // listen for requests and log when you've started doing it
       server = app.listen(port, () => {
+        /* eslint-disable no-console */
         console.log(`Server running on http://localhost:${port} [${env}]`);
+        /* eslint-enable no-console */
         resolve();
       }).on('error', err => {
         mongoose.disconnect();
-        reject(err)
+        reject(err);
       });
     });
   });
 }
 //close the server and disconnect from mongo db
 function closeServer() {
-    server.close(() => {
-      mongoose.disconnect();
-      process.exit();
-    });
+  server.close(() => {
+    mongoose.disconnect();
+    process.exit();
+  });
 }
 
 if (require.main === module) {
+  /* eslint-disable no-console */
   runServer().catch(err => console.error(err));
-};
+  /* eslint-enable no-console */
+}
 
-export { app, runServer, closeServer }
+export { app, runServer, closeServer };
