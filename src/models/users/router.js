@@ -4,7 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import User from './model';
-import strategy from '../auth/strategy';
+import strategy from '../config/strategy';
 const Router = express.Router();
 Router.use(bodyParser.json());
 
