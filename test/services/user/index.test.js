@@ -30,23 +30,21 @@ describe('user service', () => {
   afterEach(() => {
     return deleteDb();
   });
-  describe('create user', () => {
-    it('should create a user', done => {
-      let user = createUser();
-      chai.request(app)
-        //request to /cards
-        .post('/users')
-        //set headers
-        .set('Accept', 'application/json')
-        //send the following data
-        .send(user)
-        .then((res) => {
-          res.should.have.status(201);
-          res.should.be.json;
-          res.body.should.include.keys('email', 'createdAt', 'updatedAt');
-          res.body.email.should.equal(user.email);
-          done();
-        });
-    });
+  it('should create a user', done => {
+    let user = createUser();
+    chai.request(app)
+      //request to /cards
+      .post('/users')
+      //set headers
+      .set('Accept', 'application/json')
+      //send the following data
+      .send(user)
+      .then((res) => {
+        res.should.have.status(201);
+        res.should.be.json;
+        res.body.should.include.keys('email', 'createdAt', 'updatedAt');
+        res.body.email.should.equal(user.email);
+        done();
+      });
   });
 });

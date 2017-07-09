@@ -3,15 +3,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
-import strategy from '../config/strategy';
+// import strategy from '../config/strategy';
 const Router = express.Router();
 Router.use(bodyParser.json());
 
-passport.use(strategy);
-Router.use(passport.initialize());
+// passport.use(strategy);
+// Router.use(passport.initialize());
 
 //deal with authentication and setting up session
-Router.get('/login',
+Router.get('/',
   passport.authenticate('basic', {session: false}),
   (req, res) => res.json({user: req.user.apiRepr()})
 );

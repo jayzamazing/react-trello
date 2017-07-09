@@ -4,12 +4,12 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import User from './model';
-import strategy from '../config/strategy';
+// import strategy from '../config/strategy';
 const Router = express.Router();
 Router.use(bodyParser.json());
 
-passport.use(strategy);
-Router.use(passport.initialize());
+// passport.use(strategy);
+// Router.use(passport.initialize());
 
 //check that the email is valid
 function validateEmail(email) {

@@ -2,14 +2,14 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
+// import passport from 'passport';
 // import Card from './model';
-import strategy from '../auth/strategy';
+// import strategy from '../auth/strategy';
 const Router = express.Router();
 Router.use(bodyParser.json());
 
-passport.use(strategy);
-Router.use(passport.initialize());
+// passport.use(strategy);
+// Router.use(passport.initialize());
 
 
 
