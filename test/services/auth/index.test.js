@@ -45,15 +45,15 @@ describe('auth service', () => {
   });
   it('should not allow user to login', done => {
     chai.request(app)
-      .get('/login')
+      .post('/login')
       .catch((err) => {
-        err.status.should.equal(401);
+        err.status.should.equal(404);
         done();
       });
   });
   it('should allow user to login', done => {
     chai.request(app)
-      .get('/login')
+      .post('/auth/login')
       //set headers
       .set('Accept', 'application/json')
       //send the following data

@@ -11,8 +11,8 @@ Router.use(bodyParser.json());
 // Router.use(passport.initialize());
 
 //deal with authentication and setting up session
-Router.get('/',
-  passport.authenticate('basic', {session: false}),
+Router.post('/login',
+  passport.authenticate('basic'),
   (req, res) => res.json({user: req.user.apiRepr()})
 );
 
