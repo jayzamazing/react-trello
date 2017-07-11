@@ -4,7 +4,7 @@ import Express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
 import strategy from './models/config/strategy';
-import { Router as userRouter } from './models/users';
+import { Router as userRouter, User } from './models/users';
 import { Router as authRouter } from './models/auth';
 import bodyParser from 'body-parser';
 const app = Express();

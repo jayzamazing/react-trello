@@ -4,7 +4,6 @@ import chaiHttp from 'chai-http';
 import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
-import { PORT } from '../../../src/config';
 chai.should();
 
 chai.use(chaiHttp);

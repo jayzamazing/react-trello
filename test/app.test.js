@@ -1,9 +1,12 @@
 'use strict';
-const assert = require('assert');
-const request = require('request');
-import {runServer, closeServer} from '../src/app';
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+import {app, runServer, closeServer} from '../src/app';
+chai.should();
 
-describe('index page test', function() {
+chai.use(chaiHttp);
+describe('index page test', () => {
+
   //setup
   before(() => {
     return runServer();
@@ -11,11 +14,13 @@ describe('index page test', function() {
   after(() => {
     return closeServer();
   });
-
-  it('starts and shows the index page', function(done) {
-    request('http://localhost:8080', function(err, res, body) {
-      assert.ok(body.indexOf('<html lang="en">') !== -1);
-      done(err);
-    });
+  it('starts and shows the index page', () => {
+    return chai.request(app)
+      //request to /cards
+      .get('/')
+      //set headers
+      .then((res) => {
+        res.text.should.include('<html lang="en">');
+      });
   });
 });

@@ -18,7 +18,7 @@ function createUser() {
     password: faker.internet.password()
   };
 }
-describe('boards service', () => {
+describe.skip('boards service', () => {
   let user;
   let agent;
   //setup
@@ -31,7 +31,7 @@ describe('boards service', () => {
         //set headers
         .set('Accept', 'application/json')
         //send the following data
-        .send(this.user)
+        .send(this.user);
     });
   });
   after(() => {
@@ -46,15 +46,14 @@ describe('boards service', () => {
       .set('Accept', 'application/json')
       //send the following data
       .auth(user.email, user.password)
-      .then((res) => {
-        this.cookies = res.
+      .then(() => {
 
       });
   });
   afterEach(() => {
     return deleteDb();
   });
-  it.skip('should create a board', done => {
+  it('should create a board', done => {
     let user = createUser();
     agent
       //request to /cards
