@@ -15,5 +15,9 @@ Router.post('/login',
   passport.authenticate('basic'),
   (req, res) => res.json({user: req.user.apiRepr()})
 );
+Router.post('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
 
 module.exports = Router;

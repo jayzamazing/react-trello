@@ -4,6 +4,7 @@ import chaiHttp from 'chai-http';
 import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
+import { PORT } from '../../../src/config';
 chai.should();
 
 chai.use(chaiHttp);
@@ -43,16 +44,15 @@ describe('auth service', () => {
   afterEach(() => {
     return deleteDb();
   });
-  it('should not allow user to login', done => {
-    chai.request(app)
+  it('should not allow user to login', () => {
+    return chai.request(app)
       .post('/login')
       .catch((err) => {
         err.status.should.equal(404);
-        done();
       });
   });
-  it('should allow user to login', done => {
-    chai.request(app)
+  it('should allow user to login', () => {
+    return chai.request(app)
       .post('/auth/login')
       //set headers
       .set('Accept', 'application/json')
@@ -60,7 +60,15 @@ describe('auth service', () => {
       .auth(user.email, user.password)
       .then((res) => {
         res.should.have.status(200);
-        done();
+      });
+  });
+  it('should allow user to logout', () => {
+    return chai.request(app)
+      .post('/auth/logout')
+      //set headers
+      .set('Accept', 'application/json')
+      .then((res) => {
+        res.should.have.status(200);
       });
   });
 });

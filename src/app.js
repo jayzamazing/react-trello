@@ -14,7 +14,7 @@ function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
       }
       server = app.listen(port, () => {
 /* eslint-disable no-console */
-        console.log(`Server running on http://localhost:${port} [${env}]`);
+        console.log('Server running on http://localhost:' + server.address().port + ` [${env}]`);
 /* eslint-enable no-console */
         resolve();
       })
