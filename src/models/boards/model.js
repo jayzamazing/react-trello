@@ -10,6 +10,15 @@ const boardSchema = new mongoose.Schema({
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
 });
 
+boardSchema.methods.apiRepr = function() {
+  return {
+    title: this.title,
+    cardsList: this.cardsList,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt
+  };
+};
+
 const Board = mongoose.model('board', boardSchema);
 
 module.exports = Board;
