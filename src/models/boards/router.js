@@ -23,10 +23,28 @@ Router.post('/', (req, res) => {
     if (title === '') {
       return res.status(422).json({message: 'Incorrect field length: title'});
     }
+    //store board title along with the owner of the board
     return Board.
-    create({title: title})
+    create({title: title, owner: req.user._id})
     .then(board => {
       return res.status(201).json(board.apiRepr());
+    })
+    .catch(err => {
+      return res.status(500).json({message: err});
+    });
+  //otherwise
+  } else {
+    return res.redirect('/');
+  }
+});
+Router.get('/', (req, res) => {
+  //ensure there is a session
+  if (req.isAuthenticated()) {
+    //get all the boards that belong to this user
+    return Board
+    .find({owner: req.user._id})
+    .then(board => {
+      return res.status().json(board.apiRepr());
     })
     .catch(err => {
       return res.status(500).json({message: err});

@@ -5,21 +5,48 @@ import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
+// import {Board} from '../../../src/models/boards';
+import {User} from '../../../src/models/users';
 chai.should();
 
 chai.use(chaiHttp);
-
+let users;
+//used to delete the database
 function deleteDb() {
   return mongoose.connection.db.dropDatabase();
 }
+//Create a user, hash password, and keep track of original password
 function createUser() {
-  return {
-    email: faker.internet.email(),
-    password: faker.internet.password()
-  };
+  let password = faker.internet.password();
+  return User.hashPassword(password)
+  .then((hash) => {
+    return {
+      email: faker.internet.email(),
+      password: hash,
+      unhashed: password
+    };
+  });
 }
+//create multiple users
+function createUsers() {
+  const seedData = [];
+  for (let i = 0; i <= 9; i++) {
+    seedData.push(createUser());
+  }
+  //wait for all the hashpassword promises to finish before performing insert many
+  return Promise.all(seedData)
+  .then((seed) => {
+    users = seed;
+    return User.insertMany(seed);
+  });
+}
+// function seedTitleData() {
+//   const seedData = [];
+//   return {
+//     title: faker.random.words
+//   }
+// }
 describe('boards service', () => {
-  let user;
   let agent;
   //setup
   before(() => {
@@ -29,13 +56,7 @@ describe('boards service', () => {
     return closeServer();
   });
   beforeEach(() => {
-    user = createUser();
-    return chai.request(app)
-      .post('/users')
-      //set headers
-      .set('Accept', 'application/json')
-      //send the following data
-      .send(user);
+    return createUsers();
   });
   afterEach(() => {
     return deleteDb();
@@ -46,10 +67,10 @@ describe('boards service', () => {
       .post('/boards')
       //set headers
       .set('Accept', 'application/json')
-      .set('X-Forwarded-For', '127.0.0.1:49180')
       .send({title: 'grocery list'})
       .then((res) => {
         res.should.redirect;
+        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
   it('should create a board', () => {
@@ -58,7 +79,7 @@ describe('boards service', () => {
       //request to /boards
       .post('/auth/login')
       //send the following data
-      .auth(user.email, user.password)
+      .auth(users[0].email, users[0].unhashed)
       //set headers
       .set('Accept', 'application/json')
       .then(() => {
