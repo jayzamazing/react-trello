@@ -2,7 +2,6 @@
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import User from './model';
 // import strategy from '../config/strategy';
 const Router = express.Router();
@@ -72,10 +71,5 @@ Router.post('/', (req, res) => {
   return res.status(500).json({message: err});
 });
 });
-//deal with authentication and setting up session
-Router.get('/login',
-passport.authenticate('basic', {session: false}),
-(req, res) => res.json({user: req.user.apiRepr()})
-);
 
 module.exports = Router;

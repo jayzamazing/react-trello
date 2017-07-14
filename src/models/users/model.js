@@ -12,6 +12,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.apiRepr = function() {
   return {
+    _id: this._id,
     email: this.email,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt

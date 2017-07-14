@@ -44,7 +44,11 @@ Router.get('/', (req, res) => {
     return Board
     .find({owner: req.user._id})
     .then(board => {
-      return res.status().json(board.apiRepr());
+      return res.json({
+        board: board.map(
+          (board) => board.apiRepr()
+        )
+      });
     })
     .catch(err => {
       return res.status(500).json({message: err});

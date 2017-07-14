@@ -5,12 +5,12 @@ import faker from 'faker';
 import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-// import {Board} from '../../../src/models/boards';
+import {Board} from '../../../src/models/boards';
 import {User} from '../../../src/models/users';
 chai.should();
 
 chai.use(chaiHttp);
-let users;
+let users, titles, ids;
 //used to delete the database
 function deleteDb() {
   return mongoose.connection.db.dropDatabase();
@@ -40,12 +40,24 @@ function createUsers() {
     return User.insertMany(seed);
   });
 }
-// function seedTitleData() {
-//   const seedData = [];
-//   return {
-//     title: faker.random.words
-//   }
-// }
+function createTitle() {
+  return {
+    title: faker.random.words()
+  };
+}
+function createBoards() {
+  const seedData = [];
+  //create and store random titles
+  for (let i = 0; i <= 9; i++) {
+    seedData.push(createTitle());
+    seedData[i].owner = ids[i]._id;
+  }
+  return Promise.all(seedData)
+  .then((seed) => {
+    titles = seed;
+    return Board.insertMany(seed);
+  });
+}
 describe('boards service', () => {
   let agent;
   //setup
@@ -56,7 +68,11 @@ describe('boards service', () => {
     return closeServer();
   });
   beforeEach(() => {
-    return createUsers();
+    return createUsers()
+    .then((res) => {
+      ids = res;
+      return createBoards();
+    });
   });
   afterEach(() => {
     return deleteDb();
@@ -94,6 +110,41 @@ describe('boards service', () => {
           res.body.should.have.property('cardsList');
           res.body.cardsList.should.be.a('array');
           res.body.cardsList.should.eql([]);
+        });
+      });
+  });
+  it('should not get any boards, not auth redirects to /', () => {
+    agent = chai.request.agent(app);
+    return agent
+      .get('/boards')
+      //set headers
+      .set('Accept', 'application/json')
+      .then((res) => {
+        res.should.redirect;
+        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
+      });
+  });
+  it('should get a users boards', () => {
+    agent = chai.request.agent(app);
+    return agent
+      //request to /boards
+      .post('/auth/login')
+      //send the following data
+      .auth(users[0].email, users[0].unhashed)
+      //set headers
+      .set('Accept', 'application/json')
+      .then(() => {
+        return agent.
+        get('/boards')
+        //set headers
+        .set('Accept', 'application/json')
+        .then((res) => {
+          res.body.board.should.have.lengthOf(1);
+          res.body.board[0].should.have.property('title');
+          res.body.board[0].title.should.equal(titles[0].title);
+          res.body.board[0].should.have.property('cardsList');
+          res.body.board[0].cardsList.should.be.a('array');
+          res.body.board[0].cardsList.should.eql([]);
         });
       });
   });
