@@ -1,3 +1,3 @@
 import Router from './router';
-
-module.exports = { Router };
+import authenticated from './authcheck';
+module.exports = { Router, authenticated };

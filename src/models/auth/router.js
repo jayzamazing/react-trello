@@ -7,9 +7,6 @@ import passport from 'passport';
 const Router = express.Router();
 Router.use(bodyParser.json());
 
-// passport.use(strategy);
-// Router.use(passport.initialize());
-
 //deal with authentication and setting up session
 Router.post('/login',
   passport.authenticate('basic'),

@@ -18,41 +18,41 @@ function validateEmail(email) {
 
 Router.post('/', (req, res) => {
   if(!req.body) {
-    return res.status(400).json({message: 'No request body'});
+    res.status(400).json({message: 'No request body'});
   }
   if (!('email' in req.body)) {
-    return res.status(422).json({message: 'Missing field: email'});
+    res.status(422).json({message: 'Missing field: email'});
   }
   let {email, password} = req.body;
   if (typeof email !== 'string') {
-    return res.status(422).json({message: 'Invalid field type: email'});
+    res.status(422).json({message: 'Invalid field type: email'});
   }
   email = email.trim();
   if (email === '') {
-    return res.status(422).json({message: 'Incorrect field length: email'});
+    res.status(422).json({message: 'Incorrect field length: email'});
   }
   if (!validateEmail(email)) {
-    return res.status(422).json({message: 'Invalid field type: email'});
+    res.status(422).json({message: 'Invalid field type: email'});
   }
   if (!(password)) {
-    return res.status(422).json({message: 'Missing field: password'});
+    res.status(422).json({message: 'Missing field: password'});
   }
   if (typeof password !== 'string') {
-    return res.status(422).json({message: 'Incorrect field type: password'});
+    res.status(422).json({message: 'Incorrect field type: password'});
   }
   password = password.trim();
 
   if (password === '') {
-    return res.status(422).json({message: 'Incorrect field length: password'});
+    res.status(422).json({message: 'Incorrect field length: password'});
   }
 // check for existing user
-  return User
+  User
 .find({email})
 .count()
 .exec()
 .then(count => {
   if (count > 0) {
-    return res.status(422).json({message: 'username already taken'});
+    res.status(422).json({message: 'username already taken'});
   }
 // if no existing user, hash password
   return User.hashPassword(password);
@@ -65,10 +65,10 @@ Router.post('/', (req, res) => {
 });
 })
 .then(user => {
-  return res.status(201).json(user.apiRepr());
+  res.status(201).json(user.apiRepr());
 })
 .catch(err => {
-  return res.status(500).json({message: err});
+  res.status(500).json({message: err});
 });
 });
 
