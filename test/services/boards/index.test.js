@@ -10,7 +10,7 @@ import {User} from '../../../src/models/users';
 chai.should();
 
 chai.use(chaiHttp);
-let users, titles, ids;
+let users, titles, ids, boards;
 //used to delete the database
 function deleteDb() {
   return mongoose.connection.db.dropDatabase();
@@ -56,6 +56,9 @@ function createBoards() {
   .then((seed) => {
     titles = seed;
     return Board.insertMany(seed);
+  })
+  .then((res2) => {
+    boards = res2;
   });
 }
 describe('boards service', () => {
@@ -145,6 +148,34 @@ describe('boards service', () => {
           res.body.board[0].should.have.property('cardsList');
           res.body.board[0].cardsList.should.be.a('array');
           res.body.board[0].cardsList.should.eql([]);
+        });
+      });
+  });
+  it('should update a users boards', () => {
+    let newTitle = createTitle();
+    agent = chai.request.agent(app);
+    return agent
+      //request to /boards
+      .post('/auth/login')
+      //send the following data
+      .auth(users[2].email, users[2].unhashed)
+      //set headers
+      .set('Accept', 'application/json')
+      .then(() => {
+        return agent.
+        put('/boards/' + boards[2]._id)//TODO
+        //set headers
+        .set('Accept', 'application/json')
+        .send(newTitle)
+        .then((res) => {
+          res.should.have.status(204);
+          return Board.findById(boards[2]._id).exec();
+        })
+        .then((board) => {
+          board._id.toString().should.equal(boards[2]._id.toString());
+          board.title.should.equal(newTitle.title);
+          board.createdAt.toString().should.equal(boards[2].createdAt.toString());
+          board.updatedAt.should.be.greaterThan(boards[2].updatedAt);
         });
       });
   });

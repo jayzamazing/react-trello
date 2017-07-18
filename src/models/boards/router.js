@@ -38,6 +38,7 @@ Router.get('/', authenticated, (req, res) => {
   //get all the boards that belong to this user
   Board
   .find({owner: req.user._id})
+  .exec()
   .then(board => {
     res.json({
       board: board.map(
@@ -49,8 +50,21 @@ Router.get('/', authenticated, (req, res) => {
     res.status(500).json({message: err});
   });
 });
-// Router.put('/', authenticated,  (req, res) => {
-//
-// });
+
+Router.put('/:id', authenticated, (req, res) => {
+  if (!req.params.id) {
+    res.status(400).json({message: 'id field missing'});
+  }
+  //update a board that belongs to this user
+  Board
+  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
+  .exec()
+  .then(() => {
+    res.status(204).end();
+  })
+  .catch(err => {
+    res.status(500).json({message: err});
+  });
+});
 
 module.exports = Router;
