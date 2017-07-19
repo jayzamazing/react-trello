@@ -9,7 +9,7 @@ const boardSchema = new mongoose.Schema({
   updatedAt: { type: Date, 'default': Date.now },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
 });
-
+//format and return data
 boardSchema.methods.apiRepr = function() {
   return {
     title: this.title,

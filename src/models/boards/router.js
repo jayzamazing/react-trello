@@ -1,7 +1,7 @@
 'use strict';
 
 import express from 'express';
-import Board from './model'  ;
+import Board from './model';
 import bodyParser from 'body-parser';
 import {authenticated} from '../auth';
 const Router = express.Router();
@@ -67,4 +67,10 @@ Router.put('/:id', authenticated, (req, res) => {
   });
 });
 
+Router.delete('/:id', authenticated, (req, res) => {
+  Board.findByIdAndRemove(req.params.id)
+  .exec()
+  .then(() => res.status(204).end())
+  .catch((err) => res.status(500).json({message: err}));
+});
 module.exports = Router;

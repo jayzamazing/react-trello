@@ -7,7 +7,7 @@ import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Board} from '../../../src/models/boards';
 import {User} from '../../../src/models/users';
-chai.should();
+var should = chai.should();
 
 chai.use(chaiHttp);
 let users, titles, ids, boards;
@@ -163,19 +163,36 @@ describe('boards service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        put('/boards/' + boards[2]._id)//TODO
-        //set headers
-        .set('Accept', 'application/json')
+        put(`/boards/${boards[2]._id}`)
         .send(newTitle)
         .then((res) => {
           res.should.have.status(204);
           return Board.findById(boards[2]._id).exec();
         })
         .then((board) => {
-          board._id.toString().should.equal(boards[2]._id.toString());
+          board._id.should.deep.equal(boards[2]._id);
           board.title.should.equal(newTitle.title);
-          board.createdAt.toString().should.equal(boards[2].createdAt.toString());
+          board.createdAt.should.deep.equal(boards[2].createdAt);
           board.updatedAt.should.be.greaterThan(boards[2].updatedAt);
+        });
+      });
+  });
+  it('should delete a users boards', () => {
+    agent = chai.request.agent(app);
+    return agent
+      //request to /boards
+      .post('/auth/login')
+      //send the following data
+      .auth(users[3].email, users[3].unhashed)
+      .then(() => {
+        return agent.
+        delete(`/boards/${boards[3]._id}`)
+        .then((res) => {
+          res.should.have.status(204);
+          return Board.findById(boards[3]._id).exec();
+        })
+        .then((board) => {
+          should.not.exist(board);
         });
       });
   });
