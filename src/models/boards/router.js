@@ -6,7 +6,6 @@ import bodyParser from 'body-parser';
 import {authenticated} from '../auth';
 const Router = express.Router();
 Router.use(bodyParser.json());
-// Router.use(bodyParser.urlencoded({ extended: false }));
 
 
 Router.post('/', authenticated, (req, res) => {

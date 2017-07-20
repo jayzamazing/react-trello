@@ -7,6 +7,7 @@ import strategy from './models/config/strategy';
 import { Router as userRouter, User } from './models/users';
 import { Router as authRouter } from './models/auth';
 import { Router as boardRouter } from './models/boards';
+import { Router as cardslistRouter } from './models/cardslist';
 import bodyParser from 'body-parser';
 const app = Express();
 app.use(morgan('common'));
@@ -33,5 +34,6 @@ passport.deserializeUser(function(id, done) {
 app.use('/auth/', authRouter);
 app.use('/users/', userRouter);
 app.use('/boards/', boardRouter);
+app.use('/cardslist/', cardslistRouter);
 
 export default app;
