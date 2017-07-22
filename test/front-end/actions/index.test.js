@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {getBoards,FIND_BOARDS_SUCCESS} from '../../../src/components/actions';
+import {getBoards,FIND_BOARDS_SUCCESS,createBoards,CREATE_BOARD_SUCCESS} from '../../../src/components/actions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
@@ -246,26 +246,26 @@ describe('trello actions', () => {
         response.boards._id.should.equal(1);
       });
   });
-  // it('should create a board', () => {
-  //   //set up a mockstore
-  //   const store = mockStore({
-  //     boards: {}
-  //   });
-  //   //call createboard passing a title of the new board
-  //   return store.dispatch(actions.queries('boards', 'POST', {
-  //     title: 'blah'
-  //   }, 'create board'))
-  //     .then(() => {
-  //       //check response against expected values
-  //       var response = store.getActions()[0];
-  //       response.should.have.property('type');
-  //       response.type.should.equal('CREATE_BOARD_SUCCESS');
-  //       response.boards.should.have.property('title');
-  //       response.boards.title.should.equal('blah');
-  //       response.boards.should.have.property('_id');
-  //       response.boards._id.should.equal(7);
-  //     });
-  // });
+  it('should create a board', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {}
+    });
+    //call createboard passing a title of the new board
+    return store.dispatch(createBoards({
+      title: 'blah'
+    }))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.should.have.property('type');
+        response.type.should.equal(CREATE_BOARD_SUCCESS);
+        response.boards.should.have.property('title');
+        response.boards.title.should.equal('blah');
+        response.boards.should.have.property('_id');
+        response.boards._id.should.equal(7);
+      });
+  });
   // it('should delete a board', () => {
   //   //set up a mockstore
   //   const store = mockStore({

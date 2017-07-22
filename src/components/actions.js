@@ -23,19 +23,31 @@ export const findBoardsSuccess = (data) => {
 
 export const getBoards = () => dispatch => {
   return request.get('/boards')
+  .set('Accept', 'application/json')
     .then((res) => {
       if (!res.ok) return Promise.reject(res.statusText);
       dispatch(findBoardsSuccess(res.body));
     });
 };
 
-// const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
-// var createBoardSuccess = function(data) {
-//   return {
-//     type: 'CREATE_BOARD_SUCCESS',
-//     boards: data
-//   };
-// };
+export const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
+export const createBoardSuccess = function(data) {
+  return {
+    type: 'CREATE_BOARD_SUCCESS',
+    boards: data
+  };
+};
+
+export const createBoards = (postData) => dispatch => {
+  return request.post('/boards')
+  .send(postData)
+  .set('Accept', 'application/json')
+    .then((res) => {
+      if (!res.ok) return Promise.reject(res.statusText);
+      dispatch(createBoardSuccess(res.body));
+    });
+};
+
 // const DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
 // var deleteBoardSuccess = function(data) {
 //   return {
