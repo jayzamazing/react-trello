@@ -63,13 +63,21 @@ export const deleteBoards = (id) => dispatch => {
       dispatch(deleteBoardSuccess(res.body));
     });
 };
-// const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
-// var updateBoardSuccess = function(data) {
-//   return {
-//     type: 'UPDATE_BOARD_SUCCESS',
-//     boards: data
-//   };
-// };
+export const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
+export const updateBoardSuccess = function(data) {
+  return {
+    type: 'UPDATE_BOARD_SUCCESS',
+    boards: data
+  };
+};
+export const updateBoards = (id, postData) => dispatch => {
+  return request.put(`/boards/${id}`)
+  .send(postData)
+    .then((res) => {
+      if (!res.ok) return Promise.reject(res.statusText);
+      dispatch(updateBoardSuccess(res.body));
+    });
+};
 // const CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
 // var createCardListSuccess = function(data) {
 //   return {
