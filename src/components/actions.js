@@ -14,7 +14,7 @@ import request from 'superagent';
 //   .configure(hooks());
 
 export const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
-export const findBoardsSuccess = (data) => {
+export const findBoardsSuccess = data => {
   return {
     type: 'FIND_BOARDS_SUCCESS',
     boards: data
@@ -31,7 +31,7 @@ export const getBoards = () => dispatch => {
 };
 
 export const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
-export const createBoardSuccess = function(data) {
+export const createBoardSuccess = data => {
   return {
     type: 'CREATE_BOARD_SUCCESS',
     boards: data
@@ -48,13 +48,21 @@ export const createBoards = (postData) => dispatch => {
     });
 };
 
-// const DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
-// var deleteBoardSuccess = function(data) {
-//   return {
-//     type: 'DELETE_BOARD_SUCCESS',
-//     boards: data
-//   };
-// };
+export const DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
+export const deleteBoardSuccess = data => {
+  return {
+    type: 'DELETE_BOARD_SUCCESS',
+    boards: data
+  };
+};
+
+export const deleteBoards = (id) => dispatch => {
+  return request.delete(`/boards/${id}`)
+    .then((res) => {
+      if (!res.ok) return Promise.reject(res.statusText);
+      dispatch(deleteBoardSuccess(res.body));
+    });
+};
 // const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
 // var updateBoardSuccess = function(data) {
 //   return {

@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "2.14.4",
+  "version": "2.15.4",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "client.js",
   "server": "app.js",

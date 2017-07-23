@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {getBoards,FIND_BOARDS_SUCCESS,createBoards,CREATE_BOARD_SUCCESS} from '../../../src/components/actions';
+import {getBoards,FIND_BOARDS_SUCCESS,createBoards,CREATE_BOARD_SUCCESS,deleteBoards,DELETE_BOARD_SUCCESS} from '../../../src/components/actions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
@@ -42,15 +42,9 @@ describe('trello actions', () => {
       //request to create a board
       .post('/boards')
       //send back reply to request
-      .reply((uri, requestBody) => {
+      .reply(201, (uri, requestBody) => {
         //return response
-        return [
-          200,
-          board({
-            'title': JSON.parse(requestBody).title,
-            '_id': 7
-          })
-        ];
+        return board({'title': JSON.parse(requestBody).title,'_id': 7});
       })
       //request to get a board
       .get('/boards')
@@ -91,16 +85,7 @@ describe('trello actions', () => {
         ];
       })
       .delete('/boards/1')
-      .reply(() => {
-        //return response
-        return [
-          200,
-          board({
-            'title': 'blah',
-            _id: 7
-          })
-        ];
-      })
+      .reply(204)
       //update a board
       .put('/boards/1')
       .reply(() => {
@@ -152,19 +137,7 @@ describe('trello actions', () => {
         ];
       })
       .delete('/cardslists/1')
-      .reply(() => {
-        //return response
-        return [
-          200,
-          board({
-            'title': 'bleh',
-            '_id': 1
-          }, {
-            'title': 'hello',
-            _id: 5
-          })
-        ];
-      })
+      .reply(204)
       //update a cardslist
       .put('/cardslists/2')
       .reply(() => {
@@ -200,11 +173,7 @@ describe('trello actions', () => {
       .reply(() => {
         //return response
         return [
-          200,
-          board(null, null, {
-            'text': 'hello',
-            _id: 9
-          })
+          204
         ];
       })
       //update a card
@@ -266,24 +235,20 @@ describe('trello actions', () => {
         response.boards._id.should.equal(7);
       });
   });
-  // it('should delete a board', () => {
-  //   //set up a mockstore
-  //   const store = mockStore({
-  //     boards: {}
-  //   });
-  //   //call createboard passing a title of the new board
-  //   return store.dispatch(actions.queries('boards', 'DELETE', 1, 'delete board'))
-  //     .then(() => {
-  //       //check response against expected values
-  //       var response = store.getActions()[0];
-  //       response.should.have.property('type');
-  //       response.type.should.equal('DELETE_BOARD_SUCCESS');
-  //       response.boards.should.have.property('title');
-  //       response.boards.title.should.equal('blah');
-  //       response.boards.should.have.property('_id');
-  //       response.boards._id.should.equal(7);
-  //     });
-  // });
+  //TODO
+  it('should delete a board', () => {
+    //set up a mockstore
+    const store = mockStore({
+      boards: {}
+    });
+    //call createboard passing a title of the new board
+    return store.dispatch(deleteBoards(1))
+      .then(() => {
+        //check response against expected values
+        var response = store.getActions()[0];
+        response.type.should.equal(DELETE_BOARD_SUCCESS);
+      });
+  });
   // it('should update a board', () => {
   //   //set up a mockstore
   //   const store = mockStore({
