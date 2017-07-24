@@ -1,10 +1,10 @@
-'use strict';
+// 'use strict';
 //get dependencies
 // require('isomorphic-fetch');
 // import feathers from 'feathers/client';
 // import hooks from 'feathers-hooks';
 // import rest from 'feathers-rest/client';
-import request from 'superagent';
+// import request from 'superagent';
 // const superagent = require('superagent');
 // var host, app;
 // host = 'http://localhost:3030';
@@ -13,92 +13,6 @@ import request from 'superagent';
 //   .configure(rest(host).superagent(superagent))
 //   .configure(hooks());
 
-export const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
-export const findBoardsSuccess = data => {
-  return {
-    type: 'FIND_BOARDS_SUCCESS',
-    boards: data
-  };
-};
-
-export const getBoards = () => dispatch => {
-  return request.get('/boards')
-  .set('Accept', 'application/json')
-    .then((res) => {
-      if (!res.ok) return Promise.reject(res.statusText);
-      dispatch(findBoardsSuccess(res.body));
-    });
-};
-
-export const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
-export const createBoardSuccess = data => {
-  return {
-    type: 'CREATE_BOARD_SUCCESS',
-    boards: data
-  };
-};
-
-export const createBoards = (postData) => dispatch => {
-  return request.post('/boards')
-  .send(postData)
-  .set('Accept', 'application/json')
-    .then((res) => {
-      if (!res.ok) return Promise.reject(res.statusText);
-      dispatch(createBoardSuccess(res.body));
-    });
-};
-
-export const DELETE_BOARD_SUCCESS = 'DELETE_BOARD_SUCCESS';
-export const deleteBoardSuccess = data => {
-  return {
-    type: 'DELETE_BOARD_SUCCESS',
-    boards: data
-  };
-};
-
-export const deleteBoards = (id) => dispatch => {
-  return request.delete(`/boards/${id}`)
-    .then((res) => {
-      if (!res.ok) return Promise.reject(res.statusText);
-      dispatch(deleteBoardSuccess(res.body));
-    });
-};
-export const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
-export const updateBoardSuccess = function(data) {
-  return {
-    type: 'UPDATE_BOARD_SUCCESS',
-    boards: data
-  };
-};
-export const updateBoards = (id, postData) => dispatch => {
-  return request.put(`/boards/${id}`)
-  .send(postData)
-    .then((res) => {
-      if (!res.ok) return Promise.reject(res.statusText);
-      dispatch(updateBoardSuccess(res.body));
-    });
-};
-// const CREATE_CARDLIST_SUCCESS = 'CREATE_CARDLIST_SUCCESS';
-// var createCardListSuccess = function(data) {
-//   return {
-//     type: 'CREATE_CARDLIST_SUCCESS',
-//     boards: data
-//   };
-// };
-// const DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';
-// var deleteCardslistSuccess = function(data) {
-//   return {
-//     type: 'DELETE_CARDSLIST_SUCCESS',
-//     boards: data
-//   };
-// };
-// const UPDATE_CARDSLIST_SUCCESS = 'UPDATE_CARDSLIST_SUCCESS';
-// var updateCardsListSuccess = function(data) {
-//   return {
-//     type: 'UPDATE_CARDSLIST_SUCCESS',
-//     boards: data
-//   };
-// }
 // const CREATE_CARD_SUCCESS = 'CREATE_CARD_SUCCESS';
 // var createCardSuccess = function(data) {
 //   return {
