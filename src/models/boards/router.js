@@ -37,6 +37,13 @@ Router.get('/', authenticated, (req, res) => {
   //get all the boards that belong to this user
   Board
   .find({owner: req.user._id})
+  .populate({
+    path: 'cardslists',
+    populate: {
+      path: 'cards'
+    }
+  })
+  // .populate('cd')
   .exec()
   .then(board => {
     res.json({
@@ -73,16 +80,4 @@ Router.delete('/:id', authenticated, (req, res) => {
   .catch((err) => res.status(500).json({message: err}));
 });
 
-Router.patch('/:id', authenticated, (req, res) => {
-  //update only a part of the board
-  Board
-  .findByIdAndUpdate(req.params.id, {$push: {cardsList: req.body.id, updatedAt: Date.now()}})
-  .exec()
-  .then(() => {
-    res.status(204).end();
-  })
-  .catch(err => {
-    res.status(500).json({message: err});
-  });
-});
 module.exports = Router;

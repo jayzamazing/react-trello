@@ -1,10 +1,10 @@
 'use strict';
 import mongoose from 'mongoose';
+import {Cardslist} from '../cardslist';
 
 //schema representing a board
 const boardSchema = new mongoose.Schema({
   title: { type: String, required: true },
-  cardsList: [{ type: mongoose.Schema.Types.ObjectId, ref: 'cardslist' }],
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
@@ -13,11 +13,17 @@ const boardSchema = new mongoose.Schema({
 boardSchema.methods.apiRepr = function() {
   return {
     title: this.title,
-    cardsList: this.cardsList,
     createdAt: this.createdAt,
-    updatedAt: this.updatedAt
+    updatedAt: this.updatedAt,
+    cardslists: this.cardslists
   };
 };
+// populate all cardslist
+boardSchema.virtual('cardslists', {
+  ref: 'cardslist',
+  localField: '_id',
+  foreignField: 'boardId'
+});
 
 const Board = mongoose.model('board', boardSchema);
 

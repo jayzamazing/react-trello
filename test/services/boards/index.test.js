@@ -7,16 +7,18 @@ import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Board} from '../../../src/models/boards';
 import {User} from '../../../src/models/users';
+import {Card} from '../../../src/models/cards';
+import {Cardslist} from '../../../src/models/cardslist';
 var should = chai.should();
 
 chai.use(chaiHttp);
-let users, titles, ids, boards;
+let users, titles, titles2, text, cards, ids, boards, cardslists;
 //used to delete the database
-function deleteDb() {
+const deleteDb = () => {
   return mongoose.connection.db.dropDatabase();
 }
 //Create a user, hash password, and keep track of original password
-function createUser() {
+const createUser = () => {
   let password = faker.internet.password();
   return User.hashPassword(password)
   .then((hash) => {
@@ -28,8 +30,8 @@ function createUser() {
   });
 }
 //create multiple users
-function createUsers() {
-  const seedData = [];
+const createUsers = () => {
+  let seedData = [];
   for (let i = 0; i <= 9; i++) {
     seedData.push(createUser());
   }
@@ -40,13 +42,13 @@ function createUsers() {
     return User.insertMany(seed);
   });
 }
-function createTitle() {
+const createTitle = () => {
   return {
     title: faker.random.words()
   };
 }
-function createBoards() {
-  const seedData = [];
+const createBoards = () => {
+  let seedData = [];
   //create and store random titles
   for (let i = 0; i <= 9; i++) {
     seedData.push(createTitle());
@@ -59,6 +61,45 @@ function createBoards() {
   })
   .then((res2) => {
     boards = res2;
+  });
+}
+const createCardslist = () => {
+  const seedData = [];
+  //create and store random titles
+  for (let i = 0; i <= 9; i++) {
+    seedData.push(createTitle());
+    seedData[i].owner = ids[i]._id;
+    seedData[i].boardId = boards[i]._id
+  }
+  return Promise.all(seedData)
+  .then((seed) => {
+    titles2 = seed;
+    return Cardslist.insertMany(seed);
+  })
+  .then((res2) => {
+    cardslists = res2;
+  });
+}
+function createText() {
+  return {
+    text: faker.random.words()
+  };
+}
+function createCards() {
+  const seedData = [];
+  //create and store random text
+  for (let i = 0; i <= 9; i++) {
+    seedData.push(createText());
+    seedData[i].owner = ids[i]._id;
+    seedData[i].cardslistId = cardslists[i]._id
+  }
+  return Promise.all(seedData)
+  .then((seed) => {
+    text = seed;
+    return Card.insertMany(seed);
+  })
+  .then((res2) => {
+    cards = res2;
   });
 }
 describe('boards service', () => {
@@ -75,10 +116,15 @@ describe('boards service', () => {
     .then((res) => {
       ids = res;
       return createBoards();
+    })
+    .then(() => {
+      return createCardslist();
+    }).then(() => {
+      return createCards();
     });
   });
   afterEach(() => {
-    return deleteDb();
+    // return deleteDb();
   });
   it('should not create a board, not auth redirects to /', () => {
     agent = chai.request.agent(app);
@@ -110,9 +156,6 @@ describe('boards service', () => {
         .then((res) => {
           res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
-          res.body.should.have.property('cardsList');
-          res.body.cardsList.should.be.a('array');
-          res.body.cardsList.should.eql([]);
         });
       });
   });
@@ -127,7 +170,7 @@ describe('boards service', () => {
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it('should get a users boards', () => {
+  it.only('should get a users boards', () => {
     agent = chai.request.agent(app);
     return agent
       //request to /boards
@@ -142,12 +185,16 @@ describe('boards service', () => {
         //set headers
         .set('Accept', 'application/json')
         .then((res) => {
+          console.log(res.body.board[0]);
           res.body.board.should.have.lengthOf(1);
           res.body.board[0].should.have.property('title');
           res.body.board[0].title.should.equal(titles[0].title);
-          res.body.board[0].should.have.property('cardsList');
-          res.body.board[0].cardsList.should.be.a('array');
-          res.body.board[0].cardsList.should.eql([]);
+          res.body.board[0].should.have.property('cardslists');
+          res.body.board[0].cardslists.should.be.a('array');
+          res.body.board[0].cardslists[0].should.have.property('title');
+          res.body.board[0].cardslists[0].title.should.equal(cardslists[0].title);
+          // console.log(res.body.board[0].cardslist[0]);
+          // console.log(res.body.board[0]);
         });
       });
   });
