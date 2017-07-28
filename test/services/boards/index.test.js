@@ -185,7 +185,7 @@ describe('boards service', () => {
         //set headers
         .set('Accept', 'application/json')
         .then((res) => {
-          console.log(res.body.board[0]);
+          console.log(res.body.board[0].cardslists[0]);
           res.body.board.should.have.lengthOf(1);
           res.body.board[0].should.have.property('title');
           res.body.board[0].title.should.equal(titles[0].title);
@@ -193,8 +193,8 @@ describe('boards service', () => {
           res.body.board[0].cardslists.should.be.a('array');
           res.body.board[0].cardslists[0].should.have.property('title');
           res.body.board[0].cardslists[0].title.should.equal(cardslists[0].title);
-          // console.log(res.body.board[0].cardslist[0]);
-          // console.log(res.body.board[0]);
+          res.body.board[0].cardslists[0].cards[0].should.have.property('text');
+          res.body.board[0].cardslists[0].cards[0].text.should.equal(cards[0].text);
         });
       });
   });

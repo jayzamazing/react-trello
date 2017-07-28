@@ -1,6 +1,10 @@
 'use strict';
 import mongoose from 'mongoose';
 
+var options = {
+  toObject: {getters: true},
+  toJSON: {getters: true}
+};
 //schema representing a cardslist
 const cardslistSchema = new mongoose.Schema({
   title: { type: String, required: true },
@@ -8,7 +12,7 @@ const cardslistSchema = new mongoose.Schema({
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'user' }
-});
+}, options);
 //format and return data
 cardslistSchema.methods.apiRepr = function() {
   return {
