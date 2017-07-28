@@ -1,6 +1,6 @@
 'use strict';
 import mongoose from 'mongoose';
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 var options = {
   toObject: {getters: true},
   toJSON: {getters: true}

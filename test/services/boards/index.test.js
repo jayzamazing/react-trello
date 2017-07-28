@@ -1,107 +1,16 @@
 'use strict';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import faker from 'faker';
-import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Board} from '../../../src/models/boards';
-import {User} from '../../../src/models/users';
-import {Card} from '../../../src/models/cards';
-import {Cardslist} from '../../../src/models/cardslist';
+import {createUsers,createBoards,createCardslist,createCards,createTitle} from '../utils/seeddata';
+import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
 chai.use(chaiHttp);
-let users, titles, titles2, text, cards, ids, boards, cardslists;
-//used to delete the database
-const deleteDb = () => {
-  return mongoose.connection.db.dropDatabase();
-}
-//Create a user, hash password, and keep track of original password
-const createUser = () => {
-  let password = faker.internet.password();
-  return User.hashPassword(password)
-  .then((hash) => {
-    return {
-      email: faker.internet.email(),
-      password: hash,
-      unhashed: password
-    };
-  });
-}
-//create multiple users
-const createUsers = () => {
-  let seedData = [];
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createUser());
-  }
-  //wait for all the hashpassword promises to finish before performing insert many
-  return Promise.all(seedData)
-  .then((seed) => {
-    users = seed;
-    return User.insertMany(seed);
-  });
-}
-const createTitle = () => {
-  return {
-    title: faker.random.words()
-  };
-}
-const createBoards = () => {
-  let seedData = [];
-  //create and store random titles
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createTitle());
-    seedData[i].owner = ids[i]._id;
-  }
-  return Promise.all(seedData)
-  .then((seed) => {
-    titles = seed;
-    return Board.insertMany(seed);
-  })
-  .then((res2) => {
-    boards = res2;
-  });
-}
-const createCardslist = () => {
-  const seedData = [];
-  //create and store random titles
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createTitle());
-    seedData[i].owner = ids[i]._id;
-    seedData[i].boardId = boards[i]._id
-  }
-  return Promise.all(seedData)
-  .then((seed) => {
-    titles2 = seed;
-    return Cardslist.insertMany(seed);
-  })
-  .then((res2) => {
-    cardslists = res2;
-  });
-}
-function createText() {
-  return {
-    text: faker.random.words()
-  };
-}
-function createCards() {
-  const seedData = [];
-  //create and store random text
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createText());
-    seedData[i].owner = ids[i]._id;
-    seedData[i].cardslistId = cardslists[i]._id
-  }
-  return Promise.all(seedData)
-  .then((seed) => {
-    text = seed;
-    return Card.insertMany(seed);
-  })
-  .then((res2) => {
-    cards = res2;
-  });
-}
+let users, cards, boards, cardslists;
+
 describe('boards service', () => {
   let agent;
   //setup
@@ -114,13 +23,17 @@ describe('boards service', () => {
   beforeEach(() => {
     return createUsers()
     .then((res) => {
-      ids = res;
-      return createBoards();
+      users = res;
+      return createBoards(users);
     })
-    .then(() => {
-      return createCardslist();
-    }).then(() => {
-      return createCards();
+    .then((res2) => {
+      boards = res2;
+      return createCardslist(users, boards);
+    }).then((res3) => {
+      cardslists = res3;
+      return createCards(users, cardslists);
+    }).then((res4) => {
+      cards = res4
     });
   });
   afterEach(() => {
@@ -170,7 +83,7 @@ describe('boards service', () => {
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it.only('should get a users boards', () => {
+  it('should get a users boards', () => {
     agent = chai.request.agent(app);
     return agent
       //request to /boards
@@ -185,10 +98,9 @@ describe('boards service', () => {
         //set headers
         .set('Accept', 'application/json')
         .then((res) => {
-          console.log(res.body.board[0].cardslists[0]);
           res.body.board.should.have.lengthOf(1);
           res.body.board[0].should.have.property('title');
-          res.body.board[0].title.should.equal(titles[0].title);
+          res.body.board[0].title.should.equal(boards[0].title);
           res.body.board[0].should.have.property('cardslists');
           res.body.board[0].cardslists.should.be.a('array');
           res.body.board[0].cardslists[0].should.have.property('title');
