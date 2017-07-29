@@ -1,66 +1,15 @@
 'use strict';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import faker from 'faker';
-import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-import {Cardslist} from '../../../src/models/cardslist';
-import {User} from '../../../src/models/users';
+import {createUsers,createBoards,createCardslist,createCards,createTitle} from '../utils/seeddata';
+import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
 chai.use(chaiHttp);
-let users, titles, ids, cardslists;
-//used to delete the database
-function deleteDb() {
-  return mongoose.connection.db.dropDatabase();
-}
-//Create a user, hash password, and keep track of original password
-function createUser() {
-  let password = faker.internet.password();
-  return User.hashPassword(password)
-  .then((hash) => {
-    return {
-      email: faker.internet.email(),
-      password: hash,
-      unhashed: password
-    };
-  });
-}
-//create multiple users
-function createUsers() {
-  const seedData = [];
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createUser());
-  }
-  //wait for all the hashpassword promises to finish before performing insert many
-  return Promise.all(seedData)
-  .then((seed) => {
-    users = seed;
-    return User.insertMany(seed);
-  });
-}
-function createTitle() {
-  return {
-    title: faker.random.words()
-  };
-}
-function createCardslist() {
-  const seedData = [];
-  //create and store random titles
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createTitle());
-    seedData[i].owner = ids[i]._id;
-  }
-  return Promise.all(seedData)
-  .then((seed) => {
-    titles = seed;
-    return Cardslist.insertMany(seed);
-  })
-  .then((res2) => {
-    cardslists = res2;
-  });
-}
+let users, titles, cardslists;
+
 describe('Cardslist service', () => {
   let agent;
   //setup
@@ -73,8 +22,13 @@ describe('Cardslist service', () => {
   beforeEach(() => {
     return createUsers()
     .then((res) => {
-      ids = res;
-      return createCardslist();
+      users = res;
+      return createCardslist(users, boards);
+    }).then((res2) => {
+      cardslists = res2;
+      return createCards(users, cardslists);
+    }).then((res3) => {
+      cards = res3
     });
   });
   afterEach(() => {
