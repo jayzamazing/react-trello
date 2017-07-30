@@ -7,60 +7,13 @@ import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Card} from '../../../src/models/cards';
 import {User} from '../../../src/models/users';
+import {createUsers,createCards,createText} from '../utils/seeddata';
+import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
 chai.use(chaiHttp);
-let users, text, ids, cards;
-//used to delete the database
-function deleteDb() {
-  return mongoose.connection.db.dropDatabase();
-}
-//Create a user, hash password, and keep track of original password
-function createUser() {
-  let password = faker.internet.password();
-  return User.hashPassword(password)
-  .then((hash) => {
-    return {
-      email: faker.internet.email(),
-      password: hash,
-      unhashed: password
-    };
-  });
-}
-//create multiple users
-function createUsers() {
-  const seedData = [];
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createUser());
-  }
-  //wait for all the hashpassword promises to finish before performing insert many
-  return Promise.all(seedData)
-  .then((seed) => {
-    users = seed;
-    return User.insertMany(seed);
-  });
-}
-function createText() {
-  return {
-    text: faker.random.words()
-  };
-}
-function createCard() {
-  const seedData = [];
-  //create and store random text
-  for (let i = 0; i <= 9; i++) {
-    seedData.push(createText());
-    seedData[i].owner = ids[i]._id;
-  }
-  return Promise.all(seedData)
-  .then((seed) => {
-    text = seed;
-    return Card.insertMany(seed);
-  })
-  .then((res2) => {
-    cards = res2;
-  });
-}
+let users, cards, boards, cardslists;
+
 describe('Card service', () => {
   let agent;
   //setup
@@ -73,8 +26,17 @@ describe('Card service', () => {
   beforeEach(() => {
     return createUsers()
     .then((res) => {
-      ids = res;
-      return createCard();
+      users = res;
+      return createBoards(users);
+    })
+    .then((res2) => {
+      boards = res2;
+      return createCardslist(users, boards);
+    }).then((res3) => {
+      cardslists = res3;
+      return createCards(users, cardslists);
+    }).then((res4) => {
+      cards = res4
     });
   });
   afterEach(() => {

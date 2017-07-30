@@ -37,6 +37,9 @@ Router.get('/', authenticated, (req, res) => {
   //get all the Cardslists that belong to this user
   Cardslist
   .find({owner: req.user._id})
+  .populate({
+    path: 'cards'
+  })
   .exec()
   .then(cardslist => {
     res.json({

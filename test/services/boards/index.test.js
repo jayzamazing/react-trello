@@ -37,7 +37,7 @@ describe('boards service', () => {
     });
   });
   afterEach(() => {
-    // return deleteDb();
+    return deleteDb();
   });
   it('should not create a board, not auth redirects to /', () => {
     agent = chai.request.agent(app);
@@ -69,6 +69,8 @@ describe('boards service', () => {
         .then((res) => {
           res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
+          res.body.should.have.property('cardslists');
+          should.equal(res.body.cardslists, null);
         });
       });
   });

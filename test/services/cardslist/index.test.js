@@ -3,12 +3,13 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
+import {Cardslist} from '../../../src/models/cardslist';
 import {createUsers,createBoards,createCardslist,createCards,createTitle} from '../utils/seeddata';
 import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
 chai.use(chaiHttp);
-let users, titles, cardslists;
+let users, cards, boards, cardslists;
 
 describe('Cardslist service', () => {
   let agent;
@@ -23,12 +24,16 @@ describe('Cardslist service', () => {
     return createUsers()
     .then((res) => {
       users = res;
+      return createBoards(users);
+    })
+    .then((res2) => {
+      boards = res2;
       return createCardslist(users, boards);
-    }).then((res2) => {
-      cardslists = res2;
-      return createCards(users, cardslists);
     }).then((res3) => {
-      cards = res3
+      cardslists = res3;
+      return createCards(users, cardslists);
+    }).then((res4) => {
+      cards = res4
     });
   });
   afterEach(() => {
@@ -65,8 +70,7 @@ describe('Cardslist service', () => {
           res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
           res.body.should.have.property('cards');
-          res.body.cards.should.be.a('array');
-          res.body.cards.should.eql([]);
+          should.equal(res.body.cards, null);
         });
       });
   });
@@ -98,10 +102,11 @@ describe('Cardslist service', () => {
         .then((res) => {
           res.body.cardslist.should.have.lengthOf(1);
           res.body.cardslist[0].should.have.property('title');
-          res.body.cardslist[0].title.should.equal(titles[0].title);
+          res.body.cardslist[0].title.should.equal(cardslists[0].title);
           res.body.cardslist[0].should.have.property('cards');
           res.body.cardslist[0].cards.should.be.a('array');
-          res.body.cardslist[0].cards.should.eql([]);
+          res.body.cardslist[0].cards[0].should.have.property('text');
+          res.body.cardslist[0].cards[0].text.should.equal(cards[0].text);
         });
       });
   });
