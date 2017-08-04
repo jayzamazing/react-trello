@@ -33,7 +33,7 @@ describe('Cardslist service', () => {
       cardslists = res3;
       return createCards(users, cardslists);
     }).then((res4) => {
-      cards = res4
+      cards = res4;
     });
   });
   afterEach(() => {

@@ -1,12 +1,9 @@
 'use strict';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import faker from 'faker';
-import mongoose from 'mongoose';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Card} from '../../../src/models/cards';
-import {User} from '../../../src/models/users';
 import {createUsers,createCards,createText,createBoards,createCardslist} from '../utils/seeddata';
 import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
@@ -36,7 +33,7 @@ describe('Card service', () => {
       cardslists = res3;
       return createCards(users, cardslists);
     }).then((res4) => {
-      cards = res4
+      cards = res4;
     });
   });
   afterEach(() => {

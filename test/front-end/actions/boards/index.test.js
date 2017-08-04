@@ -3,38 +3,13 @@ import {getBoards,FIND_BOARDS_SUCCESS,createBoards,CREATE_BOARD_SUCCESS,deleteBo
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
+import {boards} from '../utils/seeddata';
 //use should
 chai.should();
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
-var board = function(board, cardsList, cards) {
-  var temp = {
-    'title': null,
-    '_id': null,
-    'cardsList': [{
-      'title': null,
-      '_id': null,
-      'cards': [{
-        'text': null,
-        '_id': null,
-      }]
-    }]
-  };
-  if (board) {
-    temp.title = board.title;
-    temp._id = board._id;
-  }
-  if (cardsList) {
-    temp.cardsList[0].title = cardsList.title;
-    temp.cardsList[0]._id = cardsList._id;
-  }
-  if (cards) {
-    temp.cardsList[0].cards[0].text = cards.text;
-    temp.cardsList[0].cards[0]._id = cards._id;
-  }
-  return temp;
-};
+let bds;
 describe('trello actions', () => {
   before(() => {
 //create a mock server response
@@ -43,8 +18,9 @@ describe('trello actions', () => {
 .post('/boards')
 //send back reply to request
 .reply(201, (uri, requestBody) => {
+  bds = boards(JSON.parse(requestBody).title);
 //return response
-  return board({'title': JSON.parse(requestBody).title,'_id': 7});
+  return bds;
 })
 //request to get a board
 .get('/boards')
@@ -52,16 +28,7 @@ describe('trello actions', () => {
 //send back reply to request
 .reply(200, () => {
 //return response
-  return board({
-    'title': 'bleh',
-    '_id': 1
-  }, {
-    'title': 'bleh',
-    '_id': 1
-  }, {
-    '_id': 1,
-    'text': 'superman'
-  });
+  return bds;
 })
 .delete('/boards/1')
 .reply(204)
@@ -71,6 +38,9 @@ describe('trello actions', () => {
   });
   after(() => {
     nock.cleanAll();
+  });
+  beforeEach(() => {
+    bds = boards();
   });
   it('should get boards', () => {
 //set up a mockstore
@@ -85,9 +55,9 @@ describe('trello actions', () => {
   response.should.have.property('type');
   response.type.should.equal(FIND_BOARDS_SUCCESS);
   response.boards.should.have.property('title');
-  response.boards.title.should.equal('bleh');
+  response.boards.title.should.equal(bds.title);
   response.boards.should.have.property('_id');
-  response.boards._id.should.equal(1);
+  response.boards._id.should.equal(bds._id);
 });
   });
   it('should create a board', () => {
@@ -107,7 +77,7 @@ describe('trello actions', () => {
   response.boards.should.have.property('title');
   response.boards.title.should.equal('blah');
   response.boards.should.have.property('_id');
-  response.boards._id.should.equal(7);
+  response.boards._id.should.equal(bds._id);
 });
   });
   it('should delete a board', () => {

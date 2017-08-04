@@ -15,7 +15,7 @@ export const createUser = () => {
       unhashed: password
     };
   });
-}
+};
 //create multiple users
 export const createUsers = () => {
   let seedData = [], users;
@@ -40,13 +40,13 @@ export const createUsers = () => {
       };
     });
   });
-}
+};
 //create a random title
 export const createTitle = () => {
   return {
     title: faker.random.words()
   };
-}
+};
 //create multiple boards
 export const createBoards = (users) => {
   let seedData = [];
@@ -60,7 +60,7 @@ export const createBoards = (users) => {
   .then((seed) => {
     return Board.insertMany(seed);
   });
-}
+};
 //create multiple cardslists
 export const createCardslist = (users, boards) => {
   const seedData = [];
@@ -68,20 +68,20 @@ export const createCardslist = (users, boards) => {
   for (let i = 0; i <= 9; i++) {
     seedData.push(createTitle());
     seedData[i].owner = users[i]._id;
-    seedData[i].boardId = boards[i]._id
+    seedData[i].boardId = boards[i]._id;
   }
   //wait for all actions to complete before continuing
   return Promise.all(seedData)
   .then((seed) => {
     return Cardslist.insertMany(seed);
   });
-}
+};
 //create random text
 export const createText = () => {
   return {
     text: faker.random.words()
   };
-}
+};
 //create multiple cards
 export const createCards = (users, cardslists) => {
   const seedData = [];
@@ -89,11 +89,11 @@ export const createCards = (users, cardslists) => {
   for (let i = 0; i <= 9; i++) {
     seedData.push(createText());
     seedData[i].owner = users[i]._id;
-    seedData[i].cardslistId = cardslists[i]._id
+    seedData[i].cardslistId = cardslists[i]._id;
   }
   //wait for all actions to complete before continuing
   return Promise.all(seedData)
   .then((seed) => {
     return Card.insertMany(seed);
   });
-}
+};
