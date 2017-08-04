@@ -1,8 +1,7 @@
 'use strict';
 import mongoose from 'mongoose';
-import {Cardslist} from '../cardslist';
 
-var options = {
+const options = {
   toObject: {getters: true},
   toJSON: {getters: true}
 };
@@ -15,11 +14,14 @@ const boardSchema = new mongoose.Schema({
 }, options);
 //format and return data
 boardSchema.methods.apiRepr = function() {
+  let cardslists;
+  //if there is a cardslist the format it, otherwise make it null
+  cardslists = this.cardslists ? this.cardslists.map(cardslist => cardslist.apiRepr()) : null;
   return {
     title: this.title,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    cardslists: this.cardslists
+    cardslists: cardslists
   };
 };
 // populate all cardslist

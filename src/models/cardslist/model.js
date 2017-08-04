@@ -1,7 +1,7 @@
 'use strict';
 import mongoose from 'mongoose';
 
-var options = {
+const options = {
   toObject: {getters: true},
   toJSON: {getters: true}
 };
@@ -15,11 +15,14 @@ const cardslistSchema = new mongoose.Schema({
 }, options);
 //format and return data
 cardslistSchema.methods.apiRepr = function() {
+  let cards;
+  //if there is a cards the format it, otherwise make it null
+  cards = this.cards ? this.cards.map(cards => cards.apiRepr()) : null;
   return {
     title: this.title,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    cards: this.cards
+    cards: cards
   };
 };
 // populate all cards
