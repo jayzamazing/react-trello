@@ -7,7 +7,7 @@ import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
 import {Card} from '../../../src/models/cards';
 import {User} from '../../../src/models/users';
-import {createUsers,createCards,createText} from '../utils/seeddata';
+import {createUsers,createCards,createText,createBoards,createCardslist} from '../utils/seeddata';
 import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
@@ -103,7 +103,7 @@ describe('Card service', () => {
         .then((res) => {
           res.body.card.should.have.lengthOf(1);
           res.body.card[0].should.have.property('text');
-          res.body.card[0].text.should.equal(text[0].text);
+          res.body.card[0].text.should.equal(cards[0].text);
         });
       });
   });
