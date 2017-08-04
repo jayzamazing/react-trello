@@ -1,6 +1,5 @@
 'use strict';
 import request from 'superagent';
-import {patchBoards} from './BoardActions';
 
 /*
 * action to tell store that a cardslist has been created
@@ -8,11 +7,10 @@ import {patchBoards} from './BoardActions';
 * @returns action type and data
 */
 export const CREATE_CARDSLIST_SUCCESS = 'CREATE_CARDSLIST_SUCCESS';
-export const createCardsListSuccess = function(id, data) {
+export const createCardsListSuccess = function(cardslist) {
   return {
     type: CREATE_CARDSLIST_SUCCESS,
-    data,
-    boardId: id
+    cardslist
   };
 };
 /*
@@ -27,11 +25,7 @@ export const createCardsList = (id, postData, action = createCardsListSuccess) =
   .set('Accept', 'application/json')
     .then(res => {
       if (!res.ok) return Promise.reject(res.statusText);
-      // dispatch(action(res.body));
-      return res.body;
-    })
-    .then(res2 => {
-      return dispatch(patchBoards(id, res2, action));
+      return dispatch(action(res.body));
     });
 };
 // const DELETE_CARDSLIST_SUCCESS = 'DELETE_CARDSLIST_SUCCESS';

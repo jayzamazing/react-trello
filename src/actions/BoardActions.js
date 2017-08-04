@@ -106,32 +106,3 @@ export const updateBoards = (id, postData, action = updateBoardSuccess) => dispa
       dispatch(action(id, postData));
     });
 };
-/*
-* action to tell store that a board has been patched
-* @params boards - boards to be sent to store
-* @params id - id of the board to patch in the store
-* @returns action type and boards
-*/
-export const PATCH_BOARD_SUCCESS = 'PATCH_BOARD_SUCCESS';
-export const patchBoardSuccess = function(id, boards) {
-  return {
-    type: PATCH_BOARD_SUCCESS,
-    boards,
-    boardId: id
-  };
-};
-/*
-* function to patch only a part of the board
-* @params id - id of the board to patch
-* @params postData - boards to update on the board
-* @params patchBoardSuccess or passed in action
-* @dispatch patchBoardSuccess or passed in action
-*/
-export const patchBoards = (id, postData, action = patchBoardSuccess) => dispatch => {
-  return request.patch(`/boards/${id}`)
-  .send(postData)
-    .then((res) => {
-      if (!res.ok) return Promise.reject(res.statusText);
-      dispatch(action(id, postData));
-    });
-};
