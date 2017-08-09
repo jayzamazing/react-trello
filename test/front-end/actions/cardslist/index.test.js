@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {createCardsList,CREATE_CARDSLIST_SUCCESS} from '../../../../src/actions/CardsListActions';
+import {createCardsList,CREATE_CARDSLIST_SUCCESS,deleteCardslist,DELETE_CARDSLIST_SUCCESS,updateCardslist,UPDATE_CARDSLIST_SUCCESS} from '../../../../src/actions/CardsListActions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
@@ -51,43 +51,39 @@ describe('trello actions', () => {
   response.cardslist.title.should.equal('fun');
 });
   });
-// it('should delete a cardslist', () => {
-//   //set up a mockstore
-//   const store = mockStore({
-//     boards: {},
-//     cardsList: {}
-//   });
-//   return store.dispatch(actions.queries('cardslists', 'DELETE', 1, 'delete cardslist'))
-//     .then(() => {
-//       //check response against expected values
-//       var response = store.getActions()[0];
-//       response.should.have.property('type');
-//       response.type.should.equal('DELETE_CARDSLIST_SUCCESS');
-//       response.boards.cardsList[0].should.have.property('title');
-//       response.boards.cardsList[0].title.should.equal('hello');
-//       response.boards.cardsList[0].should.have.property('_id');
-//       response.boards.cardsList[0]._id.should.equal(5);
-//     });
-// });
-// it('should update a cardslist', () => {
-//   //set up a mockstore
-//   const store = mockStore({
-//     boards: {},
-//     cardsList: {}
-//   });
-//   //call to update a cardslist
-//   return store.dispatch(actions.queries('cardslists', 'PUT', {
-//     title: 'supah man'
-//   }, 'update cardslist', 2))
-//     .then(() => {
-//       //check response against expected values
-//       var response = store.getActions()[0];
-//       response.should.have.property('type');
-//       response.type.should.equal('UPDATE_CARDSLIST_SUCCESS');
-//       response.boards.cardsList[0].should.have.property('title');
-//       response.boards.cardsList[0].title.should.equal('supah man');
-//       response.boards.cardsList[0].should.have.property('_id');
-//       response.boards.cardsList[0]._id.should.equal(2);
-//     });
-// });
+  it('should delete a cardslist', () => {
+  //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+    return store.dispatch(deleteCardslist(1))
+    .then(() => {
+      //check response against expected values
+      var response = store.getActions()[0];
+      response.should.have.property('type');
+      response.type.should.equal(DELETE_CARDSLIST_SUCCESS);
+      response.should.have.property('cardslistId');
+      response.cardslistId.should.equal(1);
+    });
+  });
+  it('should update a cardslist', () => {
+  //set up a mockstore
+    const store = mockStore({
+      boards: {},
+      cardsList: {}
+    });
+  //call to update a cardslist
+    return store.dispatch(updateCardslist(2, {title: 'supah man'}))
+    .then(() => {
+      //check response against expected values
+      var response = store.getActions()[0];
+      response.should.have.property('type');
+      response.type.should.equal(UPDATE_CARDSLIST_SUCCESS);
+      response.cardslist.should.have.property('title');
+      response.cardslist.title.should.equal('supah man');
+      response.should.have.property('cardslistId');
+      response.cardslistId.should.equal(2);
+    });
+  });
 });
