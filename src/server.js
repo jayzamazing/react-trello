@@ -10,8 +10,9 @@ import { Router as boardRouter } from './models/boards';
 import { Router as cardslistRouter } from './models/cardslist';
 import { Router as cardsRouter } from './models/cards';
 import bodyParser from 'body-parser';
+const {logger} = require('./utilities/logger');
 const app = Express();
-app.use(morgan('common'));
+app.use(morgan('common', {stream: logger.stream}));
 app.use(Express.static(path.join(__dirname, '../build/static')));
 //used for form submissions
 app.use(bodyParser.urlencoded({ extended: false }));
