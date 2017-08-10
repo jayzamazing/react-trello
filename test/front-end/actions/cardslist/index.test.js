@@ -1,9 +1,9 @@
 import chai from 'chai';
-import {createCardsList,CREATE_CARDSLIST_SUCCESS,deleteCardslist,DELETE_CARDSLIST_SUCCESS,updateCardslist,UPDATE_CARDSLIST_SUCCESS} from '../../../../src/actions/CardsListActions';
+import {CardslistActions} from '../../../../src/actions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
-import {cardslists} from '../utils/seeddata';
+import {seedCardslists} from '../utils/seeddata';
 //use should
 chai.should();
 
@@ -19,7 +19,7 @@ describe('trello actions', () => {
 //send back reply to request
 .reply(200, (uri, requestBody) => {
 //return response
-  cdl = cardslists(JSON.parse(requestBody).title);
+  cdl = seedCardslists(JSON.parse(requestBody).title);
   return cdl;
 })
 .delete('/cardslist/1')
@@ -32,20 +32,19 @@ describe('trello actions', () => {
     nock.cleanAll();
   });
   beforeEach(() => {
-    cdl = cardslists();
+    cdl = seedCardslists();
   });
   it('should create a cardslist', () => {
 //set up a mockstore
     const store = mockStore({
-      boards: {},
       cardsList: {}
     });
-    return store.dispatch(createCardsList(1, {title: 'fun'}))
+    return store.dispatch(CardslistActions.createCardslist(1, {title: 'fun'}))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
-  response.type.should.equal(CREATE_CARDSLIST_SUCCESS);
+  response.type.should.equal(CardslistActions.CREATE_CARDSLIST_SUCCESS);
   response.should.have.property('cardslist');
   response.cardslist.should.have.property('title');
   response.cardslist.title.should.equal('fun');
@@ -54,15 +53,14 @@ describe('trello actions', () => {
   it('should delete a cardslist', () => {
   //set up a mockstore
     const store = mockStore({
-      boards: {},
       cardsList: {}
     });
-    return store.dispatch(deleteCardslist(1))
+    return store.dispatch(CardslistActions.deleteCardslist(1))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
       response.should.have.property('type');
-      response.type.should.equal(DELETE_CARDSLIST_SUCCESS);
+      response.type.should.equal(CardslistActions.DELETE_CARDSLIST_SUCCESS);
       response.should.have.property('cardslistId');
       response.cardslistId.should.equal(1);
     });
@@ -70,16 +68,15 @@ describe('trello actions', () => {
   it('should update a cardslist', () => {
   //set up a mockstore
     const store = mockStore({
-      boards: {},
       cardsList: {}
     });
   //call to update a cardslist
-    return store.dispatch(updateCardslist(2, {title: 'supah man'}))
+    return store.dispatch(CardslistActions.updateCardslist(2, {title: 'supah man'}))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
       response.should.have.property('type');
-      response.type.should.equal(UPDATE_CARDSLIST_SUCCESS);
+      response.type.should.equal(CardslistActions.UPDATE_CARDSLIST_SUCCESS);
       response.cardslist.should.have.property('title');
       response.cardslist.title.should.equal('supah man');
       response.should.have.property('cardslistId');

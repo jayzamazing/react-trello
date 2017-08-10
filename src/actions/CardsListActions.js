@@ -7,19 +7,19 @@ import request from 'superagent';
 * @returns action type and data
 */
 export const CREATE_CARDSLIST_SUCCESS = 'CREATE_CARDSLIST_SUCCESS';
-export const createCardsListSuccess = cardslist => {
+export const createCardslistSuccess = cardslist => {
   return {
     type: CREATE_CARDSLIST_SUCCESS,
     cardslist
   };
 };
 /*
-* function to create a board
-* @params postData - data to update on the board
-* @params createBoardSuccess or passed in action
-* @dispatch createBoardSuccess or passed in action
+* function to create a cardslist
+* @params postData - data to update on the cardslist
+* @params createCardslistSuccess or passed in action
+* @dispatch createCardslistSuccess or passed in action
 */
-export const createCardsList = (id, postData, action = createCardsListSuccess) => dispatch => {
+export const createCardslist = (id, postData, action = createCardslistSuccess) => dispatch => {
   return request.post('/cardslist')
   .send(postData)
   .set('Accept', 'application/json')
@@ -55,7 +55,7 @@ export const deleteCardslist = (id, action = deleteCardslistSuccess) => dispatch
 };
 /*
 * action to tell store that a cardslist has been updated
-* @params boards - cardslist to be sent to store
+* @params cardslist - cardslist to be sent to store
 * @params id - id of the cardslist to update in the store
 * @returns action type and cardslist
 */

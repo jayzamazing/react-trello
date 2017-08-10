@@ -1,9 +1,9 @@
 import chai from 'chai';
-import {getBoards,FIND_BOARDS_SUCCESS,createBoards,CREATE_BOARD_SUCCESS,deleteBoards,DELETE_BOARD_SUCCESS,UPDATE_BOARD_SUCCESS,updateBoards} from '../../../../src/actions/BoardActions';
+import {BoardActions} from '../../../../src/actions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
-import {boards} from '../utils/seeddata';
+import {seedBoards} from '../utils/seeddata';
 //use should
 chai.should();
 
@@ -18,7 +18,7 @@ describe('trello actions', () => {
 .post('/boards')
 //send back reply to request
 .reply(201, (uri, requestBody) => {
-  bds = boards(JSON.parse(requestBody).title);
+  bds = seedBoards(JSON.parse(requestBody).title);
 //return response
   return bds;
 })
@@ -40,7 +40,7 @@ describe('trello actions', () => {
     nock.cleanAll();
   });
   beforeEach(() => {
-    bds = boards();
+    bds = seedBoards();
   });
   it('should get boards', () => {
 //set up a mockstore
@@ -48,12 +48,12 @@ describe('trello actions', () => {
       boards: {}
     });
 //call createboard passing a title of the new board
-    return store.dispatch(getBoards())
+    return store.dispatch(BoardActions.getBoards())
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
-  response.type.should.equal(FIND_BOARDS_SUCCESS);
+  response.type.should.equal(BoardActions.FIND_BOARDS_SUCCESS);
   response.boards.should.have.property('title');
   response.boards.title.should.equal(bds.title);
   response.boards.should.have.property('_id');
@@ -66,14 +66,14 @@ describe('trello actions', () => {
       boards: {}
     });
 //call createboard passing a title of the new board
-    return store.dispatch(createBoards({
+    return store.dispatch(BoardActions.createBoards({
       title: 'blah'
     }))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
-  response.type.should.equal(CREATE_BOARD_SUCCESS);
+  response.type.should.equal(BoardActions.CREATE_BOARD_SUCCESS);
   response.boards.should.have.property('title');
   response.boards.title.should.equal('blah');
   response.boards.should.have.property('_id');
@@ -86,11 +86,11 @@ describe('trello actions', () => {
       boards: {}
     });
 //call createboard passing a title of the new board
-    return store.dispatch(deleteBoards(1))
+    return store.dispatch(BoardActions.deleteBoards(1))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
-  response.type.should.equal(DELETE_BOARD_SUCCESS);
+  response.type.should.equal(BoardActions.DELETE_BOARD_SUCCESS);
   response.should.have.property('boardId');
   response.boardId.should.equal(1);
 });
@@ -101,12 +101,12 @@ describe('trello actions', () => {
       boards: {}
     });
 //call to update a board
-    return store.dispatch(updateBoards(1, {title: 'bleh'}))
+    return store.dispatch(BoardActions.updateBoards(1, {title: 'bleh'}))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
-  response.type.should.equal(UPDATE_BOARD_SUCCESS);
+  response.type.should.equal(BoardActions.UPDATE_BOARD_SUCCESS);
   response.boards.should.have.property('title');
   response.boards.title.should.equal('bleh');
   response.should.have.property('boardId');
