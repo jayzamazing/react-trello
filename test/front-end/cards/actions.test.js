@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {CardsActions} from '../../../../src/actions';
+import {CardsActions} from '../../../src/components/cards';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';

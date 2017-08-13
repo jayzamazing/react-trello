@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {BoardActions} from '../../../../src/actions';
+import {BoardActions} from '../../../src/components/boards';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';

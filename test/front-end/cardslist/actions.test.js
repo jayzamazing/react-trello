@@ -1,5 +1,5 @@
 import chai from 'chai';
-import {CardslistActions} from '../../../../src/actions';
+import {CardsListActions} from '../../../src/components/cardslist';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
@@ -39,12 +39,12 @@ describe('trello actions', () => {
     const store = mockStore({
       cardsList: {}
     });
-    return store.dispatch(CardslistActions.createCardslist(1, {title: 'fun'}))
+    return store.dispatch(CardsListActions.createCardslist(1, {title: 'fun'}))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
-  response.type.should.equal(CardslistActions.CREATE_CARDSLIST_SUCCESS);
+  response.type.should.equal(CardsListActions.CREATE_CARDSLIST_SUCCESS);
   response.should.have.property('cardslist');
   response.cardslist.should.have.property('title');
   response.cardslist.title.should.equal('fun');
@@ -55,12 +55,12 @@ describe('trello actions', () => {
     const store = mockStore({
       cardsList: {}
     });
-    return store.dispatch(CardslistActions.deleteCardslist(1))
+    return store.dispatch(CardsListActions.deleteCardslist(1))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
       response.should.have.property('type');
-      response.type.should.equal(CardslistActions.DELETE_CARDSLIST_SUCCESS);
+      response.type.should.equal(CardsListActions.DELETE_CARDSLIST_SUCCESS);
       response.should.have.property('cardslistId');
       response.cardslistId.should.equal(1);
     });
@@ -71,12 +71,12 @@ describe('trello actions', () => {
       cardsList: {}
     });
   //call to update a cardslist
-    return store.dispatch(CardslistActions.updateCardslist(2, {title: 'supah man'}))
+    return store.dispatch(CardsListActions.updateCardslist(2, {title: 'supah man'}))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
       response.should.have.property('type');
-      response.type.should.equal(CardslistActions.UPDATE_CARDSLIST_SUCCESS);
+      response.type.should.equal(CardsListActions.UPDATE_CARDSLIST_SUCCESS);
       response.cardslist.should.have.property('title');
       response.cardslist.title.should.equal('supah man');
       response.should.have.property('cardslistId');
