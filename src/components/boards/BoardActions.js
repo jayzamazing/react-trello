@@ -1,12 +1,24 @@
 'use strict';
 import request from 'superagent';
+import {
+normalize,
+arrayOf
+} from 'normalizr';
+import {
+boardsSchema
+} from './board-schema';
+
 /*
 * action to tell store that all boards has been retrieved
 * @params boards - boards to be sent to store
 * @returns action type and boards
 */
 export const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
-export const findBoardsSuccess = boards => {
+export const findBoardsSuccess = data => {
+  //grab all boards array with cards and cardslist and normalize it
+  const boards = (normalize({boards: data}, {
+    boards: arrayOf(boardsSchema)
+  })).entities.boards;
   return {
     type: FIND_BOARDS_SUCCESS,
     boards

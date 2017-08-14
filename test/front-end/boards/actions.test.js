@@ -28,7 +28,7 @@ describe('trello actions', () => {
 //send back reply to request
 .reply(200, () => {
 //return response
-  return bds;
+  return [bds];
 })
 .delete('/boards/1')
 .reply(204)
@@ -54,10 +54,12 @@ describe('trello actions', () => {
   var response = store.getActions()[0];
   response.should.have.property('type');
   response.type.should.equal(BoardActions.FIND_BOARDS_SUCCESS);
-  response.boards.should.have.property('title');
-  response.boards.title.should.equal(bds.title);
-  response.boards.should.have.property('_id');
-  response.boards._id.should.equal(bds._id);
+  //get array of board keys
+  let keys = Object.keys(response.boards);
+  response.boards[keys[0]].should.have.property('title');
+  response.boards[keys[0]].title.should.equal(bds.title);
+  response.boards[keys[0]].should.have.property('_id');
+  response.boards[keys[0]]._id.should.equal(bds._id);
 });
   });
   it('should create a board', () => {
