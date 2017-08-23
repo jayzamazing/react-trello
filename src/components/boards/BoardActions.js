@@ -14,14 +14,14 @@ boardsSchema
 * @returns action type and boards
 */
 export const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
-export const findBoardsSuccess = data => {
+export const findBoardsSuccess = boards => {
   //grab all boards array with cards and cardslist and normalize it
-  const boards = (normalize({boards: data}, {
+  const items = (normalize(boards, {
     boards: arrayOf(boardsSchema)
-  })).entities.boards;
+  })).entities;
   return {
     type: FIND_BOARDS_SUCCESS,
-    boards
+    items
   };
 };
 /*

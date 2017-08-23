@@ -1,2 +1,3 @@
 import * as BoardActions from './BoardActions';
-module.exports = { BoardActions };
+import boardReducer from './boardReducer';
+module.exports = { BoardActions, boardReducer };

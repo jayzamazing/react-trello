@@ -1,9 +1,9 @@
 import chai from 'chai';
-import {BoardActions} from '../../../src/components/boards';
+import * as BoardActions from './BoardActions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
-import {seedBoards} from '../utils/seeddata';
+import {seedBoards} from '../testutils/seeddata';
 //use should
 chai.should();
 
@@ -18,7 +18,7 @@ describe('trello actions', () => {
 .post('/boards')
 //send back reply to request
 .reply(201, (uri, requestBody) => {
-  bds = seedBoards(JSON.parse(requestBody).title);
+  bds = seedBoards(0, JSON.parse(requestBody).title);
 //return response
   return bds;
 })
@@ -28,7 +28,7 @@ describe('trello actions', () => {
 //send back reply to request
 .reply(200, () => {
 //return response
-  return [bds];
+  return bds;
 })
 .delete('/boards/1')
 .reply(204)
@@ -40,7 +40,7 @@ describe('trello actions', () => {
     nock.cleanAll();
   });
   beforeEach(() => {
-    bds = seedBoards();
+    bds = seedBoards(3);
   });
   it('should get boards', () => {
 //set up a mockstore
@@ -55,11 +55,11 @@ describe('trello actions', () => {
   response.should.have.property('type');
   response.type.should.equal(BoardActions.FIND_BOARDS_SUCCESS);
   //get array of board keys
-  let keys = Object.keys(response.boards);
-  response.boards[keys[0]].should.have.property('title');
-  response.boards[keys[0]].title.should.equal(bds.title);
-  response.boards[keys[0]].should.have.property('_id');
-  response.boards[keys[0]]._id.should.equal(bds._id);
+  let keys = Object.keys(response.items.boards);
+  response.items.boards[keys[0]].should.have.property('title');
+  response.items.boards[keys[0]].title.should.equal(bds.boards[0].title);
+  response.items.boards[keys[0]].should.have.property('_id');
+  response.items.boards[keys[0]]._id.should.equal(bds.boards[0]._id);
 });
   });
   it('should create a board', () => {
