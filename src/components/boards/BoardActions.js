@@ -8,6 +8,7 @@ import {
 boardsSchema
 } from './board-schema';
 
+
 /*
 * action to tell store that all boards has been retrieved
 * @params boards - boards to be sent to store
@@ -44,9 +45,12 @@ export const getBoards = (action = findBoardsSuccess) => dispatch => {
 */
 export const CREATE_BOARD_SUCCESS = 'CREATE_BOARD_SUCCESS';
 export const createBoardSuccess = boards => {
+  const items = (normalize(boards, {
+    boards: boardsSchema
+  })).entities;
   return {
     type: CREATE_BOARD_SUCCESS,
-    boards
+    items
   };
 };
 /*

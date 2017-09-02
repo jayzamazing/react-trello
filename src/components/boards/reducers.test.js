@@ -34,4 +34,26 @@ describe('board reducer', () => {
       state.boards[keys[1]].title.should.equal(boards.boards[1].title);
     });
   });
+  describe('CREATE_BOARD_SUCCESS', () => {
+    let state, test;
+    before(() => {
+      test = seedBoards(0, 'grocery list');
+      state = boardReducer.trelloReducer(undefined, BoardActions.createBoardSuccess({'boards': test}));
+    });
+    it('should exist', () => {
+      should.exist(state.boards);
+    });
+    it('should have properties', () => {
+      let keys = Object.keys(state.boards);
+      state.boards.should.have.property(keys[0]);
+      state.boards[keys[0]].should.have.property('_id');
+      state.boards[keys[0]].should.have.property('title');
+      state.boards[keys[0]].should.have.property('cardsList');
+      should.equal(state.boards[keys[0]].cardsList, null);
+    });
+    it('should deserialize the order', () => {
+      state.boards[test._id]._id.should.equal(test._id);
+      state.boards[test._id].title.should.equal('grocery list');
+    });
+  });
 });

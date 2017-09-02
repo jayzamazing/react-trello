@@ -18,7 +18,8 @@ export const seedBoards = function(count, title = faker.random.words()) {
     let _id = faker.random.alphaNumeric(20);
     return {
       title: title,
-      _id: _id
+      _id: _id,
+      cardsList: null
     };
   }
 };
@@ -37,7 +38,8 @@ export const seedCardslists = function(count, title = faker.random.words()) {
   } else {
     return {
       title: title,
-      _id: _id
+      _id: _id,
+      cards: null
     };
   }
 };
