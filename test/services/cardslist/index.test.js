@@ -68,6 +68,7 @@ describe('Cardslist service', () => {
         .send({title: 'grocery list'})
         .then((res) => {
           res.body.should.have.property('title');
+          res.body.should.have.property('_id');
           res.body.title.should.equal('grocery list');
           res.body.should.have.property('cards');
           should.equal(res.body.cards, null);
@@ -102,7 +103,9 @@ describe('Cardslist service', () => {
         .then((res) => {
           res.body.cardslist.should.have.lengthOf(1);
           res.body.cardslist[0].should.have.property('title');
+          res.body.cardslist[0].should.have.property('_id');
           res.body.cardslist[0].title.should.equal(cardslists[0].title);
+          res.body.cardslist[0]._id.should.equal(`${cardslists[0]._id}`);
           res.body.cardslist[0].should.have.property('cards');
           res.body.cardslist[0].cards.should.be.a('array');
           res.body.cardslist[0].cards[0].should.have.property('text');

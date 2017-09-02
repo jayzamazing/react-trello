@@ -17,8 +17,7 @@ const cardSchema = new mongoose.Schema({
 cardSchema.methods.apiRepr = function() {
   return {
     text: this.text,
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt
+    _id: this._id
   };
 };
 const Card = mongoose.model('card', cardSchema);

@@ -18,9 +18,8 @@ boardSchema.methods.apiRepr = function() {
   //if there is a cardslist the format it, otherwise make it null
   cardslists = this.cardslists ? this.cardslists.map(cardslist => cardslist.apiRepr()) : null;
   return {
+    _id: this._id,
     title: this.title,
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt,
     cardslists: cardslists
   };
 };

@@ -67,6 +67,7 @@ describe('boards service', () => {
         .set('Accept', 'application/json')
         .send({title: 'grocery list'})
         .then((res) => {
+          res.body.should.have.property('_id');
           res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
           res.body.should.have.property('cardslists');
@@ -101,6 +102,8 @@ describe('boards service', () => {
         .set('Accept', 'application/json')
         .then((res) => {
           res.body.board.should.have.lengthOf(1);
+          res.body.board[0].should.have.property('_id');
+          res.body.board[0]._id.should.equal(`${boards[0]._id}`);
           res.body.board[0].should.have.property('title');
           res.body.board[0].title.should.equal(boards[0].title);
           res.body.board[0].should.have.property('cardslists');

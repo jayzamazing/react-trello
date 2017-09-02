@@ -67,6 +67,7 @@ describe('Card service', () => {
         .set('Accept', 'application/json')
         .send({text: 'grocery list'})
         .then((res) => {
+          res.body.should.have.property('_id');
           res.body.should.have.property('text');
           res.body.text.should.equal('grocery list');
         });
@@ -99,8 +100,10 @@ describe('Card service', () => {
         .set('Accept', 'application/json')
         .then((res) => {
           res.body.card.should.have.lengthOf(1);
+          res.body.card[0].should.have.property('_id');
           res.body.card[0].should.have.property('text');
           res.body.card[0].text.should.equal(cards[0].text);
+          res.body.card[0]._id.should.equal(`${cards[0]._id}`);
         });
       });
   });

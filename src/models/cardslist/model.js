@@ -20,8 +20,7 @@ cardslistSchema.methods.apiRepr = function() {
   cards = this.cards ? this.cards.map(cards => cards.apiRepr()) : null;
   return {
     title: this.title,
-    createdAt: this.createdAt,
-    updatedAt: this.updatedAt,
+    _id: this._id,
     cards: cards
   };
 };
