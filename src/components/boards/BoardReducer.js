@@ -9,7 +9,7 @@ const initialRepositoryState = Immutable({
 * params state- old state before merge
 * params action- action with data to update state
 */
-export const createBoard = (state, action) => state.merge(action.items.boards);
+export const createBoard = (state, action) => state.merge({boards: action.items.boards});
 
 /*
 * Function to deal with deleting a board and removing it from state
@@ -23,7 +23,7 @@ export const createBoard = (state, action) => state.merge(action.items.boards);
 * params state- old state before merge
 * params action- action with data to modify state
 */
-export const boardReducer = (state, action) => {
+export const trelloReducer = (state, action) => {
   state = initialRepositoryState || state;
   switch (action.type) {
   case 'FIND_BOARDS_SUCCESS':
