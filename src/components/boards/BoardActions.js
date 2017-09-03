@@ -1,12 +1,7 @@
 'use strict';
 import request from 'superagent';
-import {
-normalize,
-arrayOf
-} from 'normalizr';
-import {
-boardsSchema
-} from './board-schema';
+import {normalize,arrayOf} from 'normalizr';
+import {boardsSchema} from '../board-schema';
 
 
 /*

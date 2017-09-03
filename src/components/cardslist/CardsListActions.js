@@ -1,5 +1,7 @@
 'use strict';
 import request from 'superagent';
+import {normalize,arrayOf} from 'normalizr';
+import {cardsListSchema} from '../board-schema';
 
 /*
 * action to tell store that a cardslist has been created
@@ -8,9 +10,12 @@ import request from 'superagent';
 */
 export const CREATE_CARDSLIST_SUCCESS = 'CREATE_CARDSLIST_SUCCESS';
 export const createCardslistSuccess = cardslist => {
+  const items = (normalize(cardslist, {
+    cardslist: cardsListSchema
+  })).entities;
   return {
     type: CREATE_CARDSLIST_SUCCESS,
-    cardslist
+    items
   };
 };
 /*
@@ -19,7 +24,7 @@ export const createCardslistSuccess = cardslist => {
 * @params createCardslistSuccess or passed in action
 * @dispatch createCardslistSuccess or passed in action
 */
-export const createCardslist = (id, postData, action = createCardslistSuccess) => dispatch => {
+export const createCardslist = (postData, action = createCardslistSuccess) => dispatch => {
   return request.post('/cardslist')
   .send(postData)
   .set('Accept', 'application/json')
@@ -61,9 +66,12 @@ export const deleteCardslist = (id, action = deleteCardslistSuccess) => dispatch
 */
 export const UPDATE_CARDSLIST_SUCCESS = 'UPDATE_CARDSLIST_SUCCESS';
 export const updateCardslistSuccess = function(id, cardslist) {
+  const items = (normalize(cardslist, {
+    cardslist: cardsListSchema
+  })).entities;
   return {
     type: UPDATE_CARDSLIST_SUCCESS,
-    cardslist,
+    items,
     cardslistId: id
   };
 };
