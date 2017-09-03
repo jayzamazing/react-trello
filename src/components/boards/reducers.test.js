@@ -57,17 +57,37 @@ describe('board reducer', () => {
       state.boards[test._id].title.should.equal('grocery list');
     });
   });
-    describe.only('DELETE_BOARD_SUCCESS', () => {
-      let state;
-      before(() => {
-        state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
-        state = boardReducer.trelloReducer(state, BoardActions.deleteBoardSuccess(boards.boards[0]._id));
-      });
-      it('should exist', () => {
-        should.exist(state.boards);
-      });
-      it('should not have properties', () => {
-        state.boards.should.not.have.property(boards.boards[0]._id);
-      });
+  describe('DELETE_BOARD_SUCCESS', () => {
+    let state;
+    before(() => {
+      state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
+      state = boardReducer.trelloReducer(state, BoardActions.deleteBoardSuccess(boards.boards[1]._id));
     });
+    it('should exist', () => {
+      should.exist(state.boards);
+    });
+    it('should not have properties', () => {
+      state.boards.should.not.have.property(boards.boards[1]._id);
+    });
+  });
+  describe('UPDATE_BOARD_SUCCESS', () => {
+    let state, test;
+    before(() => {
+      test = seedBoards(0, 'super mario', boards.boards[2]._id);
+      state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
+      state = boardReducer.trelloReducer(state, BoardActions.updateBoardSuccess(boards.boards[2]._id,
+      {'boards': test}));
+    });
+    it('should exist', () => {
+      should.exist(state.boards);
+    });
+    it('should have properties', () => {
+      state.boards[boards.boards[2]._id].should.have.property('_id');
+      state.boards[boards.boards[2]._id].should.have.property('title');
+    });
+    it('should deserialize the order', () => {
+      state.boards[boards.boards[2]._id]._id.should.equal(boards.boards[2]._id);
+      state.boards[boards.boards[2]._id].title.should.equal('super mario');
+    });
+  });
 });

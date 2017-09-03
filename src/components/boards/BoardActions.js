@@ -101,9 +101,12 @@ export const deleteBoards = (id, action = deleteBoardSuccess) => dispatch => {
 */
 export const UPDATE_BOARD_SUCCESS = 'UPDATE_BOARD_SUCCESS';
 export const updateBoardSuccess = function(id, boards) {
+  const items = (normalize(boards, {
+    boards: boardsSchema
+  })).entities;
   return {
     type: UPDATE_BOARD_SUCCESS,
-    boards,
+    items,
     boardId: id
   };
 };

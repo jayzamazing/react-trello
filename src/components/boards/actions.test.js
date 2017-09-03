@@ -20,7 +20,7 @@ describe('trello actions', () => {
 .reply(201, (uri, requestBody) => {
   bds = seedBoards(0, JSON.parse(requestBody).title);
 //return response
-  return bds;
+  return {boards: bds};
 })
 //request to get a board
 .get('/boards')
@@ -51,7 +51,7 @@ describe('trello actions', () => {
     return store.dispatch(BoardActions.getBoards())
 .then(() => {
 //check response against expected values
-  var response = store.getActions()[0];
+  let response = store.getActions()[0];
   response.should.have.property('type');
   response.type.should.equal(BoardActions.FIND_BOARDS_SUCCESS);
   //get array of board keys
@@ -73,13 +73,14 @@ describe('trello actions', () => {
     }))
 .then(() => {
 //check response against expected values
-  var response = store.getActions()[0];
+  let response = store.getActions()[0];
   response.should.have.property('type');
   response.type.should.equal(BoardActions.CREATE_BOARD_SUCCESS);
-  response.boards.should.have.property('title');
-  response.boards.title.should.equal('blah');
-  response.boards.should.have.property('_id');
-  response.boards._id.should.equal(bds._id);
+  let keys = Object.keys(response.items.boards);
+  response.items.boards[keys[0]].should.have.property('title');
+  response.items.boards[keys[0]].title.should.equal('blah');
+  response.items.boards[keys[0]].should.have.property('_id');
+  response.items.boards[keys[0]]._id.should.equal(bds._id);
 });
   });
   it('should delete a board', () => {
@@ -91,7 +92,7 @@ describe('trello actions', () => {
     return store.dispatch(BoardActions.deleteBoards(1))
 .then(() => {
 //check response against expected values
-  var response = store.getActions()[0];
+  let response = store.getActions()[0];
   response.type.should.equal(BoardActions.DELETE_BOARD_SUCCESS);
   response.should.have.property('boardId');
   response.boardId.should.equal(1);
@@ -102,15 +103,17 @@ describe('trello actions', () => {
     const store = mockStore({
       boards: {}
     });
+    let temp = seedBoards(0, 'bleh');
 //call to update a board
-    return store.dispatch(BoardActions.updateBoards(1, {title: 'bleh'}))
+    return store.dispatch(BoardActions.updateBoards(1, {boards: temp}))
 .then(() => {
 //check response against expected values
-  var response = store.getActions()[0];
+  let response = store.getActions()[0];
   response.should.have.property('type');
   response.type.should.equal(BoardActions.UPDATE_BOARD_SUCCESS);
-  response.boards.should.have.property('title');
-  response.boards.title.should.equal('bleh');
+  let keys = Object.keys(response.items.boards);
+  response.items.boards[keys[0]].should.have.property('title');
+  response.items.boards[keys[0]].title.should.equal('bleh');
   response.should.have.property('boardId');
   response.boardId.should.equal(1);
 });

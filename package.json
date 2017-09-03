@@ -1,7 +1,7 @@
 {
   "name": "react-trello",
   "description": "Trello app.",
-  "version": "2.31.8",
+  "version": "2.32.8",
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "main": "client.js",
   "server": "app.js",
@@ -26,7 +26,7 @@
     "test": "npm run eslint && npm run mocha",
     "eslint": "eslint src/. test/.",
     "start": "node build/server/app.js",
-    "mocha": "mocha test/",
+    "mocha": "mocha test/ src/",
     "mochaIndividual": "mocha --compilers js:babel-register --require test/utils/dom.js",
     "mkdir": "mkdir -p build/static/css build/static/js",
     "build": "npm run clean && npm run mkdir && npm run build:html && npm run build:js",

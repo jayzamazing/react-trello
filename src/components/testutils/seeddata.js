@@ -1,7 +1,7 @@
 'use strict';
 import faker from 'faker';
 
-export const seedBoards = function(count, title = faker.random.words()) {
+export const seedBoards = function(count, title = faker.random.words(), _id = faker.random.alphaNumeric(20)) {
   if (count != 0) {
     let boards = [];
     for (var i = 0; i < count; i++) {
@@ -15,7 +15,6 @@ export const seedBoards = function(count, title = faker.random.words()) {
       boards
     };
   } else {
-    let _id = faker.random.alphaNumeric(20);
     return {
       title: title,
       _id: _id,

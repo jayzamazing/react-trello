@@ -2,7 +2,7 @@ var React = require('react');
 var connect = require('react-redux').connect;
 var router = require('react-router');
 var hashHistory = router.hashHistory;
-var CreateItems = require('./create-items');
+// var CreateItems = require('./create-items');
 var actions = require('./BoardActions');
 var Immutable = require('seamless-immutable');
 //function to render multiple lists of boards
