@@ -1,5 +1,5 @@
 import Immutable from 'seamless-immutable';
-
+import * as BoardActions from './BoardActions';
 const initialRepositoryState = Immutable({
   boards: {}
 });
@@ -16,7 +16,7 @@ export const createBoard = (state, action) => state.merge({boards: action.items.
 * params state- old state before merge
 * params action- action with data to update state
 */
-// const deleteBoard = (state, action) => state
+const deleteBoard = (state, action) => Immutable({boards: Immutable.without(state.boards, action.boardId)});
 
 /*
 * Function to deal with using various reducer functions
@@ -24,10 +24,13 @@ export const createBoard = (state, action) => state.merge({boards: action.items.
 * params action- action with data to modify state
 */
 export const trelloReducer = (state, action) => {
-  state = initialRepositoryState || state;
+  state = state || initialRepositoryState;
+  // console.log(state.boards);
   switch (action.type) {
-  case 'FIND_BOARDS_SUCCESS':
-  case 'CREATE_BOARD_SUCCESS':
+  case BoardActions.FIND_BOARDS_SUCCESS:
+  case BoardActions.CREATE_BOARD_SUCCESS:
     return createBoard(state, action);
+  case BoardActions.DELETE_BOARD_SUCCESS:
+    return deleteBoard(state, action);
   }
 };

@@ -38,7 +38,8 @@ describe('board reducer', () => {
     let state, test;
     before(() => {
       test = seedBoards(0, 'grocery list');
-      state = boardReducer.trelloReducer(undefined, BoardActions.createBoardSuccess({'boards': test}));
+      state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
+      state = boardReducer.trelloReducer(state, BoardActions.createBoardSuccess({'boards': test}));
     });
     it('should exist', () => {
       should.exist(state.boards);
@@ -56,4 +57,17 @@ describe('board reducer', () => {
       state.boards[test._id].title.should.equal('grocery list');
     });
   });
+    describe.only('DELETE_BOARD_SUCCESS', () => {
+      let state;
+      before(() => {
+        state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
+        state = boardReducer.trelloReducer(state, BoardActions.deleteBoardSuccess(boards.boards[0]._id));
+      });
+      it('should exist', () => {
+        should.exist(state.boards);
+      });
+      it('should not have properties', () => {
+        state.boards.should.not.have.property(boards.boards[0]._id);
+      });
+    });
 });
