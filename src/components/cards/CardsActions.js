@@ -1,5 +1,7 @@
 'use strict';
 import request from 'superagent';
+import {normalize} from 'normalizr';
+import {cardsSchema} from '../board-schema';
 
 /*
 * action to tell store that a cards has been created
@@ -8,9 +10,12 @@ import request from 'superagent';
 */
 export const CREATE_CARDS_SUCCESS = 'CREATE_CARDS_SUCCESS';
 export const createCardsSuccess = cards => {
+  const items = (normalize(cards, {
+    cards: cardsSchema
+  })).entities;
   return {
     type: CREATE_CARDS_SUCCESS,
-    cards
+    items
   };
 };
 /*
@@ -19,7 +24,7 @@ export const createCardsSuccess = cards => {
 * @params createCardsSuccess or passed in action
 * @dispatch createCardsSuccess or passed in action
 */
-export const createCards = (id, postData, action = createCardsSuccess) => dispatch => {
+export const createCards = (postData, action = createCardsSuccess) => dispatch => {
   return request.post('/cards')
   .send(postData)
   .set('Accept', 'application/json')
@@ -61,16 +66,19 @@ export const deleteCards = (id, action = deleteCardsSuccess) => dispatch => {
 */
 export const UPDATE_CARDS_SUCCESS = 'UPDATE_CARDS_SUCCESS';
 export const updateCardsSuccess = function(id, cards) {
+  const items = (normalize(cards, {
+    cards: cardsSchema
+  })).entities;
   return {
     type: UPDATE_CARDS_SUCCESS,
-    cards,
+    items,
     cardsId: id
   };
 };
 /*
 * function to update the cards
 * @params id - id of the cards to update
-* @params postData - cards to update on the cardslist
+* @params postData - cards to update on the board
 * @params updateCardsSuccess or passed in action
 * @dispatch updateCardsSuccess or passed in action
 */

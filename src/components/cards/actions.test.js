@@ -1,9 +1,9 @@
 import chai from 'chai';
-import {CardsActions} from '../../../src/components/cards';
+import * as CardsActions from './CardsActions';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import configureMockStore from 'redux-mock-store';
-import {seedCards} from '../utils/seeddata';
+import {seedCards} from '../testutils/seeddata';
 //use should
 chai.should();
 
@@ -14,13 +14,13 @@ describe('trello actions', () => {
   before(() => {
 //create a mock server response
     nock('http://localhost')
-//request to create cards
+//request to create cardsList
 .post('/cards')
 //send back reply to request
 .reply(200, (uri, requestBody) => {
 //return response
-  cdl = seedCards(JSON.parse(requestBody).text);
-  return cdl;
+  cdl = seedCards(0, JSON.parse(requestBody).text);
+  return {cards: cdl};
 })
 .delete('/cards/1')
 .reply(204)
@@ -39,15 +39,16 @@ describe('trello actions', () => {
     const store = mockStore({
       cards: {}
     });
-    return store.dispatch(CardsActions.createCards(1, {text: 'fun'}))
+    return store.dispatch(CardsActions.createCards({text: 'fun'}))
 .then(() => {
 //check response against expected values
   var response = store.getActions()[0];
   response.should.have.property('type');
   response.type.should.equal(CardsActions.CREATE_CARDS_SUCCESS);
-  response.should.have.property('cards');
-  response.cards.should.have.property('text');
-  response.cards.text.should.equal('fun');
+  response.items.should.have.property('cards');
+  let keys = Object.keys(response.items.cards);
+  response.items.cards[keys[0]].should.have.property('text');
+  response.items.cards[keys[0]].text.should.equal('fun');
 });
   });
   it('should delete a cards', () => {
@@ -70,15 +71,17 @@ describe('trello actions', () => {
     const store = mockStore({
       cards: {}
     });
+    let temp = seedCards(0, 'supah man');
   //call to update a cards
-    return store.dispatch(CardsActions.updateCards(2, {text: 'supah man'}))
+    return store.dispatch(CardsActions.updateCards(2, {cards: temp}))
     .then(() => {
       //check response against expected values
       var response = store.getActions()[0];
       response.should.have.property('type');
       response.type.should.equal(CardsActions.UPDATE_CARDS_SUCCESS);
-      response.cards.should.have.property('text');
-      response.cards.text.should.equal('supah man');
+      let keys = Object.keys(response.items.cards);
+      response.items.cards[keys[0]].should.have.property('text');
+      response.items.cards[keys[0]].text.should.equal('supah man');
       response.should.have.property('cardsId');
       response.cardsId.should.equal(2);
     });
