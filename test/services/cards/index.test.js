@@ -3,15 +3,15 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-import {Cardslist} from '../../../src/models/cardslist';
-import {createUsers,createBoards,createCardslist,createCards,createTitle} from '../utils/seeddata';
+import {Card} from '../../../src/models/cards';
+import {createUsers,createCards,createText,createBoards,createCardslist} from '../utils/seeddata';
 import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
 
 chai.use(chaiHttp);
 let users, cards, boards, cardslists;
 
-describe('Cardslist service', () => {
+describe('Card service', () => {
   let agent;
   //setup
   before(() => {
@@ -39,22 +39,22 @@ describe('Cardslist service', () => {
   afterEach(() => {
     return deleteDb();
   });
-  it('should not create a Cardslist, not auth redirects to /', () => {
+  it('should not create a Card, not auth redirects to /', () => {
     agent = chai.request.agent(app);
     return agent
-      .post('/cardslist')
+      .post('/cards')
       //set headers
       .set('Accept', 'application/json')
-      .send({title: 'grocery list'})
+      .send({text: 'grocery list'})
       .then((res) => {
         res.should.redirect;
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it('should create a Cardslist', () => {
+  it('should create a Card', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /Card
       .post('/auth/login')
       //send the following data
       .auth(users[0].email, users[0].unhashed)
@@ -62,23 +62,21 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        post('/Cardslist')
+        post('/cards')
         //set headers
         .set('Accept', 'application/json')
-        .send({title: 'grocery list'})
+        .send({text: 'grocery list'})
         .then((res) => {
-          res.body.should.have.property('title');
           res.body.should.have.property('_id');
-          res.body.title.should.equal('grocery list');
-          res.body.should.have.property('cards');
-          should.equal(res.body.cards, null);
+          res.body.should.have.property('text');
+          res.body.text.should.equal('grocery list');
         });
       });
   });
-  it('should not get any Cardslist, not auth redirects to /', () => {
+  it('should not get any Card, not auth redirects to /', () => {
     agent = chai.request.agent(app);
     return agent
-      .get('/Cardslist')
+      .get('/cards')
       //set headers
       .set('Accept', 'application/json')
       .then((res) => {
@@ -86,10 +84,10 @@ describe('Cardslist service', () => {
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it('should get a users Cardslist', () => {
+  it('should get a users Card', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /Card
       .post('/auth/login')
       //send the following data
       .auth(users[0].email, users[0].unhashed)
@@ -97,27 +95,23 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        get('/Cardslist')
+        get('/cards')
         //set headers
         .set('Accept', 'application/json')
         .then((res) => {
-          res.body.cardslist.should.have.lengthOf(1);
-          res.body.cardslist[0].should.have.property('title');
-          res.body.cardslist[0].should.have.property('_id');
-          res.body.cardslist[0].title.should.equal(cardslists[0].title);
-          res.body.cardslist[0]._id.should.equal(`${cardslists[0]._id}`);
-          res.body.cardslist[0].should.have.property('cards');
-          res.body.cardslist[0].cards.should.be.a('array');
-          res.body.cardslist[0].cards[0].should.have.property('text');
-          res.body.cardslist[0].cards[0].text.should.equal(cards[0].text);
+          res.body.card.should.have.lengthOf(1);
+          res.body.card[0].should.have.property('_id');
+          res.body.card[0].should.have.property('text');
+          res.body.card[0].text.should.equal(cards[0].text);
+          res.body.card[0]._id.should.equal(`${cards[0]._id}`);
         });
       });
   });
-  it('should update a users Cardslist', () => {
-    let newTitle = createTitle();
+  it('should update a users Card', () => {
+    let newTitle = createText();
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /Card
       .post('/auth/login')
       //send the following data
       .auth(users[2].email, users[2].unhashed)
@@ -125,36 +119,36 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        put(`/Cardslist/${cardslists[2]._id}`)
+        put(`/cards/${cards[2]._id}`)
         .send(newTitle)
         .then((res) => {
           res.should.have.status(204);
-          return Cardslist.findById(cardslists[2]._id).exec();
+          return Card.findById(cards[2]._id).exec();
         })
-        .then((cardslist) => {
-          cardslist._id.should.deep.equal(cardslists[2]._id);
-          cardslist.title.should.equal(newTitle.title);
-          cardslist.createdAt.should.deep.equal(cardslists[2].createdAt);
-          cardslist.updatedAt.should.be.greaterThan(cardslists[2].updatedAt);
+        .then((card) => {
+          card._id.should.deep.equal(cards[2]._id);
+          card.text.should.equal(newTitle.text);
+          card.createdAt.should.deep.equal(cards[2].createdAt);
+          card.updatedAt.should.be.greaterThan(cards[2].updatedAt);
         });
       });
   });
-  it('should delete a users Cardslist', () => {
+  it('should delete a users Card', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /Card
       .post('/auth/login')
       //send the following data
       .auth(users[3].email, users[3].unhashed)
       .then(() => {
         return agent.
-        delete(`/Cardslist/${cardslists[3]._id}`)
+        delete(`/cards/${cards[3]._id}`)
         .then((res) => {
           res.should.have.status(204);
-          return Cardslist.findById(cardslists[3]._id).exec();
+          return Card.findById(cards[3]._id).exec();
         })
-        .then((cardslist) => {
-          should.not.exist(cardslist);
+        .then((cards) => {
+          should.not.exist(cards);
         });
       });
   });

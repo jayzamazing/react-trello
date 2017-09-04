@@ -1,35 +1,51 @@
 'use strict';
+import app from './server.js';
+import mongoose from 'mongoose';
+import { PORT, DATABASE_URL, NODE_ENV } from './config';
+let server;
+mongoose.Promise = global.Promise;
+//start the server and connect to mongo db
+function runServer(databaseUrl=DATABASE_URL, port=PORT, env=NODE_ENV) {
 
-const path = require('path');
-const serveStatic = require('feathers').static;
-const favicon = require('serve-favicon');
-const compress = require('compression');
-const cors = require('cors');
-const feathers = require('feathers');
-const configuration = require('feathers-configuration');
-const hooks = require('feathers-hooks');
-const rest = require('feathers-rest');
-const bodyParser = require('body-parser');
-const socketio = require('feathers-socketio');
-const middleware = require('./middleware');
-const services = require('./services');
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+/* eslint-disable no-console */
+        console.log('Server running on http://localhost:' + server.address().port + ` [${env}]`);
+/* eslint-enable no-console */
+        resolve();
+      })
+.on('error', err => {
+  mongoose.disconnect();
+  reject(err);
+});
+    });
+  });
+}
+//close the server and disconnect from mongo db
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+/* eslint-disable no-console */
+      console.log('Closing server');
+/* eslint-enable no-console */
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
+}
 
-const app = feathers();
+if (require.main === module) {
+/* eslint-disable no-console */
+  runServer().catch(err => console.error(err));
+/* eslint-enable no-console */
+}
 
-app.configure(configuration(path.join(__dirname, '..')));
-
-app.use(compress())
-  .options('*', cors())
-  .use(cors())
-  .use(favicon( path.join(app.get('build'), 'favicon.ico') ))
-  .use('/', serveStatic( app.get('build') ))
-  .use('/scripts', serveStatic(app.get('node_modules')))
-  .use(bodyParser.json())
-  .use(bodyParser.urlencoded({ extended: true }))
-  .configure(hooks())
-  .configure(rest())
-  .configure(socketio())
-  .configure(services)
-  .configure(middleware);
-
-module.exports = app;
+export { app, runServer, closeServer };

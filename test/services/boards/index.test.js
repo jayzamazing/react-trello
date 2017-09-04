@@ -3,7 +3,7 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import {app, runServer, closeServer} from '../../../src/app';
 import {DATABASE_URL} from '../../../src/config';
-import {Cardslist} from '../../../src/models/cardslist';
+import {Board} from '../../../src/models/boards';
 import {createUsers,createBoards,createCardslist,createCards,createTitle} from '../utils/seeddata';
 import {deleteDb} from '../utils/cleandb.js';
 var should = chai.should();
@@ -11,7 +11,7 @@ var should = chai.should();
 chai.use(chaiHttp);
 let users, cards, boards, cardslists;
 
-describe('Cardslist service', () => {
+describe('boards service', () => {
   let agent;
   //setup
   before(() => {
@@ -39,10 +39,10 @@ describe('Cardslist service', () => {
   afterEach(() => {
     return deleteDb();
   });
-  it('should not create a Cardslist, not auth redirects to /', () => {
+  it('should not create a board, not auth redirects to /', () => {
     agent = chai.request.agent(app);
     return agent
-      .post('/cardslist')
+      .post('/boards')
       //set headers
       .set('Accept', 'application/json')
       .send({title: 'grocery list'})
@@ -51,10 +51,10 @@ describe('Cardslist service', () => {
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it('should create a Cardslist', () => {
+  it('should create a board', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /boards
       .post('/auth/login')
       //send the following data
       .auth(users[0].email, users[0].unhashed)
@@ -62,23 +62,23 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        post('/Cardslist')
+        post('/boards')
         //set headers
         .set('Accept', 'application/json')
         .send({title: 'grocery list'})
         .then((res) => {
-          res.body.should.have.property('title');
           res.body.should.have.property('_id');
+          res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
-          res.body.should.have.property('cards');
-          should.equal(res.body.cards, null);
+          res.body.should.have.property('cardslists');
+          should.equal(res.body.cardslists, null);
         });
       });
   });
-  it('should not get any Cardslist, not auth redirects to /', () => {
+  it('should not get any boards, not auth redirects to /', () => {
     agent = chai.request.agent(app);
     return agent
-      .get('/Cardslist')
+      .get('/boards')
       //set headers
       .set('Accept', 'application/json')
       .then((res) => {
@@ -86,10 +86,10 @@ describe('Cardslist service', () => {
         res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
       });
   });
-  it('should get a users Cardslist', () => {
+  it('should get a users boards', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /boards
       .post('/auth/login')
       //send the following data
       .auth(users[0].email, users[0].unhashed)
@@ -97,27 +97,29 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        get('/Cardslist')
+        get('/boards')
         //set headers
         .set('Accept', 'application/json')
         .then((res) => {
-          res.body.cardslist.should.have.lengthOf(1);
-          res.body.cardslist[0].should.have.property('title');
-          res.body.cardslist[0].should.have.property('_id');
-          res.body.cardslist[0].title.should.equal(cardslists[0].title);
-          res.body.cardslist[0]._id.should.equal(`${cardslists[0]._id}`);
-          res.body.cardslist[0].should.have.property('cards');
-          res.body.cardslist[0].cards.should.be.a('array');
-          res.body.cardslist[0].cards[0].should.have.property('text');
-          res.body.cardslist[0].cards[0].text.should.equal(cards[0].text);
+          res.body.board.should.have.lengthOf(1);
+          res.body.board[0].should.have.property('_id');
+          res.body.board[0]._id.should.equal(`${boards[0]._id}`);
+          res.body.board[0].should.have.property('title');
+          res.body.board[0].title.should.equal(boards[0].title);
+          res.body.board[0].should.have.property('cardslists');
+          res.body.board[0].cardslists.should.be.a('array');
+          res.body.board[0].cardslists[0].should.have.property('title');
+          res.body.board[0].cardslists[0].title.should.equal(cardslists[0].title);
+          res.body.board[0].cardslists[0].cards[0].should.have.property('text');
+          res.body.board[0].cardslists[0].cards[0].text.should.equal(cards[0].text);
         });
       });
   });
-  it('should update a users Cardslist', () => {
+  it('should update a users boards', () => {
     let newTitle = createTitle();
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /boards
       .post('/auth/login')
       //send the following data
       .auth(users[2].email, users[2].unhashed)
@@ -125,36 +127,36 @@ describe('Cardslist service', () => {
       .set('Accept', 'application/json')
       .then(() => {
         return agent.
-        put(`/Cardslist/${cardslists[2]._id}`)
+        put(`/boards/${boards[2]._id}`)
         .send(newTitle)
         .then((res) => {
           res.should.have.status(204);
-          return Cardslist.findById(cardslists[2]._id).exec();
+          return Board.findById(boards[2]._id).exec();
         })
-        .then((cardslist) => {
-          cardslist._id.should.deep.equal(cardslists[2]._id);
-          cardslist.title.should.equal(newTitle.title);
-          cardslist.createdAt.should.deep.equal(cardslists[2].createdAt);
-          cardslist.updatedAt.should.be.greaterThan(cardslists[2].updatedAt);
+        .then((board) => {
+          board._id.should.deep.equal(boards[2]._id);
+          board.title.should.equal(newTitle.title);
+          board.createdAt.should.deep.equal(boards[2].createdAt);
+          board.updatedAt.should.be.greaterThan(boards[2].updatedAt);
         });
       });
   });
-  it('should delete a users Cardslist', () => {
+  it('should delete a users boards', () => {
     agent = chai.request.agent(app);
     return agent
-      //request to /Cardslist
+      //request to /boards
       .post('/auth/login')
       //send the following data
       .auth(users[3].email, users[3].unhashed)
       .then(() => {
         return agent.
-        delete(`/Cardslist/${cardslists[3]._id}`)
+        delete(`/boards/${boards[3]._id}`)
         .then((res) => {
           res.should.have.status(204);
-          return Cardslist.findById(cardslists[3]._id).exec();
+          return Board.findById(boards[3]._id).exec();
         })
-        .then((cardslist) => {
-          should.not.exist(cardslist);
+        .then((board) => {
+          should.not.exist(board);
         });
       });
   });
