@@ -57,9 +57,9 @@ describe('trello actions', () => {
   //get array of board keys
   let keys = Object.keys(response.items.boards);
   response.items.boards[keys[0]].should.have.property('title');
-  response.items.boards[keys[0]].title.should.equal(bds.boards[0].title);
+  response.items.boards[keys[0]].title.should.equal(bds[0].title);
   response.items.boards[keys[0]].should.have.property('_id');
-  response.items.boards[keys[0]]._id.should.equal(bds.boards[0]._id);
+  response.items.boards[keys[0]]._id.should.equal(bds[0]._id);
 });
   });
   it('should create a board', () => {

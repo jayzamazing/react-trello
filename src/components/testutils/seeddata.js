@@ -11,9 +11,7 @@ export const seedBoards = function(count, title = faker.random.words(), _id = fa
         cardsList: seedCardslists(count)
       });
     }
-    return {
-      boards
-    };
+    return boards;
   } else {
     return {
       title: title,

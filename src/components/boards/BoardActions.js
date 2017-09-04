@@ -12,7 +12,7 @@ import {boardsSchema} from '../board-schema';
 export const FIND_BOARDS_SUCCESS = 'FIND_BOARDS_SUCCESS';
 export const findBoardsSuccess = boards => {
   //grab all boards array with cards and cardslist and normalize it
-  const items = (normalize(boards, {
+  const items = (normalize({boards: boards}, {
     boards: arrayOf(boardsSchema)
   })).entities;
   return {

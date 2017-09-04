@@ -30,8 +30,8 @@ describe('board reducer', () => {
     });
     it('should deserialize the order', () => {
       let keys = Object.keys(state.boards);
-      state.boards[keys[0]]._id.should.equal(boards.boards[0]._id);
-      state.boards[keys[1]].title.should.equal(boards.boards[1].title);
+      state.boards[keys[0]]._id.should.equal(boards[0]._id);
+      state.boards[keys[1]].title.should.equal(boards[1].title);
     });
   });
   describe('CREATE_BOARD_SUCCESS', () => {
@@ -61,33 +61,33 @@ describe('board reducer', () => {
     let state;
     before(() => {
       state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
-      state = boardReducer.trelloReducer(state, BoardActions.deleteBoardSuccess(boards.boards[1]._id));
+      state = boardReducer.trelloReducer(state, BoardActions.deleteBoardSuccess(boards[1]._id));
     });
     it('should exist', () => {
       should.exist(state.boards);
     });
     it('should not have properties', () => {
-      state.boards.should.not.have.property(boards.boards[1]._id);
+      state.boards.should.not.have.property(boards[1]._id);
     });
   });
   describe('UPDATE_BOARD_SUCCESS', () => {
     let state, test;
     before(() => {
-      test = seedBoards(0, 'super mario', boards.boards[2]._id);
+      test = seedBoards(0, 'super mario', boards[2]._id);
       state = boardReducer.trelloReducer(undefined, BoardActions.findBoardsSuccess(boards));
-      state = boardReducer.trelloReducer(state, BoardActions.updateBoardSuccess(boards.boards[2]._id,
+      state = boardReducer.trelloReducer(state, BoardActions.updateBoardSuccess(boards[2]._id,
       {'boards': test}));
     });
     it('should exist', () => {
       should.exist(state.boards);
     });
     it('should have properties', () => {
-      state.boards[boards.boards[2]._id].should.have.property('_id');
-      state.boards[boards.boards[2]._id].should.have.property('title');
+      state.boards[test._id].should.have.property('_id');
+      state.boards[test._id].should.have.property('title');
     });
     it('should deserialize the order', () => {
-      state.boards[boards.boards[2]._id]._id.should.equal(boards.boards[2]._id);
-      state.boards[boards.boards[2]._id].title.should.equal('super mario');
+      state.boards[test._id]._id.should.equal(test._id);
+      state.boards[test._id].title.should.equal('super mario');
     });
   });
 });

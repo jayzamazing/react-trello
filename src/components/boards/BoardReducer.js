@@ -19,7 +19,7 @@ export const createBoard = (state, action) => state.merge({boards: action.items.
 export const deleteBoard = (state, action) => Immutable({boards: Immutable.without(state.boards, action.boardId)});
 
 /*
-* Function called when FIND_BOARDS_SUCCESS or CREATE_BOARD_SUCCESS is called to update boards with a new board
+* Function called when UPDATE_BOARD_SUCCESS is called to update boards with a new board
 * params state- old state before merge
 * params action.items.boards- boards to update
 */
