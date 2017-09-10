@@ -20,6 +20,23 @@ export const seedBoards = function(count, title = faker.random.words(), _id = fa
     };
   }
 };
+//create board items, this is after the data has been normalized
+export const seedBoards2 = (count) => {
+  let boards = [];
+  for (var i = 0; i < count; i++) {
+    var _id = faker.random.alphaNumeric(20);
+    boards[_id]= {
+      _id: _id,
+      title: faker.random.words(),
+      cardslist: []
+    };
+    for (var j = 0; j < count; j++) {
+      var _id2 = faker.random.alphaNumeric(20);
+      boards[_id].cardslist.push(_id2);
+    }
+  }
+  return boards;
+}
 export const seedCardslists = function(count, title = faker.random.words()) {
   let _id = faker.random.alphaNumeric(20);
   if (count != 0) {

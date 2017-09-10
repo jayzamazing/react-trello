@@ -1,10 +1,9 @@
-var React = require('react');
-var connect = require('react-redux').connect;
-var router = require('react-router');
-var hashHistory = router.hashHistory;
-// var CreateItems = require('./create-items');
-var actions = require('./BoardActions');
-var Immutable = require('seamless-immutable');
+import React from 'react';
+import {connect} from 'react-redux';
+import { Router, hashHistory } from 'react-router';
+import CreateItems from '../utils/create-items';
+import * as actions from './BoardActions';
+import {Immutable} from 'seamless-immutable';
 //function to render multiple lists of boards
 var BoardsListName = React.createClass({
   //set up initial data state
@@ -41,31 +40,31 @@ var BoardsListName = React.createClass({
   //function to add a new board by dispatching post request
   addBoard: function() {
     this.props.dispatch(
-      //dispatch query boards
-      actions.queries('boards', 'POST', {title: this.state.boardTitle}, 'create board')
+      //dispatch to create a board
+      actions.createBoards({title: this.state.boardTitle})
     );
     this.setState({showCreateBoard: false});
   },
   //function to delete a board by dispatching delete request
   deleteBoard: function(boardId) {
     this.props.dispatch(
-      //dispatch query boards
-      actions.queries('boards', 'DELETE', boardId, 'delete board')
+      //dispatch to delete a board
+      actions.deleteBoards(boardId)
     );
     this.forceUpdate();
   },
   //function to edit the name of the board
   updateBoard: function(boardId, boardName) {
     this.props.dispatch(
-      //dispatch query boards
-      actions.queries('boards', 'PUT', {title: boardName}, 'update board', boardId)
+      //dispatch tp update a board
+      actions.updateBoards(boardId, {title: boardName})
     );
     this.forceUpdate();
   },
   componentDidMount() {
     this.props.dispatch(
-      //dispatch query boards
-      actions.queries('boards', 'FIND', {}, 'find boards')
+      //dispatch to get all boards
+      actions.getBoards()
     );
   },
   //set the variable to show the create board inputs
@@ -122,8 +121,9 @@ var BoardsListName = React.createClass({
       <div>
         <ul>{list}</ul>
         <input type="button" value="Add Board" onClick={this.showCreateBoard}/>
-        {this.state.showCreateBoard ? <CreateItems.Container
-          onAddInputChanged={this.onAddInputChanged} addItems={this.addBoard} name="addBoard"/> : null}
+        {this.state.showCreateBoard ?
+          <CreateItems onAddInputChanged={this.onAddInputChanged}
+            addItems={this.addBoard} name="addBoard"/> : null}
       </div>
     );
   }
