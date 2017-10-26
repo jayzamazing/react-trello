@@ -7,16 +7,16 @@ const Router = express.Router();
 Router.use(bodyParser.json());
 
 // passport.use(strategy);
-// Router.use(passport.initialize());
+// router.use(passport.initialize());
 
 //check that the email is valid
 function validateEmail(email) {
-  let regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(email);
 }
 
 Router.post('/', (req, res) => {
-  if(!req.body) {
+  if (!req.body) {
     res.status(400).json({message: 'No request body'});
   }
   if (!('email' in req.body)) {
@@ -33,7 +33,7 @@ Router.post('/', (req, res) => {
   if (!validateEmail(email)) {
     res.status(422).json({message: 'Invalid field type: email'});
   }
-  if (!(password)) {
+  if (!password) {
     res.status(422).json({message: 'Missing field: password'});
   }
   if (typeof password !== 'string') {
@@ -59,7 +59,7 @@ Router.post('/', (req, res) => {
 .then(hash => {
   return User
 .create({
-  email: email,
+  email,
   password: hash
 });
 })

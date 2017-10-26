@@ -11,7 +11,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('auth service', () => {
-  let token, user;
+  let token, user, email, decoded;
   function deleteDb() {
     return mongoose.connection.db.dropDatabase();
   }
@@ -40,7 +40,7 @@ describe('auth service', () => {
         res.should.have.status(201);
         done();
       });
-      const email = user.email;
+      email = user.email;
       token = jwt.sign(
          {
              user: {
@@ -54,7 +54,7 @@ describe('auth service', () => {
              expiresIn: '7d'
          }
      );
-      // decoded = jwt.decode(token);
+      decoded = jwt.decode(token);
   });
   afterEach(() => {
     token = {};
@@ -68,7 +68,7 @@ describe('auth service', () => {
         err.status.should.equal(404);
       });
   });
-  it.only('should allow user to login', () => {
+  it('should allow user to login', () => {
     return chai.request(app)
       .post('/auth/login')
       //set headers
@@ -77,18 +77,30 @@ describe('auth service', () => {
       .auth(user.email, user.password)
       .then(res => {
         res.should.have.status(200);
+        res.body.should.be.an('object');
+        let resToken = res.body.authToken;
+        resToken.should.be.a('string');
+        const payload = jwt.verify(resToken, JWT_SECRET, {
+            algorithm: ['HS256']
+        });
+        payload.user.email.should.eql(email);
       });
   });
-  it('should allow user to logout', () => {
-    console.log('token');
-    console.log(token);
+  it('should allow user to refresh their token', () => {
     return chai.request(app)
-      .post('/auth/logout')
+      .post('/auth/refresh')
       //set headers
       .set('authorization', `Bearer ${token}`)
       .then(res => {
         res.should.have.status(200);
-        res.body.should.be.an.object;
+        res.body.should.be.an('object');
+        let resToken = res.body.authToken;
+        resToken.should.be.a('string');
+        const payload = jwt.verify(resToken, JWT_SECRET, {
+            algorithm: ['HS256']
+        });
+        payload.user.should.eql({email});
+        payload.exp.should.be.at.least(decoded.exp);
       });
   });
 });

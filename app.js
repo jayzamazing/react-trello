@@ -25,17 +25,6 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveU
 app.use(passport.initialize());
 passport.use(basicStrategy);
 passport.use(jwtStrategy);
-// app.use(passport.session());
-// //save user for session
-// passport.serializeUser(function(user, done) {
-//   done(null, user.id);
-// });
-// //create user object from session
-// passport.deserializeUser(function(id, done) {
-//   User.findById(id, function (err, user) {
-//     done(err, user);
-//   });
-// });
 app.use('/auth/', authRouter);
 app.use('/users/', userRouter);
 app.use('/boards/', boardRouter);

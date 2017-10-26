@@ -1,37 +1,29 @@
 const passport = require('passport');
-const authenticated = (req, res, next) => {
-  console.log('in here');
-  // if (!req.isAuthenticated()) {res.redirect('/');}
-  // else {next();}
-  passport.authenticate('basic', {session: false}, (err, user, info) => {
-    console.log('no err 1');
-    console.error(err);
-      if (err) {return next(err);}
-      if (!user) {return res.redirect('/login');}
-      req.logIn(user, function(err) {
-        console.log('no err 2');
-        console.error(err);
-        if(err) {return next(err);}
-        else {next();}
-      });
+const jwt = require('jsonwebtoken');
+const config = require('../config/serverConfig');
+
+const createAuthToken = user => {
+  return jwt.sign({user}, config.JWT_SECRET, {
+    subject: user.email,
+    expiresIn: config.JWT_EXPIRY,
+    algorithm: 'HS256'
   });
 };
-const authenticatedJWT = (req, res, next) => {
-  console.log('in here');
-  // if (!req.isAuthenticated()) {res.redirect('/');}
-  // else {next();}
-  passport.authenticate('jwt', {session: false}, (err, user, info) => {
-    console.log('no err 1');
-    console.error(err);
+const authenticated = (req, res, next) => {
+  passport.authenticate('basic', {session: false}, (err, user, info) => {
       if (err) {return next(err);}
       if (!user) {return res.redirect('/login');}
-      req.logIn(user, function(err) {
-        console.log('no err 2');
-        console.error(err);
-        if(err) {return next(err);}
-        else {next();}
-      });
-  });
+      const authToken = createAuthToken(user.apiRepr());
+      res.send({authToken: authToken});
+  })(req, res, next);
+};
+const authenticatedJWT = (req, res, next) => {
+  passport.authenticate('jwt', {session: false}, (err, user, info) => {
+      if (err) {return next(err);}
+      if (!user) {return res.redirect('/login');}
+      const authToken = createAuthToken(user);
+      res.send({authToken: authToken});
+  })(req, res, next);
 };
 
 module.exports = {authenticated, authenticatedJWT};
