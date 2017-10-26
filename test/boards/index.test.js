@@ -2,7 +2,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const {app, runServer, closeServer} = require('../../bin/www');
-const {DATABASE_URL} = require('../../config/config');
+const {DATABASE_URL} = require('../../config/serverConfig');
 const {Board} = require('../../models/boards');
 const {createUsers, createBoards, createCardslist, createCards, createTitle} = require('../utils/seeddata');
 const {deleteDb} = require('../utils/cleandb');
