@@ -44,7 +44,7 @@ return createCards(users, cardslists);
   afterEach(() => {
     return deleteDb();
   });
-  it('should not create a Card, not auth redirects to /', () => {
+  it('should not create a Card, not auth redirects to /login', () => {
     agent = chai.request.agent(app);
 
 return agent
@@ -56,7 +56,7 @@ return agent
         /* eslint-disable */
         res.should.redirect;
         /* eslint-enable */
-        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
+        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/login`);
       });
   });
   it('should create a Card', () => {
@@ -69,11 +69,12 @@ return agent
       .auth(users[0].email, users[0].unhashed)
       //set headers
       .set('Accept', 'application/json')
-      .then(() => {
+      .then(res => {
+        const token = res.body.authToken;
         return agent
         .post('/cards')
         //set headers
-        .set('Accept', 'application/json')
+        .set('authorization', `Bearer ${token}`)
         .send({text: 'grocery list'})
         .then(res => {
           res.body.should.have.property('_id');
@@ -82,7 +83,7 @@ return agent
         });
       });
   });
-  it('should not get any Card, not auth redirects to /', () => {
+  it('should not get any Card, not auth redirects to /login', () => {
     agent = chai.request.agent(app);
 
 return agent
@@ -93,7 +94,7 @@ return agent
         /* eslint-disable */
         res.should.redirect;
         /* eslint-enable */
-        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/`);
+        res.should.redirectTo(`${res.request.protocol}//${res.request.host}/login`);
       });
   });
   it('should get a users Card', () => {
@@ -106,11 +107,12 @@ return agent
       .auth(users[0].email, users[0].unhashed)
       //set headers
       .set('Accept', 'application/json')
-      .then(() => {
+      .then(res => {
+        const token = res.body.authToken;
         return agent
         .get('/cards')
         //set headers
-        .set('Accept', 'application/json')
+        .set('authorization', `Bearer ${token}`)
         .then(res => {
           /* eslint-disable */
           res.body.card.should.have.lengthOf(1);
@@ -133,10 +135,12 @@ return agent
       .auth(users[2].email, users[2].unhashed)
       //set headers
       .set('Accept', 'application/json')
-      .then(() => {
+      .then(res => {
+        const token = res.body.authToken;
         return agent
         .put(`/cards/${cards[2]._id}`)
         .send(newTitle)
+        .set('authorization', `Bearer ${token}`)
         .then(res => {
           res.should.have.status(204);
 
@@ -158,9 +162,11 @@ return agent
       .post('/auth/login')
       //send the following data
       .auth(users[3].email, users[3].unhashed)
-      .then(() => {
+      .then(res => {
+        const token = res.body.authToken;
         return agent
         .delete(`/cards/${cards[3]._id}`)
+        .set('authorization', `Bearer ${token}`)
         .then(res => {
           res.should.have.status(204);
 
