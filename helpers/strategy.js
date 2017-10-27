@@ -2,7 +2,7 @@ const passport = require('passport');
 const {BasicStrategy} = require('passport-http');
 const {User} = require('../models/users');
 const {Strategy: JwtStrategy, ExtractJwt} = require('passport-jwt');
-const {JWT_SECRET} = require('../config/ServerConfig');
+const {JWT_SECRET} = require('../config/serverConfig');
 //strategy to verify the user against
 const basicStrategy = new BasicStrategy(
   (email, password, cb) => {

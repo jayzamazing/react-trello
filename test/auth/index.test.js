@@ -5,7 +5,7 @@ const faker = require('faker');
 const mongoose = require('mongoose');
 const {app, runServer, closeServer} = require('../../bin/www');
 const jwt = require('jsonwebtoken');
-const {JWT_SECRET} = require('../../config/ServerConfig');
+const {JWT_SECRET} = require('../../config/serverConfig');
 chai.should();
 
 chai.use(chaiHttp);
