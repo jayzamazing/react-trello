@@ -2,18 +2,20 @@ language: node_js
 node_js: node
 services:
 - mongodb
+env:
+  - CXX=g++-4.8
 addons:
   apt:
     sources:
     - mongodb-3.2-precise
+    - ubuntu-toolchain-r-test
     packages:
     - mongodb-org-server
-before_script:
-- npm run postinstall
+    - g++-4.8
 deploy:
   provider: heroku
   api_key:
     secure: x63KbeJzCpV/1MCdNAkPoDn/x8kWBi8xDdUk4gFVBy0v9Xuk6K35MOTcdEZpZVZpj/qa9DtrG5Xqfj1thVVVm1sKVnFnFNfOXqemLkN2ELB0PzwGifBgQUoB+MM8C5NAKLGz0icq1uIvXRwtSD36oMCODH2GQh7VoPF7DUPhSrbEm+3LE3VslDq66LOSOfzUzYQnstgN2Cc7pLpsc3woZ0qeBTJV/eZA5J5pzT06hgZnYxmvT+GNAg6kpnES7MxDPWAep6xPsw19wf4Ag3dsruxPJfhb3BKzwiuEH+zflk947GjGs5mTWfPI70wOJ16TchS72QBAj3cEbJb5ZDkaI3DQKXgsAvfjaL8DhbJsHz/Zq9j8NcN16jqKeqIbczBoj5y3PI5gFIrjqJBdjqLbc4id+FQloNr7JR3NrzDDW9vmwL3MJ0vG8EQYIIFlkxw87VoFCR/QVLFsOMj0aBDWRXE6dB4+50+gaE95zBLd/V2WyOoSdlA7rFTwB67iBgM95gvffo1A5B0ViXFToEU4DUKj6CcYMM5u3yF3pApGAgcicrbVECevPg4/mEGgdLZ3B9UDM56M0SWytO8lgGOAf1ND8k09QK16Zf0N1ngSFyYSDbwHkP8e5P2AIqJJaVtwBcdbBJS1QHkxvN2M7jaIeXfpFc3HAxS/bLkC/PoX2Jo=
-  app: jays-react-trello
+  app: jays-react-trello-back-end
   on:
-    repo: jayzamazing/react-trello
+    repo: jayzamazing/react-trello-back-end

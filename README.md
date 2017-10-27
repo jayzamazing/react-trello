@@ -1,2 +1,2 @@
-#react-trello
-This is a simple trello styled app that uses react/redux.
+#react-trello-back-end
+The server back-end for the react trello project. 
