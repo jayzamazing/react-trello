@@ -13,8 +13,9 @@ const basicStrategy = new BasicStrategy(
       user = _user;
       //if the user does not exist
       if (!user) {
-        return cb(null, false, {
-          message: 'Incorrect credentials'
+        return Promise.reject({
+            reason: 'LoginError',
+            message: 'Incorrect username or password'
         });
       }
       //otherwise try and validate the password
@@ -23,8 +24,9 @@ const basicStrategy = new BasicStrategy(
     .then(isValid => {
       //if the password is incorrect
       if (!isValid) {
-        return cb(null, false, {
-          message: 'Incorrect credentials'
+        return Promise.reject({
+            reason: 'LoginError',
+            message: 'Incorrect username or password'
         });
       } else {
         return cb(null, user);

@@ -9,12 +9,12 @@ const Router = express.Router();
 Router.use(bodyParser.json());
 //deal with authentication and setting up session
 Router.post('/login', authenticated, (req, res) => {
-    let authToken = res.authToken;
+    const authToken = res.authToken;
     res.json({authToken});
 });
 //deal with refreshing the token when it has expired
 Router.post('/refresh', authenticatedJWT, (req, res) => {
-    let authToken = res.authToken;
+    const authToken = res.authToken;
     res.json({authToken});
 });
 module.exports = {Router};

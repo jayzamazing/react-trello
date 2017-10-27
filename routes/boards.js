@@ -3,12 +3,12 @@
 const express = require('express');
 const {Board} = require('../models/boards');
 const bodyParser = require('body-parser');
-const {authenticated} = require('../middlewares/authcheck');
+const {authenticatedJWT} = require('../middlewares/authcheck');
 const Router = express.Router();
 Router.use(bodyParser.json());
 
 
-Router.post('/', authenticated, (req, res) => {
+Router.post('/', authenticatedJWT, (req, res) => {
   if(!req.body) {
     res.status(400).json({message: 'No request body'});
   }
@@ -33,7 +33,7 @@ Router.post('/', authenticated, (req, res) => {
     res.status(500).json({message: err});
   });
 });
-Router.get('/', authenticated, (req, res) => {
+Router.get('/', authenticatedJWT, (req, res) => {
   //get all the boards that belong to this user
   Board
   .find({owner: req.user._id})
@@ -57,7 +57,7 @@ Router.get('/', authenticated, (req, res) => {
   });
 });
 
-Router.put('/:id', authenticated, (req, res) => {
+Router.put('/:id', authenticatedJWT, (req, res) => {
   if (!req.params.id) {
     res.status(400).json({message: 'id field missing'});
   }
@@ -73,7 +73,7 @@ Router.put('/:id', authenticated, (req, res) => {
   });
 });
 
-Router.delete('/:id', authenticated, (req, res) => {
+Router.delete('/:id', authenticatedJWT, (req, res) => {
   Board.findByIdAndRemove(req.params.id)
   .exec()
   .then(() => res.status(204).end())

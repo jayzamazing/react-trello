@@ -11,7 +11,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('auth service', () => {
-  let token, user, email, decoded;
+  let decoded, email, token, user;
   function deleteDb() {
     return mongoose.connection.db.dropDatabase();
   }
@@ -40,20 +40,12 @@ describe('auth service', () => {
         res.should.have.status(201);
         done();
       });
-      email = user.email;
+      ({email} = user);
       token = jwt.sign(
-         {
-             user: {
-                 email
-             }
-         },
-         JWT_SECRET,
-         {
-             algorithm: 'HS256',
-             subject: email,
-             expiresIn: '7d'
-         }
-     );
+      {user: {email}},
+        JWT_SECRET,
+        {algorithm: 'HS256', subject: 'email', expiresIn: '7d'}
+);
       decoded = jwt.decode(token);
   });
   afterEach(() => {
@@ -78,12 +70,10 @@ describe('auth service', () => {
       .then(res => {
         res.should.have.status(200);
         res.body.should.be.an('object');
-        let resToken = res.body.authToken;
+        const resToken = res.body.authToken;
         resToken.should.be.a('string');
-        const payload = jwt.verify(resToken, JWT_SECRET, {
-            algorithm: ['HS256']
-        });
-        payload.user.email.should.eql(email);
+        const payload = jwt.verify(resToken, JWT_SECRET, {algorithm: ['HS256']});
+        payload.user.email.should.equal(email);
       });
   });
   it('should allow user to refresh their token', () => {
@@ -94,11 +84,9 @@ describe('auth service', () => {
       .then(res => {
         res.should.have.status(200);
         res.body.should.be.an('object');
-        let resToken = res.body.authToken;
+        const resToken = res.body.authToken;
         resToken.should.be.a('string');
-        const payload = jwt.verify(resToken, JWT_SECRET, {
-            algorithm: ['HS256']
-        });
+        const payload = jwt.verify(resToken, JWT_SECRET, {algorithm: ['HS256']});
         payload.user.should.eql({email});
         payload.exp.should.be.at.least(decoded.exp);
       });

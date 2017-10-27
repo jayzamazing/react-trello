@@ -14,7 +14,8 @@ const authenticated = (req, res, next) => {
       if (err) {return next(err);}
       if (!user) {return res.redirect('/login');}
       const authToken = createAuthToken(user.apiRepr());
-      res.send({authToken: authToken});
+      res.authToken = authToken;
+      next();
   })(req, res, next);
 };
 const authenticatedJWT = (req, res, next) => {
@@ -22,7 +23,9 @@ const authenticatedJWT = (req, res, next) => {
       if (err) {return next(err);}
       if (!user) {return res.redirect('/login');}
       const authToken = createAuthToken(user);
-      res.send({authToken: authToken});
+      req.user = user;
+      res.authToken = authToken;
+      next();
   })(req, res, next);
 };
 
