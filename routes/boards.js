@@ -1,5 +1,4 @@
 'use strict';
-
 const express = require('express');
 const {Board} = require('../models/boards');
 const bodyParser = require('body-parser');
@@ -43,16 +42,28 @@ Router.get('/', authenticatedJWT, (req, res) => {
       path: 'cards'
     }
   })
-  // .populate('cd')
   .exec()
   .then(board => {
-    res.json({
-      board: board.map(
-        (board) => board.apiRepr()
-      )
-    });
+    var count = board.length;
+    if (count >= 1) {
+      res.json(
+        board.map(
+          (board) => board.apiRepr()
+        )
+      );
+    } else {
+      return Promise.reject({
+          code: 204,
+          reason: 'NoData',
+          message: 'No Data found for user'
+      });
+    }
+
   })
   .catch(err => {
+    if (err.reason === 'NoData') {
+      return res.status(err.code).json(err);
+    }
     res.status(500).json({message: err});
   });
 });
