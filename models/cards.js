@@ -7,7 +7,8 @@ const options = {
 };
 //schema representing a card
 const cardSchema = new mongoose.Schema({
-  text: { type: String, required: true },
+  title: { type: String, required: true },
+  text: { type: String },
   createdAt: { type: Date, 'default': Date.now },
   cardslistId: { type: mongoose.Schema.Types.ObjectId, ref: 'cardslist' },
   updatedAt: { type: Date, 'default': Date.now },
@@ -16,6 +17,7 @@ const cardSchema = new mongoose.Schema({
 //format and return data
 cardSchema.methods.apiRepr = function() {
   return {
+    title: this.title,
     text: this.text,
     _id: this._id
   };

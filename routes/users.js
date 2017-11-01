@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {User} = require('../models/users');
 const Router = express.Router();
+const welcomeData = require('../helpers/welcomeData');
 Router.use(bodyParser.json());
 
 //check that the email is valid
@@ -61,7 +62,12 @@ Router.post('/', (req, res) => {
 });
 })
 .then(user => {
-  res.status(201).json(user.apiRepr());
+  const userInfo = user.apiRepr();
+  //generate sample data for user
+  welcomeData.createBoards(userInfo._id)
+  .then(welcomeBoards => welcomeData.createCardslist(userInfo._id, welcomeBoards))
+  .then(welcomeCardslist => welcomeData.createCards(userInfo._id, welcomeCardslist))
+  .then(() => res.status(201).json(userInfo));
 })
 .catch(err => {
   res.status(500).json({message: err});
