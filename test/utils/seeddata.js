@@ -12,7 +12,8 @@ const password = faker.internet.password();
     return {
       email: faker.internet.email(),
       password: hash,
-      unhashed: password
+      unhashed: password,
+      fullName: faker.name.findName()
     };
   });
 };
@@ -87,6 +88,7 @@ const seedData = [];
 //create and store random text
 for (let index = 0; index < users.length; index++) {
   seedData.push(createText());
+  seedData[index].title = createTitle().title;
   seedData[index].owner = users[index]._id;
   seedData[index].cardslistId = cardslists[index]._id;
 }
