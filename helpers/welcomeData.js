@@ -18,7 +18,7 @@ return Promise.all(seedData)
   return Board.insertMany(seed);
 });
 };
-//create multiple cardslists
+//create multiple cardslist
 const createCardslist = (userId, boards) => {
 const seedData = [];
 //create and store random titles
@@ -34,14 +34,14 @@ return Promise.all(seedData)
 });
 };
 //create multiple cards
-const createCards = (userId, cardslists) => {
+const createCards = (userId, cardslist) => {
 const seedData = [];
 //create and store random text
-for (let index = 0; index < cardslists.length; index++) {
+for (let index = 0; index < cardslist.length; index++) {
   for (var index2 = 0; index2 < data.cards[index].length; index2++) {
     seedData.push(data.cards[index][index2]);
     seedData[index].owner = userId;
-    seedData[index].cardslistId = cardslists[index]._id;
+    seedData[index].cardslistId = cardslist[index]._id;
   }
 }
 //wait for all actions to complete before continuing

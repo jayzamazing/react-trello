@@ -37,7 +37,7 @@ Router.get('/', authenticatedJWT, (req, res) => {
   Board
   .find({owner: req.user._id})
   .populate({
-    path: 'cardslists',
+    path: 'cardslist',
     populate: {
       path: 'cards'
     }

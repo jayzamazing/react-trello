@@ -8,7 +8,7 @@ const {createUsers, createCards, createText, createBoards, createCardslist} = re
 const {deleteDb} = require('../utils/cleandb.js');
 const should = chai.should();
 chai.use(chaiHttp);
-let boards, cards, cardslists, users;
+let boards, cards, cardslist, users;
 describe('Card service', () => {
   let agent;
   //setup
@@ -33,9 +33,9 @@ return createBoards(users);
 return createCardslist(users, boards);
     })
 .then(res3 => {
-      cardslists = res3;
+      cardslist = res3;
 
-return createCards(users, cardslists);
+return createCards(users, cardslist);
     })
 .then(res4 => {
       cards = res4;

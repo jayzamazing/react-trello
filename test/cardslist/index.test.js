@@ -8,7 +8,7 @@ const {createUsers, createBoards, createCardslist, createCards, createTitle} = r
 const {deleteDb} = require('../utils/cleandb.js');
 const should = chai.should();
 chai.use(chaiHttp);
-let boards, cards, cardslists, users;
+let boards, cards, cardslist, users;
 describe('Cardslist service', () => {
   let agent;
   //setup
@@ -33,9 +33,9 @@ return createBoards(users);
 return createCardslist(users, boards);
     })
 .then(res3 => {
-      cardslists = res3;
+      cardslist = res3;
 
-return createCards(users, cardslists);
+return createCards(users, cardslist);
     })
 .then(res4 => {
       cards = res4;
@@ -121,8 +121,8 @@ return agent
           /* eslint-enable */
           res.body.cardslist[0].should.have.property('title');
           res.body.cardslist[0].should.have.property('_id');
-          res.body.cardslist[0].title.should.equal(cardslists[0].title);
-          res.body.cardslist[0]._id.should.equal(`${cardslists[0]._id}`);
+          res.body.cardslist[0].title.should.equal(cardslist[0].title);
+          res.body.cardslist[0]._id.should.equal(`${cardslist[0]._id}`);
           res.body.cardslist[0].should.have.property('cards');
           res.body.cardslist[0].cards.should.be.a('array');
           res.body.cardslist[0].cards[0].should.have.property('text');
@@ -144,19 +144,19 @@ return agent
       .then(res => {
         const token = res.body.authToken;
         return agent
-        .put(`/Cardslist/${cardslists[2]._id}`)
+        .put(`/Cardslist/${cardslist[2]._id}`)
         .send(newTitle)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           res.should.have.status(204);
 
-return Cardslist.findById(cardslists[2]._id).exec();
+return Cardslist.findById(cardslist[2]._id).exec();
         })
         .then(cardslist => {
-          cardslist._id.should.deep.equal(cardslists[2]._id);
+          cardslist._id.should.deep.equal(cardslist[2]._id);
           cardslist.title.should.equal(newTitle.title);
-          cardslist.createdAt.should.deep.equal(cardslists[2].createdAt);
-          cardslist.updatedAt.should.be.greaterThan(cardslists[2].updatedAt);
+          cardslist.createdAt.should.deep.equal(cardslist[2].createdAt);
+          cardslist.updatedAt.should.be.greaterThan(cardslist[2].updatedAt);
         });
       });
   });
@@ -171,12 +171,12 @@ return agent
       .then(res => {
         const token = res.body.authToken;
         return agent
-        .delete(`/Cardslist/${cardslists[3]._id}`)
+        .delete(`/Cardslist/${cardslist[3]._id}`)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           res.should.have.status(204);
 
-return Cardslist.findById(cardslists[3]._id).exec();
+return Cardslist.findById(cardslist[3]._id).exec();
         })
         .then(cardslist => {
           should.not.exist(cardslist);
