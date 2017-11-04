@@ -26,6 +26,7 @@ Router.post('/', authenticatedJWT, (req, res) => {
   Board.
   create({title: title, owner: req.user._id})
   .then(board => {
+    res.setHeader('Content-Type', 'application/json');
     res.status(201).json(board.apiRepr());
   })
   .catch(err => {
@@ -46,6 +47,7 @@ Router.get('/', authenticatedJWT, (req, res) => {
   .then(board => {
     var count = board.length;
     if (count >= 1) {
+      res.setHeader('Content-Type', 'application/json');
       res.json(
         board.map(
           (board) => board.apiRepr()
@@ -74,10 +76,11 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   }
   //update a board that belongs to this user
   Board
-  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
+  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}}, {new: true})
   .exec()
-  .then(() => {
-    res.status(204).end();
+  .then((board) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json(board.apiRepr());
   })
   .catch(err => {
     res.status(500).json({message: err});
