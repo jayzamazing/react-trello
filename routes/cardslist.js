@@ -23,9 +23,20 @@ Router.post('/', authenticatedJWT, (req, res) => {
   if (title === '') {
     res.status(422).json({message: 'Incorrect field length: title'});
   }
+  if (!('boardId' in req.body)) {
+    res.status(422).json({message: 'Missing field: boardId'});
+  }
+  let {boardId} = req.body;
+  if (typeof boardId !== 'string') {
+    res.status(422).json({message: 'Invalid field type: boardId'});
+  }
+  boardId = boardId.trim();
+  if (boardId === '') {
+    res.status(422).json({message: 'Incorrect field length: boardId'});
+  }
   //store Cardslist title along with the owner of the Cardslist
   Cardslist.
-  create({title: title, owner: req.user._id})
+  create({title: title, owner: req.user._id, boardId: boardId})
   .then(cardslist => {
     res.status(201).json(cardslist.apiRepr());
   })
