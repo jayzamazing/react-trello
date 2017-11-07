@@ -75,9 +75,10 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
     res.status(400).json({message: 'id field missing'});
   }
   const board = req.body;
+  board.updatedAt = Date.now();
   //update a board that belongs to this user
   Board
-  .findByIdAndUpdate(req.params.id, {$set: {board, updatedAt: Date.now()}}, {new: true})
+  .findByIdAndUpdate(req.params.id, {$set: board}, {new: true})
   .exec()
   .then((board) => {
     res.setHeader('Content-Type', 'application/json');
