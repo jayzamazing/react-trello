@@ -72,8 +72,8 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   Cardslist
   .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
   .exec()
-  .then(() => {
-    res.status(204).end();
+  .then(cardslist => {
+    res.status(201).json(cardslist.apiRepr());;
   })
   .catch(err => {
     res.status(500).json({message: err});
