@@ -19,7 +19,8 @@ cardSchema.methods.apiRepr = function() {
   return {
     title: this.title,
     text: this.text,
-    _id: this._id
+    _id: this._id,
+    cardslistId: this.cardslistId
   };
 };
 const Card = mongoose.model('card', cardSchema);

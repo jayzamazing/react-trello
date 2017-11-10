@@ -12,20 +12,31 @@ Router.post('/', authenticatedJWT, (req, res) => {
   if(!req.body) {
     res.status(400).json({message: 'No request body'});
   }
-  if (!('text' in req.body)) {
-    res.status(422).json({message: 'Missing field: text'});
+  if (!('title' in req.body)) {
+    res.status(422).json({message: 'Missing field: title'});
   }
-  let {text} = req.body;
-  if (typeof text !== 'string') {
-    res.status(422).json({message: 'Invalid field type: text'});
+  let {title} = req.body;
+  if (typeof title !== 'string') {
+    res.status(422).json({message: 'Invalid field type: title'});
   }
-  text = text.trim();
-  if (text === '') {
-    res.status(422).json({message: 'Incorrect field length: text'});
+  title = title.trim();
+  if (title === '') {
+    res.status(422).json({message: 'Incorrect field length: title'});
   }
-  //store Card text along with the owner of the Card
+  if (!('cardslistId' in req.body)) {
+    res.status(422).json({message: 'Missing field: cardslistId'});
+  }
+  let {cardslistId} = req.body;
+  if (typeof cardslistId !== 'string') {
+    res.status(422).json({message: 'Invalid field type: cardslistId'});
+  }
+  cardslistId = cardslistId.trim();
+  if (cardslistId === '') {
+    res.status(422).json({message: 'Incorrect field length: cardslistId'});
+  }
+  //store Card title along with the owner of the Card
   Card.
-  create({text: text, owner: req.user._id})
+  create({title: title, owner: req.user._id, cardslistId: cardslistId})
   .then(card => {
     res.status(201).json(card.apiRepr());
   })
@@ -56,7 +67,7 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   }
   //update a Card that belongs to this user
   Card
-  .findByIdAndUpdate(req.params.id, {$set: {text: req.body.text, updatedAt: Date.now()}})
+  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
   .exec()
   .then(() => {
     res.status(204).end();
