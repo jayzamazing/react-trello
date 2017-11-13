@@ -37,13 +37,12 @@ return Promise.all(seedData)
 const createCards = (userId, cardslist) => {
 const seedData = [];
 //create and store random text
-for (let index = 0; index < cardslist.length; index++) {
-  for (var index2 = 0; index2 < data.cards[index].length; index2++) {
-    seedData.push(data.cards[index][index2]);
-    seedData[index].owner = userId;
-    seedData[index].cardslistId = cardslist[index]._id;
-  }
-}
+cardslist.forEach((cardslistItem, index) => {
+  data.cards[index].forEach(item => {
+    seedData.push({cardslistId: cardslistItem._id, owner: userId, title: item.title, text: item.text});
+  });
+});
+
 //wait for all actions to complete before continuing
 return Promise.all(seedData)
 .then(seed => {

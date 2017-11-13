@@ -1,6 +1,8 @@
 'use strict';
 const express = require('express');
 const {Board} = require('../models/boards');
+const {Cardslist} = require('../models/cardslist');
+const {Card} = require('../models/cards');
 const bodyParser = require('body-parser');
 const {authenticatedJWT} = require('../middlewares/authcheck');
 const Router = express.Router();
@@ -90,8 +92,20 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
 });
 
 Router.delete('/:id', authenticatedJWT, (req, res) => {
-  Board.findByIdAndRemove(req.params.id)
+  Board
+  .findByIdAndRemove(req.params.id)
   .exec()
+  .then(() => Cardslist.find({boardId: req.params.id}).exec())
+  .then(cardslists => {
+    let removedCardslists = [];
+    cardslists.forEach(cardslist => {
+      removedCardslists.push(cardslist._id);
+      cardslist.remove();
+    });
+    return removedCardslists;
+  })
+  .then(cardslistIds => Card.find({cardslistId: {$in: cardslistIds}}).exec())
+  .then(cards => cards.forEach(card => card.remove()))
   .then(() => res.status(204).end())
   .catch((err) => res.status(500).json({message: err}));
 });
