@@ -81,6 +81,9 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   //update a board that belongs to this user
   Board
   .findByIdAndUpdate(req.params.id, {$set: board}, {new: true})
+  .populate({
+    path: 'cardslist'
+  })
   .exec()
   .then((board) => {
     res.setHeader('Content-Type', 'application/json');
