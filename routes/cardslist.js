@@ -2,6 +2,7 @@
 
 const express = require('express');
 const {Cardslist} = require('../models/cardslist');
+const {Card} = require('../models/cards');
 const bodyParser = require('body-parser');
 const {authenticatedJWT} = require('../middlewares/authcheck');
 const Router = express.Router();
@@ -88,6 +89,8 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
 Router.delete('/:id', authenticatedJWT, (req, res) => {
   Cardslist.findByIdAndRemove(req.params.id)
   .exec()
+  .then(() => Card.find({cardslistId: req.params.id}))
+  .then(cards => cards.forEach(card => card.remove()))
   .then(() => res.status(204).end())
   .catch((err) => res.status(500).json({message: err}));
 });
