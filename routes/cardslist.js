@@ -79,7 +79,7 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   })
   .exec()
   .then(cardslist => {
-    res.status(201).json(cardslist.apiRepr());;
+    res.status(201).json(cardslist.apiRepr());
   })
   .catch(err => {
     res.status(500).json({message: err});
