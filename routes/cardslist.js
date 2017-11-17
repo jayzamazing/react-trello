@@ -39,6 +39,7 @@ Router.post('/', authenticatedJWT, (req, res) => {
   Cardslist.
   create({title: title, owner: req.user._id, boardId: boardId})
   .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
     res.status(201).json(cardslist.apiRepr());
   })
   .catch(err => {
@@ -54,6 +55,7 @@ Router.get('/', authenticatedJWT, (req, res) => {
   })
   .exec()
   .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
     res.json({
       cardslist: cardslist.map(
         (cardslist) => cardslist.apiRepr()
@@ -79,6 +81,7 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   })
   .exec()
   .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
     res.status(201).json(cardslist.apiRepr());
   })
   .catch(err => {
