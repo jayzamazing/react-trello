@@ -67,9 +67,11 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   if (!req.params.id) {
     res.status(400).json({message: 'id field missing'});
   }
+  let cards = req.body;
+  cards.updatedAt = Date.now();
   //update a Card that belongs to this user
   Card
-  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
+  .findByIdAndUpdate(req.params.id, {$set: cards}, {new: true})
   .exec()
   .then(card => {
     res.setHeader('Content-Type', 'application/json');
