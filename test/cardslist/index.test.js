@@ -75,7 +75,7 @@ return agent
         .post('/Cardslist')
         //set headers
         .set('authorization', `Bearer ${token}`)
-        .send({title: 'grocery list'})
+        .send({title: 'grocery list', boardId: boards[0]._id})
         .then(res => {
           res.body.should.have.property('title');
           res.body.should.have.property('_id');
@@ -148,15 +148,17 @@ return agent
         .send(newTitle)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
-          res.should.have.status(204);
+          res.should.have.status(201);
+          res.body._id.should.equal(`${cardslist[2]._id}`);
+          res.body.title.should.equal(newTitle.title);
 
 return Cardslist.findById(cardslist[2]._id).exec();
         })
-        .then(cardslist => {
-          cardslist._id.should.deep.equal(cardslist[2]._id);
-          cardslist.title.should.equal(newTitle.title);
-          cardslist.createdAt.should.deep.equal(cardslist[2].createdAt);
-          cardslist.updatedAt.should.be.greaterThan(cardslist[2].updatedAt);
+        .then(cdls => {
+          cdls._id.should.deep.equal(cardslist[2]._id);
+          cdls.title.should.equal(newTitle.title);
+          cdls.createdAt.should.deep.equal(cardslist[2].createdAt);
+          cdls.updatedAt.should.be.greaterThan(cardslist[2].updatedAt);
         });
       });
   });

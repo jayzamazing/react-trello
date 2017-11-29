@@ -143,7 +143,8 @@ return agent
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           res.should.have.status(201);
-
+          res.body._id.should.equal(`${cards[2]._id}`);
+          res.body.text.should.equal(newTitle.text);
 return Card.findById(cards[2]._id).exec();
         })
         .then(card => {
