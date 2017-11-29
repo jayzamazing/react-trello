@@ -67,7 +67,7 @@ return agent
       //send the following data
       .auth(users[0].email, users[0].unhashed)
       //set headers
-      // .set('Accept', 'application/json')
+      .set('Accept', 'application/json')
       .then(res => {
         const token = res.body.authToken;
         return agent

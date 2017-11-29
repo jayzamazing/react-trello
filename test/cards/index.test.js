@@ -75,11 +75,11 @@ return agent
         .post('/cards')
         //set headers
         .set('authorization', `Bearer ${token}`)
-        .send({text: 'grocery list'})
+        .send({title: 'grocery list', cardslistId: cardslist[0]._id})
         .then(res => {
           res.body.should.have.property('_id');
-          res.body.should.have.property('text');
-          res.body.text.should.equal('grocery list');
+          res.body.should.have.property('title');
+          res.body.title.should.equal('grocery list');
         });
       });
   });
@@ -142,7 +142,7 @@ return agent
         .send(newTitle)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
-          res.should.have.status(204);
+          res.should.have.status(201);
 
 return Card.findById(cards[2]._id).exec();
         })
