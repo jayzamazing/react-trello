@@ -14,17 +14,17 @@ const boardSchema = new mongoose.Schema({
 }, options);
 //format and return data
 boardSchema.methods.apiRepr = function() {
-  let cardslists;
+  let cardslist;
   //if there is a cardslist the format it, otherwise make it null
-  cardslists = this.cardslists ? this.cardslists.map(cardslist => cardslist.apiRepr()) : null;
+  cardslist = this.cardslist ? this.cardslist.map(cardslist => cardslist.apiRepr()) : null;
   return {
     _id: this._id,
     title: this.title,
-    cardslists: cardslists
+    cardslist: cardslist
   };
 };
 // populate all cardslist
-boardSchema.virtual('cardslists', {
+boardSchema.virtual('cardslist', {
   ref: 'cardslist',
   localField: '_id',
   foreignField: 'boardId'

@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const userSchema = mongoose.Schema({
   email: {type: String, required: true, unique: true},
   password: { type: String, required: true },
+  fullName: { type: String, required: true },
   createdAt: { type: Date, 'default': Date.now },
   updatedAt: { type: Date, 'default': Date.now }
 });
@@ -14,6 +15,7 @@ userSchema.methods.apiRepr = function() {
   return {
     _id: this._id,
     email: this.email,
+    fullName: this.fullName,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt
   };

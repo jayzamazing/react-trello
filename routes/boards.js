@@ -1,7 +1,8 @@
 'use strict';
-
 const express = require('express');
 const {Board} = require('../models/boards');
+const {Cardslist} = require('../models/cardslist');
+const {Card} = require('../models/cards');
 const bodyParser = require('body-parser');
 const {authenticatedJWT} = require('../middlewares/authcheck');
 const Router = express.Router();
@@ -27,6 +28,7 @@ Router.post('/', authenticatedJWT, (req, res) => {
   Board.
   create({title: title, owner: req.user._id})
   .then(board => {
+    res.setHeader('Content-Type', 'application/json');
     res.status(201).json(board.apiRepr());
   })
   .catch(err => {
@@ -38,21 +40,34 @@ Router.get('/', authenticatedJWT, (req, res) => {
   Board
   .find({owner: req.user._id})
   .populate({
-    path: 'cardslists',
+    path: 'cardslist',
     populate: {
       path: 'cards'
     }
   })
-  // .populate('cd')
   .exec()
   .then(board => {
-    res.json({
-      board: board.map(
-        (board) => board.apiRepr()
-      )
-    });
+    var count = board.length;
+    if (count >= 1) {
+      res.setHeader('Content-Type', 'application/json');
+      res.json(
+        board.map(
+          (board) => board.apiRepr()
+        )
+      );
+    } else {
+      return Promise.reject({
+          code: 204,
+          reason: 'NoData',
+          message: 'No Data found for user'
+      });
+    }
+
   })
   .catch(err => {
+    if (err.reason === 'NoData') {
+      return res.status(err.code).json(err);
+    }
     res.status(500).json({message: err});
   });
 });
@@ -61,12 +76,18 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   if (!req.params.id) {
     res.status(400).json({message: 'id field missing'});
   }
+  const board = req.body;
+  board.updatedAt = Date.now();
   //update a board that belongs to this user
   Board
-  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
+  .findByIdAndUpdate(req.params.id, {$set: board}, {new: true})
+  .populate({
+    path: 'cardslist'
+  })
   .exec()
-  .then(() => {
-    res.status(204).end();
+  .then((board) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json(board.apiRepr());
   })
   .catch(err => {
     res.status(500).json({message: err});
@@ -74,8 +95,20 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
 });
 
 Router.delete('/:id', authenticatedJWT, (req, res) => {
-  Board.findByIdAndRemove(req.params.id)
+  Board
+  .findByIdAndRemove(req.params.id)
   .exec()
+  .then(() => Cardslist.find({boardId: req.params.id}).exec())
+  .then(cardslists => {
+    let removedCardslists = [];
+    cardslists.forEach(cardslist => {
+      removedCardslists.push(cardslist._id);
+      cardslist.remove();
+    });
+    return removedCardslists;
+  })
+  .then(cardslistIds => Card.find({cardslistId: {$in: cardslistIds}}).exec())
+  .then(cards => cards.forEach(card => card.remove()))
   .then(() => res.status(204).end())
   .catch((err) => res.status(500).json({message: err}));
 });

@@ -8,7 +8,7 @@ const {createUsers, createBoards, createCardslist, createCards, createTitle} = r
 const {deleteDb} = require('../utils/cleandb');
 const should = chai.should();
 chai.use(chaiHttp);
-let boards, cards, cardslists, users;
+let boards, cards, cardslist, users;
 describe('boards service', () => {
   let agent;
   //setup
@@ -32,9 +32,9 @@ return createBoards(users);
 return createCardslist(users, boards);
     })
 .then(res3 => {
-      cardslists = res3;
+      cardslist = res3;
 
-return createCards(users, cardslists);
+return createCards(users, cardslist);
     })
 .then(res4 => {
       cards = res4;
@@ -67,7 +67,7 @@ return agent
       //send the following data
       .auth(users[0].email, users[0].unhashed)
       //set headers
-      // .set('Accept', 'application/json')
+      .set('Accept', 'application/json')
       .then(res => {
         const token = res.body.authToken;
         return agent
@@ -79,8 +79,8 @@ return agent
           res.body.should.have.property('_id');
           res.body.should.have.property('title');
           res.body.title.should.equal('grocery list');
-          res.body.should.have.property('cardslists');
-          should.equal(res.body.cardslists, null);
+          res.body.should.have.property('cardslist');
+          should.equal(res.body.cardslist, null);
         });
       });
   });
@@ -116,18 +116,18 @@ return agent
         .set('authorization', `Bearer ${token}`)
         .then(res => {
           /* eslint-disable */
-          res.body.board.should.have.lengthOf(1);
+          res.body.should.have.lengthOf(1);
           /* eslint-enable */
-          res.body.board[0].should.have.property('_id');
-          res.body.board[0]._id.should.equal(`${boards[0]._id}`);
-          res.body.board[0].should.have.property('title');
-          res.body.board[0].title.should.equal(boards[0].title);
-          res.body.board[0].should.have.property('cardslists');
-          res.body.board[0].cardslists.should.be.a('array');
-          res.body.board[0].cardslists[0].should.have.property('title');
-          res.body.board[0].cardslists[0].title.should.equal(cardslists[0].title);
-          res.body.board[0].cardslists[0].cards[0].should.have.property('text');
-          res.body.board[0].cardslists[0].cards[0].text.should.equal(cards[0].text);
+          res.body[0].should.have.property('_id');
+          res.body[0]._id.should.equal(`${boards[0]._id}`);
+          res.body[0].should.have.property('title');
+          res.body[0].title.should.equal(boards[0].title);
+          res.body[0].should.have.property('cardslist');
+          res.body[0].cardslist.should.be.a('array');
+          res.body[0].cardslist[0].should.have.property('title');
+          res.body[0].cardslist[0].title.should.equal(cardslist[0].title);
+          res.body[0].cardslist[0].cards[0].should.have.property('text');
+          res.body[0].cardslist[0].cards[0].text.should.equal(cards[0].text);
         });
       });
   });
@@ -149,8 +149,7 @@ return agent
         .send(newTitle)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
-          res.should.have.status(204);
-
+          res.should.have.status(201);
 return Board.findById(boards[2]._id).exec();
         })
         .then(board => {

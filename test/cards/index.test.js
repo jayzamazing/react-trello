@@ -8,7 +8,7 @@ const {createUsers, createCards, createText, createBoards, createCardslist} = re
 const {deleteDb} = require('../utils/cleandb.js');
 const should = chai.should();
 chai.use(chaiHttp);
-let boards, cards, cardslists, users;
+let boards, cards, cardslist, users;
 describe('Card service', () => {
   let agent;
   //setup
@@ -33,9 +33,9 @@ return createBoards(users);
 return createCardslist(users, boards);
     })
 .then(res3 => {
-      cardslists = res3;
+      cardslist = res3;
 
-return createCards(users, cardslists);
+return createCards(users, cardslist);
     })
 .then(res4 => {
       cards = res4;
@@ -75,11 +75,11 @@ return agent
         .post('/cards')
         //set headers
         .set('authorization', `Bearer ${token}`)
-        .send({text: 'grocery list'})
+        .send({title: 'grocery list', cardslistId: cardslist[0]._id})
         .then(res => {
           res.body.should.have.property('_id');
-          res.body.should.have.property('text');
-          res.body.text.should.equal('grocery list');
+          res.body.should.have.property('title');
+          res.body.title.should.equal('grocery list');
         });
       });
   });
@@ -142,8 +142,9 @@ return agent
         .send(newTitle)
         .set('authorization', `Bearer ${token}`)
         .then(res => {
-          res.should.have.status(204);
-
+          res.should.have.status(201);
+          res.body._id.should.equal(`${cards[2]._id}`);
+          res.body.text.should.equal(newTitle.text);
 return Card.findById(cards[2]._id).exec();
         })
         .then(card => {

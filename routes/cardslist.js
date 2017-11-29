@@ -2,6 +2,7 @@
 
 const express = require('express');
 const {Cardslist} = require('../models/cardslist');
+const {Card} = require('../models/cards');
 const bodyParser = require('body-parser');
 const {authenticatedJWT} = require('../middlewares/authcheck');
 const Router = express.Router();
@@ -23,10 +24,22 @@ Router.post('/', authenticatedJWT, (req, res) => {
   if (title === '') {
     res.status(422).json({message: 'Incorrect field length: title'});
   }
+  if (!('boardId' in req.body)) {
+    res.status(422).json({message: 'Missing field: boardId'});
+  }
+  let {boardId} = req.body;
+  if (typeof boardId !== 'string') {
+    res.status(422).json({message: 'Invalid field type: boardId'});
+  }
+  boardId = boardId.trim();
+  if (boardId === '') {
+    res.status(422).json({message: 'Incorrect field length: boardId'});
+  }
   //store Cardslist title along with the owner of the Cardslist
   Cardslist.
-  create({title: title, owner: req.user._id})
+  create({title: title, owner: req.user._id, boardId: boardId})
   .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
     res.status(201).json(cardslist.apiRepr());
   })
   .catch(err => {
@@ -42,6 +55,7 @@ Router.get('/', authenticatedJWT, (req, res) => {
   })
   .exec()
   .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
     res.json({
       cardslist: cardslist.map(
         (cardslist) => cardslist.apiRepr()
@@ -57,12 +71,18 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
   if (!req.params.id) {
     res.status(400).json({message: 'id field missing'});
   }
+  let cardslist = req.body;
+  cardslist.updatedAt = Date.now();
   //update a Cardslist that belongs to this user
   Cardslist
-  .findByIdAndUpdate(req.params.id, {$set: {title: req.body.title, updatedAt: Date.now()}})
+  .findByIdAndUpdate(req.params.id, {$set: cardslist}, {new: true})
+  .populate({
+    path: 'cards'
+  })
   .exec()
-  .then(() => {
-    res.status(204).end();
+  .then(cardslist => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).json(cardslist.apiRepr());
   })
   .catch(err => {
     res.status(500).json({message: err});
@@ -72,6 +92,8 @@ Router.put('/:id', authenticatedJWT, (req, res) => {
 Router.delete('/:id', authenticatedJWT, (req, res) => {
   Cardslist.findByIdAndRemove(req.params.id)
   .exec()
+  .then(() => Card.find({cardslistId: req.params.id}))
+  .then(cards => cards.forEach(card => card.remove()))
   .then(() => res.status(204).end())
   .catch((err) => res.status(500).json({message: err}));
 });

@@ -1,13 +1,10 @@
 'use strict';
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const {User} = require('../models/users');
 const Router = express.Router();
+const welcomeData = require('../helpers/welcomeData');
 Router.use(bodyParser.json());
-
-// passport.use(strategy);
-// router.use(passport.initialize());
 
 //check that the email is valid
 function validateEmail(email) {
@@ -22,7 +19,7 @@ Router.post('/', (req, res) => {
   if (!('email' in req.body)) {
     res.status(422).json({message: 'Missing field: email'});
   }
-  let {email, password} = req.body;
+  let {email, password, fullName} = req.body;
   if (typeof email !== 'string') {
     res.status(422).json({message: 'Invalid field type: email'});
   }
@@ -60,11 +57,17 @@ Router.post('/', (req, res) => {
   return User
 .create({
   email,
-  password: hash
+  password: hash,
+  fullName
 });
 })
 .then(user => {
-  res.status(201).json(user.apiRepr());
+  const userInfo = user.apiRepr();
+  //generate sample data for user
+  welcomeData.createBoards(userInfo._id)
+  .then(welcomeBoards => welcomeData.createCardslist(userInfo._id, welcomeBoards))
+  .then(welcomeCardslist => welcomeData.createCards(userInfo._id, welcomeCardslist))
+  .then(() => res.status(201).json(userInfo));
 })
 .catch(err => {
   res.status(500).json({message: err});

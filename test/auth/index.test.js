@@ -18,7 +18,8 @@ describe('auth service', () => {
   function createUser() {
     return {
       email: faker.internet.email(),
-      password: faker.internet.password()
+      password: faker.internet.password(),
+      fullName: faker.name.findName()
     };
   }
   //setup
@@ -50,7 +51,7 @@ describe('auth service', () => {
   });
   afterEach(() => {
     token = {};
-    // decoded = {};
+    decoded = {};
     return deleteDb();
   });
   it('should not allow user to login', () => {

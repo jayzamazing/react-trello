@@ -21,7 +21,8 @@ cardslistSchema.methods.apiRepr = function() {
   return {
     title: this.title,
     _id: this._id,
-    cards: cards
+    cards: cards,
+    boardId: this.boardId
   };
 };
 // populate all cards
