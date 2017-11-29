@@ -15,7 +15,8 @@ function deleteDb() {
 function createUser() {
   return {
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: faker.internet.password(),
+    fullName: faker.name.findName()
   };
 }
 describe('user service', () => {
