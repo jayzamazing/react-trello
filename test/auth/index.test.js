@@ -1,11 +1,11 @@
 'use strict';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const faker = require('faker');
 const mongoose = require('mongoose');
 const {app, runServer, closeServer} = require('../../bin/www');
 const jwt = require('jsonwebtoken');
 const {JWT_SECRET} = require('../../config/serverConfig');
+const {createUserDB} = require('../utils/seeddata');
 chai.should();
 
 chai.use(chaiHttp);
@@ -15,13 +15,6 @@ describe('auth service', () => {
   function deleteDb() {
     return mongoose.connection.db.dropDatabase();
   }
-  function createUser() {
-    return {
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      fullName: faker.name.findName()
-    };
-  }
   //setup
   before(() => {
     return runServer();
@@ -29,25 +22,20 @@ describe('auth service', () => {
   after(() => {
     return closeServer();
   });
-  beforeEach(done => {
-    user = createUser();
-    chai.request(app)
-      .post('/users')
-      //set headers
-      .set('Accept', 'application/json')
-      //send the following data
-      .send(user)
-      .then(res => {
-        res.should.have.status(201);
-        done();
-      });
+  beforeEach(() => {
+    return createUserDB()
+    .then(res => {
+      user = res;
+    })
+    .then(() => {
       ({email} = user);
       token = jwt.sign(
-      {user: {email}},
-        JWT_SECRET,
-        {algorithm: 'HS256', subject: 'email', expiresIn: '7d'}
-);
+        {user: {email}},
+          JWT_SECRET,
+          {algorithm: 'HS256', subject: 'email', expiresIn: '7d'}
+      );
       decoded = jwt.decode(token);
+    });
   });
   afterEach(() => {
     token = {};
@@ -67,7 +55,7 @@ describe('auth service', () => {
       //set headers
       .set('Accept', 'application/json')
       //send the following data
-      .auth(user.email, user.password)
+      .auth(user.email, user.unhashed)
       .then(res => {
         res.should.have.status(200);
         res.body.should.be.an('object');
