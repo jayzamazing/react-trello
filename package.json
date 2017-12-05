@@ -1,6 +1,6 @@
 {
   "name": "react-trello-backend",
-  "version": "3.22.6",
+  "version": "4.0.0",
   "private": true,
   "homepage": "https://github.com/jayzamazing/react-trello#readme",
   "scripts": {
