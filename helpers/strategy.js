@@ -14,9 +14,12 @@ const basicStrategy = new BasicStrategy(
       //if the user does not exist
       if (!user) {
         return Promise.reject({
-            reason: 'LoginError',
-            message: 'Incorrect username or password'
+            code: 401,
+            reason: 'ValidationError',
+            message: 'Incorrect username or password',
+            location: 'email'
         });
+
       }
       //otherwise try and validate the password
       return user.validatePassword(password);
@@ -25,8 +28,10 @@ const basicStrategy = new BasicStrategy(
       //if the password is incorrect
       if (!isValid) {
         return Promise.reject({
-            reason: 'LoginError',
-            message: 'Incorrect username or password'
+          code: 401,
+          reason: 'ValidationError',
+          message: 'Incorrect username or password',
+          location: 'email'
         });
       } else {
         return cb(null, user);

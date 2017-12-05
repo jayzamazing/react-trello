@@ -48,7 +48,12 @@ Router.post('/', (req, res) => {
 .exec()
 .then(count => {
   if (count > 0) {
-    res.status(422).json({message: 'username already taken'});
+    return Promise.reject({
+      code: 422,
+      reason: 'ValidationError',
+      message: 'Username already taken',
+      location: 'email'
+    });
   }
 // if no existing user, hash password
   return User.hashPassword(password);
@@ -67,9 +72,13 @@ Router.post('/', (req, res) => {
   welcomeData.createBoards(userInfo._id)
   .then(welcomeBoards => welcomeData.createCardslist(userInfo._id, welcomeBoards))
   .then(welcomeCardslist => welcomeData.createCards(userInfo._id, welcomeCardslist))
-  .then(() => res.status(201).json(userInfo));
+  .then(() => res.status(201).json(userInfo))
+  .catch(err => {throw err});
 })
 .catch(err => {
+  if (err.reason === 'ValidationError') {
+    return res.status(err.code).json(err);
+  }
   res.status(500).json({message: err});
 });
 });
