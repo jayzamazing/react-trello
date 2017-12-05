@@ -24,20 +24,21 @@ describe('boards service', () => {
     /* eslint-enable */
     .then(res => {
       users = res;
-return createBoards(users);
+      return users;
     })
-    .then(res2 => {
-      boards = res2;
-
-return createCardslist(users, boards);
+    .then(res => createBoards(res))
+    .then(res => {
+      boards = res;
+      return boards;
     })
-.then(res3 => {
-      cardslist = res3;
-
-return createCards(users, cardslist);
+    .then(res => createCardslist(users, res))
+    .then(res => {
+      cardslist = res;
+      return cardslist;
     })
-.then(res4 => {
-      cards = res4;
+    .then(res => createCards(users, res))
+    .then(res => {
+      cards = res;
     });
   });
   afterEach(() => {

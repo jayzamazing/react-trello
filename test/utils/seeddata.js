@@ -17,6 +17,24 @@ const password = faker.internet.password();
     };
   });
 };
+const createUserDB = () => {
+  let user;
+  return createUser()
+  .then(res => {
+    user = res;
+  })
+  .then(() => {
+    const {email, password, fullName} = user;
+    return User.create({
+      email,
+      password,
+      fullName
+    });
+  })
+  .then(() => {
+    return user;
+  });
+};
 //create multiple users
 const createUsers = count => {
 const seedData = [];
@@ -98,4 +116,4 @@ return Promise.all(seedData)
   return Card.insertMany(seed);
 });
 };
-module.exports = {createUser, createUsers, createTitle, createBoards, createCardslist, createText, createCards};
+module.exports = {createUser, createUsers, createTitle, createBoards, createCardslist, createText, createCards, createUserDB};

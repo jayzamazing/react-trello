@@ -24,20 +24,20 @@ describe('Card service', () => {
     /* eslint-enable */
     .then(res => {
       users = res;
-
-return createBoards(users);
+      return users;
     })
+    .then(res => createBoards(res))
     .then(res2 => {
       boards = res2;
-
-return createCardslist(users, boards);
+      return boards;
     })
-.then(res3 => {
+    .then(res => createCardslist(users, res))
+    .then(res3 => {
       cardslist = res3;
-
-return createCards(users, cardslist);
+      return cardslist;
     })
-.then(res4 => {
+    .then(res => createCards(users, res))
+    .then(res4 => {
       cards = res4;
     });
   });
