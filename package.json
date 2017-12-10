@@ -1,8 +1,8 @@
 {
   "name": "react-trello-backend",
-  "version": "4.1.1",
+  "version": "4.2.1",
   "private": true,
-  "homepage": "https://github.com/jayzamazing/react-trello#readme",
+  "homepage": "https://github.com/jayzamazing/react-trello-back-end#readme",
   "scripts": {
     "start": "node ./bin/www",
     "inspect": "node --inspect ./bin/www",
@@ -14,12 +14,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jayzamazing/react-trello.git"
+    "url": "git+https://github.com/jayzamazing/react-trello-back-end.git"
   },
   "author": "Adrian J Lopez <adrianjaylopez@gmail.com>",
   "contributors": [],
   "bugs": {
-    "url": "https://github.com/jayzamazing/react-trello/issues"
+    "url": "https://github.com/jayzamazing/react-trello-back-end/issues"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
